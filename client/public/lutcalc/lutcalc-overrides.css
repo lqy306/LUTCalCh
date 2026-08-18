@@ -486,6 +486,70 @@ html, body { background: #f5f5f7 !important; color: #1d1d1f !important; font-fam
 		box-sizing: border-box !important;
 		width: 100% !important;
 		max-width: 100% !important;
-		margin-top: 5px !important;
-	}
+			margin-top: 5px !important;
+		}
 }
+
+/* 工作台主题桥接：外层将 --theme-* 令牌同步至同源 iframe；本覆盖只改变调整项外观，不触及原版计算逻辑。 */
+html.embed-adjustments,
+html.embed-adjustments body,
+html.embed-adjustments #main,
+html.embed-adjustments #lutcalcform,
+html.embed-adjustments #box-twk {
+	color: var(--theme-text, #242424) !important;
+	background: transparent !important;
+	font-family: var(--theme-font, Ubuntu, sans-serif) !important;
+}
+html.embed-adjustments #box-twk fieldset {
+	color: var(--theme-text, #242424) !important;
+	background: var(--theme-card, #fff) !important;
+	border-color: var(--theme-border, #d6d6d6) !important;
+	border-radius: var(--theme-radius, 4px) !important;
+	box-shadow: var(--theme-shadow, none) !important;
+}
+html.embed-adjustments #tweak-top,
+html.embed-adjustments #tweaksholder,
+html.embed-adjustments #box-twk label,
+html.embed-adjustments #box-twk .twk,
+html.embed-adjustments #box-twk .twk-title {
+	color: var(--theme-text, #242424) !important;
+	font-family: var(--theme-font, Ubuntu, sans-serif) !important;
+}
+html.embed-adjustments #tweak-top {
+	background: var(--theme-surface, #f7f7f7) !important;
+	border-color: var(--theme-border, #d6d6d6) !important;
+}
+html.embed-adjustments #tweak-top,
+html.embed-adjustments #tweak-top * {
+	color: var(--theme-text, #242424) !important;
+}
+html.embed-adjustments #tweaksholder .tweakholder {
+	color: var(--theme-text, #242424) !important;
+	background: var(--theme-surface, #f7f7f7) !important;
+	border-color: var(--theme-border, #d6d6d6) !important;
+}
+html.embed-adjustments #tweaksholder .tweakholder label,
+html.embed-adjustments #tweaksholder .tweakholder p,
+html.embed-adjustments #tweaksholder .tweakholder span,
+html.embed-adjustments #tweaksholder .tweakholder div {
+	color: var(--theme-text, #242424) !important;
+}
+html.embed-adjustments #box-twk input:not([type="checkbox"]):not([type="radio"]),
+html.embed-adjustments #box-twk select,
+html.embed-adjustments #box-twk textarea,
+html.embed-adjustments #box-twk button {
+	color: var(--theme-text, #242424) !important;
+	background: var(--theme-input, #fff) !important;
+	border-color: var(--theme-border, #d6d6d6) !important;
+	border-radius: var(--theme-radius, 4px) !important;
+	font-family: var(--theme-font, Ubuntu, sans-serif) !important;
+}
+html.embed-adjustments #box-twk input:focus,
+html.embed-adjustments #box-twk select:focus,
+html.embed-adjustments #box-twk textarea:focus,
+html.embed-adjustments #box-twk button:focus {
+	outline-color: var(--theme-focus, rgba(233,84,32,.34)) !important;
+	border-color: var(--theme-accent, #e95420) !important;
+}
+html.embed-adjustments #box-twk input[type="checkbox"],
+html.embed-adjustments #box-twk input[type="radio"] { accent-color: var(--theme-accent, #e95420) !important; }

@@ -7,6 +7,8 @@ import {
   Eye,
   FileJson,
   FolderOpen,
+  Moon,
+  Palette,
   Play,
   Plus,
   Save,
@@ -18,7 +20,9 @@ import {
   WandSparkles,
   Workflow,
   X,
+  Sun,
 } from "lucide-react";
+import { applyWorkbenchTheme, BUILTIN_THEMES, readStoredThemeId, readStoredThemeMode, resolveTheme, THEME_MODE_STORAGE_KEY, THEME_STORAGE_KEY, type ThemeMode } from "@/themes/themeRegistry";
 
 type WorkflowEvent = { action: "change" | "click"; selector: string; value?: string; checked?: boolean; label: string };
 type WorkflowFile = { version: 1; name: string; createdAt: string; events: WorkflowEvent[] };
@@ -88,11 +92,22 @@ export default function Home() {
   const [engineState, setEngineState] = useState<Record<EngineField, string>>(EMPTY_STATE);
   const [choices, setChoices] = useState<Partial<Record<EngineField, Choice[]>>>({});
   const [previewSrc, setPreviewSrc] = useState("");
+  const [themeId, setThemeId] = useState(readStoredThemeId);
+  const [themeMode, setThemeMode] = useState<ThemeMode>(readStoredThemeMode);
+  const activeTheme = useMemo(() => resolveTheme(themeId), [themeId]);
 
   const engineDocument = () => iframeRef.current?.contentDocument || null;
   const engineWindow = () => iframeRef.current?.contentWindow || null;
   const persistWorkflows = useCallback((next: WorkflowFile[]) => { setSavedWorkflows(next); localStorage.setItem(WORKFLOW_KEY, JSON.stringify(next)); }, []);
   const persistProfiles = useCallback((next: LogGammaProfile[]) => { setProfiles(next); localStorage.setItem(PROFILE_KEY, JSON.stringify(next)); }, []);
+
+  useEffect(() => {
+    applyWorkbenchTheme(activeTheme, themeMode);
+    const documentRef = engineDocument();
+    if (documentRef) applyWorkbenchTheme(activeTheme, themeMode, documentRef);
+    localStorage.setItem(THEME_STORAGE_KEY, activeTheme.id);
+    localStorage.setItem(THEME_MODE_STORAGE_KEY, themeMode);
+  }, [activeTheme, themeMode]);
 
   const syncAdjustmentFrameHeight = useCallback(() => {
     const documentRef = engineDocument();
@@ -288,7 +303,7 @@ export default function Home() {
 
   return (
     <main className="apple-app-shell" aria-label="LUTCalc 中文计算器工作台">
-      <header className="apple-topbar"><div className="apple-brand"><span />LUTCalc 中文计算器</div><div>主工作台</div><div className="apple-status"><i />{message}</div></header>
+      <header className="apple-topbar"><div className="apple-brand"><span />LUTCalc 中文计算器</div><div>主工作台</div><div className="topbar-actions"><div className="theme-controls" aria-label="主题设置"><Palette size={14} aria-hidden="true" /><select aria-label="选择主题" value={activeTheme.id} onChange={(event) => setThemeId(event.target.value)}>{BUILTIN_THEMES.map((theme) => <option key={theme.id} value={theme.id}>{theme.name}</option>)}</select><button type="button" className="theme-mode-button" aria-label={`切换到${themeMode === "light" ? "深色" : "亮色"}模式`} onClick={() => setThemeMode((current) => current === "light" ? "dark" : "light")}>{themeMode === "light" ? <Sun size={14} /> : <Moon size={14} />}<span>{activeTheme.modes[themeMode].label}</span></button></div><div className="apple-status"><i />{message}</div></div></header>
       <div className="apple-workspace">
         <aside className={`workflow-sidebar tool-sidebar ${workflowOpen ? "is-open" : "is-closed"}`} aria-label="工具中心">
           <div className="workflow-sidebar-head"><div><span className="eyebrow">工具中心</span><h1><SlidersHorizontal size={17} />工作台工具</h1></div><button className="icon-button" onClick={() => setWorkflowOpen(false)} aria-label="关闭工具中心"><X size={16} /></button></div>
@@ -304,7 +319,7 @@ export default function Home() {
             <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
             <section className="native-card pipeline-card"><div className="card-title"><span>02</span><div><h3>色彩管线</h3><p>定义记录伽马、色域与目标输出。</p></div></div><div className="pipeline-groups"><div><h4>记录设置</h4><div className="form-grid">{select("recGammaMaker", "伽马品牌")}{select("recGamma", "记录伽马")}{select("recGamutMaker", "色域品牌")}{select("recGamut", "记录色域")}</div></div><div><h4>输出设置</h4><div className="form-grid">{select("outGammaMaker", "伽马品牌")}{select("outGamma", "输出伽马")}{select("outGamutMaker", "色域品牌")}{select("outGamut", "输出色域")}</div></div></div></section>
             <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>命名、选择编码与生成导出文件。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field>{select("lutFormat", "输出格式")}{select("hardClip", "硬裁切")}</div><div className="native-actions"><button className="apple-button" onClick={() => engineAction(["Preview", "预览"], "预览已更新")}><Eye size={15} />更新预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
-            <section className="native-card adjust-card original-adjust-card" aria-label="调整项"><iframe ref={iframeRef} className="adjustments-engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="原版 LUTCalc 调整项" onLoad={() => { if (!verifyAdjustmentEmbed()) return; hydrateEngine(); window.setTimeout(hydrateEngine, 720); window.setTimeout(observeAdjustmentFrame, 760); }} /></section>
+            <section className="native-card adjust-card original-adjust-card" aria-label="调整项"><iframe ref={iframeRef} className="adjustments-engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="原版 LUTCalc 调整项" onLoad={() => { if (!verifyAdjustmentEmbed()) return; const documentRef = engineDocument(); if (documentRef) applyWorkbenchTheme(activeTheme, themeMode, documentRef); hydrateEngine(); window.setTimeout(hydrateEngine, 720); window.setTimeout(observeAdjustmentFrame, 760); }} /></section>
             <section className="native-card preview-card"><div className="card-title"><span>05</span><div><h3>曲线预览</h3><p>{previewHint}</p></div></div><div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div><div className="preview-footnote"><span>状态</span><strong>{engineReady ? "参数已同步" : "加载中"}</strong><span>工作流程记录会自动捕获原生参数调整。</span></div></section>
           </div>
         </section>

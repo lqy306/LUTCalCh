@@ -479,3 +479,86 @@ h1 em { color: #647222; font-style: normal; }
 .project-disclosure-body p { margin: 0; }
 .project-disclosure-body p + p { margin-top: 6px; }
 .project-disclosure-body a { color: #b5481e; text-decoration: underline; text-underline-offset: 2px; }
+
+/* 内置主题系统：所有视觉色彩来自 client/src/themes/*.theme.json；不支持临时上传主题。 */
+:root {
+  --theme-font: Ubuntu, "Noto Sans SC", sans-serif;
+  --theme-radius: 4px;
+  --theme-canvas: #deddda;
+  --theme-surface: #f7f7f7;
+  --theme-surface-muted: #f0efec;
+  --theme-sidebar: #f7f7f7;
+  --theme-card: #fff;
+  --theme-text: #242424;
+  --theme-muted: #6b6b6b;
+  --theme-border: #d6d6d6;
+  --theme-accent: #e95420;
+  --theme-accent-hover: #d94818;
+  --theme-accent-soft: #fff3ed;
+  --theme-topbar: #2c001e;
+  --theme-topbar-text: #fff;
+  --theme-control: #ededed;
+  --theme-control-hover: #e2e2e2;
+  --theme-input: #fff;
+  --theme-input-disabled: #efefef;
+  --theme-focus: rgba(233,84,32,.34);
+  --theme-success: #299c5c;
+  --theme-danger: #a51d2d;
+  --theme-shadow: 0 1px 2px rgba(0,0,0,.10);
+  --theme-link: #b5481e;
+  --theme-preview-blend: multiply;
+}
+
+html[data-workbench-mode="dark"] { color-scheme: dark; }
+.apple-app-shell { color: var(--theme-text); background: var(--theme-canvas); font-family: var(--theme-font); }
+.apple-topbar { color: var(--theme-topbar-text); background: var(--theme-topbar); border-bottom-color: var(--theme-border); box-shadow: var(--theme-shadow); font-family: var(--theme-font); }
+.apple-brand span { background: var(--theme-accent); }
+.apple-status { color: var(--theme-topbar-text); opacity: .86; }
+.apple-status i, .engine-indicator.is-ready i { background: var(--theme-success); }
+.apple-workspace, .native-calculator-pane { background: var(--theme-canvas); }
+.apple-app-shell .workflow-sidebar, .apple-app-shell .profile-sidebar { background: var(--theme-sidebar); border-color: var(--theme-border); }
+.apple-app-shell .eyebrow { color: var(--theme-accent); }
+.workflow-intro, .profile-help, .workflow-name-label, .workflow-list-head, .profile-item-meta, .workflow-item-meta { color: var(--theme-muted); }
+.workflow-name-label input, .native-field input, .native-field select, .native-output { color: var(--theme-text); background: var(--theme-input); border-color: var(--theme-border); border-radius: var(--theme-radius); font-family: var(--theme-font); }
+.workflow-name-label input:focus, .native-field input:focus, .native-field select:focus { outline-color: var(--theme-focus); border-color: var(--theme-accent); }
+.native-field :disabled { color: var(--theme-muted); background: var(--theme-input-disabled); }
+.native-output { background: var(--theme-surface-muted); }
+.apple-button { color: var(--theme-text); background: var(--theme-control); border-color: var(--theme-border); border-radius: var(--theme-radius); box-shadow: none; font-family: var(--theme-font); }
+.apple-button:hover { background: var(--theme-control-hover); border-color: var(--theme-accent); }
+.apple-button.is-primary { color: #fff; background: var(--theme-accent); border-color: var(--theme-accent); }
+.apple-button.is-primary:hover { background: var(--theme-accent-hover); border-color: var(--theme-accent-hover); }
+.apple-button.is-recording { background: var(--theme-danger); border-color: var(--theme-danger); }
+.apple-button.is-quiet { color: var(--theme-muted); }
+.native-calculator-head h2, .card-title h3, .pipeline-groups h4 { color: var(--theme-text); font-family: var(--theme-font); }
+.native-calculator-head p, .card-title p, .engine-indicator, .native-field, .preview-footnote { color: var(--theme-muted); }
+.engine-indicator { color: var(--theme-muted); background: var(--theme-surface); border-color: var(--theme-border); border-radius: var(--theme-radius); }
+.native-card { background: var(--theme-card); border-color: var(--theme-border); border-radius: var(--theme-radius); box-shadow: var(--theme-shadow); }
+.card-title > span { color: #fff; background: var(--theme-accent); border-radius: var(--theme-radius); }
+.pipeline-groups > div, .native-toggle, .preview-surface { color: var(--theme-text); background: var(--theme-surface); border-color: var(--theme-border); border-radius: var(--theme-radius); }
+.native-toggle.is-on { color: var(--theme-text); background: var(--theme-accent-soft); border-color: var(--theme-accent); }
+.native-toggle.is-on .toggle-track { background: var(--theme-accent); }
+.preview-surface img { mix-blend-mode: var(--theme-preview-blend); }
+.preview-footnote strong { color: var(--theme-success); }
+.apple-app-shell .workflow-item, .apple-app-shell .profile-item { background: var(--theme-card); border-color: var(--theme-border); border-radius: var(--theme-radius); box-shadow: var(--theme-shadow); }
+.apple-app-shell .workflow-item-actions button, .apple-app-shell .profile-item-actions button { color: var(--theme-link); font-family: var(--theme-font); }
+.apple-app-shell .workflow-reopen, .apple-app-shell .profile-reopen { color: var(--theme-topbar-text); background: var(--theme-topbar); border-radius: var(--theme-radius); box-shadow: var(--theme-shadow); }
+.tool-tabs, .analyst-mode { background: var(--theme-surface-muted); border-color: var(--theme-border); border-radius: var(--theme-radius); }
+.tool-tabs button, .analyst-mode button { color: var(--theme-muted); border-radius: var(--theme-radius); font-family: var(--theme-font); }
+.tool-tabs button.is-active, .analyst-mode button.is-active { color: var(--theme-text); background: var(--theme-card); border-color: var(--theme-border); }
+.analyst-file, .analyst-drawer { color: var(--theme-muted); background: var(--theme-card); border-color: var(--theme-border); border-radius: var(--theme-radius); }
+.analyst-drawer summary, .analyst-drawer-body > p { color: var(--theme-text); }
+.analyst-drawer-body { border-top-color: var(--theme-border); }
+.project-disclosure { color: var(--theme-muted); background: var(--theme-canvas); font-family: var(--theme-font); }
+.project-disclosure summary { color: var(--theme-muted); }
+.project-disclosure summary:hover, .project-disclosure-body a { color: var(--theme-link); }
+.project-disclosure-body { background: var(--theme-surface); border-color: var(--theme-border); border-radius: var(--theme-radius); }
+
+.topbar-actions { display: flex; align-items: center; justify-content: end; gap: 12px; min-width: 0; }
+.theme-controls { display: inline-flex; align-items: center; gap: 6px; min-width: 0; color: var(--theme-topbar-text); opacity: .94; }
+.theme-controls select, .theme-mode-button { min-height: 27px; color: var(--theme-topbar-text); background: color-mix(in srgb, var(--theme-topbar-text) 10%, transparent); border: 1px solid color-mix(in srgb, var(--theme-topbar-text) 22%, transparent); border-radius: var(--theme-radius); font: 500 11px/1 var(--theme-font); }
+.theme-controls select { max-width: 102px; padding: 0 6px; }
+.theme-controls select option { color: var(--theme-text); background: var(--theme-card); }
+.theme-mode-button { display: inline-flex; align-items: center; gap: 5px; padding: 0 7px; cursor: pointer; transition: transform .16s var(--ease-out), background .16s var(--ease-out); }
+.theme-mode-button:hover { background: color-mix(in srgb, var(--theme-topbar-text) 18%, transparent); }
+.theme-mode-button:active { transform: scale(.97); }
+@media (max-width: 760px) { .topbar-actions { gap: 7px; } .theme-controls > svg, .theme-mode-button span { display: none; } .theme-controls select { max-width: 86px; } .apple-status { max-width: 86px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }

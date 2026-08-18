@@ -1,0 +1,12 @@
+{
+  "$schema": "./lutcalc-theme.schema.json",
+  "id": "omarchy",
+  "name": "Omarchy",
+  "description": "Omarchy 风格：终端化深色基底、锐利边界与冷蓝强调。",
+  "fontFamily": "ui-monospace, 'Cascadia Code', 'Noto Sans Mono CJK SC', monospace",
+  "radius": "2px",
+  "modes": {
+    "light": { "label": "亮色", "colors": { "canvas": "#eef2f7", "surface": "#f8fafc", "surfaceMuted": "#e5eaf1", "sidebar": "#f1f5f9", "card": "#ffffff", "text": "#111827", "muted": "#5b6575", "border": "#cbd5e1", "accent": "#2563eb", "accentHover": "#1d4ed8", "accentSoft": "#dbeafe", "topbar": "#111827", "topbarText": "#f8fafc", "control": "#f8fafc", "controlHover": "#e5eaf1", "input": "#ffffff", "inputDisabled": "#e5eaf1", "focus": "rgba(37,99,235,.34)", "success": "#15803d", "danger": "#dc2626", "shadow": "3px 3px 0 rgba(15,23,42,.15)", "link": "#1d4ed8", "previewBlend": "multiply" } },
+    "dark": { "label": "深色", "colors": { "canvas": "#0b0e14", "surface": "#10151f", "surfaceMuted": "#161c28", "sidebar": "#0f131b", "card": "#131a26", "text": "#dce6f2", "muted": "#91a1b6", "border": "#2b3648", "accent": "#89b4fa", "accentHover": "#b4d0ff", "accentSoft": "#162948", "topbar": "#080b10", "topbarText": "#dce6f2", "control": "#182131", "controlHover": "#233047", "input": "#0f151f", "inputDisabled": "#182131", "focus": "rgba(137,180,250,.44)", "success": "#a6e3a1", "danger": "#f38ba8", "shadow": "4px 4px 0 rgba(0,0,0,.42)", "link": "#89b4fa", "previewBlend": "normal" } }
+  }
+}

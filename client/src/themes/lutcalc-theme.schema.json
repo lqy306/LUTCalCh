@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lutcalc.app/schemas/lutcalc-workbench-theme.schema.json",
+  "title": "LUTCalc 工作台主题配置",
+  "type": "object",
+  "required": ["$schema", "id", "name", "description", "fontFamily", "radius", "modes"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "fontFamily": { "type": "string" },
+    "radius": { "type": "string" },
+    "modes": {
+      "type": "object",
+      "required": ["light", "dark"],
+      "properties": {
+        "light": { "$ref": "#/$defs/mode" },
+        "dark": { "$ref": "#/$defs/mode" }
+      }
+    }
+  },
+  "$defs": {
+    "mode": {
+      "type": "object",
+      "required": ["label", "colors"],
+      "properties": {
+        "label": { "type": "string" },
+        "colors": {
+          "type": "object",
+          "required": ["canvas", "surface", "surfaceMuted", "sidebar", "card", "text", "muted", "border", "accent", "accentHover", "accentSoft", "topbar", "topbarText", "control", "controlHover", "input", "inputDisabled", "focus", "success", "danger", "shadow", "link", "previewBlend"],
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    }
+  }
+}
