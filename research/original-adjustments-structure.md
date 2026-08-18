@@ -34,6 +34,10 @@
 
 为彻底阻断任何遗留工作区通过裸 `/lutcalc/index.html` 加载完整旧版，原版入口现在默认直接添加 `embed-adjustments`。工作台 iframe 同时升级到 `workspaceEmbed=20260818-3`。最终验证显示：主工作台在 390px 下保持原生参数卡与调整项栈；裸原版入口也只显示调整项，不再能呈现完整旧版计算器布局。
 
+## 主站套娃修复验证
+
+GitHub Pages 子目录兼容代码已在用户取消该部署后移除。主站 iframe 现在固定使用根路径 `/lutcalc/index.html?embed=adjustments&workspaceEmbed=20260818-5`，不会再根据部署基路径把原版引擎解析为工作台路由。浏览器运行时确认：iframe 文档带有 `#lutcalcform` 与 `#box-twk`，没有 React `#root`；相机选项为 36 个、原版画布尺寸为 1120×600。点击工作台“更新预览”后状态变为“预览已更新”，曲线区域已生成 PNG 数据图；原版引擎也仍可定位预览、生成 LUT 与生成套装入口。
+
 ## 发布站点复核
 
 在已发布域名带缓存规避参数的页面中，工作台 iframe 已加载 `/lutcalc/index.html?embed=adjustments&workspaceEmbed=20260818-3`；引擎初始化完成后，原生参数卡会读取真实值。`#box-twk` 的原始模块容器列表中，`LUT分析` 为第 14 个可见模块容器，和白平衡、CDL、伪色等共享同一个“调整项”模块栈，并非独立工具中心或独立页面。

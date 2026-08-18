@@ -42,7 +42,7 @@ type EngineField = "cameraMaker" | "cameraModel" | "cineEI" | "stopShift" | "rec
 
 const WORKFLOW_KEY = "lutcalc-apple-workflows";
 const PROFILE_KEY = "lutcalc-log-gamma-profiles";
-const ADJUSTMENTS_EMBED_SRC = "/lutcalc/index.html?embed=adjustments&workspaceEmbed=20260818-3";
+const ADJUSTMENTS_EMBED_SRC = "/lutcalc/index.html?embed=adjustments&workspaceEmbed=20260818-5";
 const EMPTY_STATE: Record<EngineField, string> = {
   cameraMaker: "", cameraModel: "", cineEI: "", stopShift: "", recGammaMaker: "", recGamma: "", recGamutMaker: "", recGamut: "", outGammaMaker: "", outGamma: "", outGamutMaker: "", outGamut: "", title: "", lutFormat: "", hardClip: "",
 };
