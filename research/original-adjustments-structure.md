@@ -26,6 +26,12 @@
 
 运行时检查确认 `#box-cam` 只有一个原始 `fieldset`，其中依次包含相机品牌 `select`、型号 `select`、隐藏输入、原生 ISO `label`、CineEI `div`（内含 `.iso-input`）及挡位修正 `div`（内含 `.shift-input`）。这些节点没有稳定的业务类名或内联样式；移动端补丁应通过 `#box-cam fieldset` 的直接子节点顺序、`.iso-input` 和 `.shift-input` 进行 scoped 覆盖，强制回到单列 grid/flow。
 
+## 发布版内嵌模块核对
+
+已发布工作台的 iframe 当前实际地址为 `/lutcalc/index.html?embed=adjustments`，HTML 根元素带有 `embed-adjustments` 类。运行时样式确认 `#box-cam`、`#box-gam`、`#box-lut` 和 `#titlebar` 都为 `display: none`，仅 `#box-twk`（调整项）显示。为避免用户标签页复用旧 iframe 资源，后续修复将为专用嵌入地址加入明确的版本查询参数，并在加载完成后验证嵌入模式标识。
+
+版本化验证已完成：工作台 iframe 现加载 `/lutcalc/index.html?embed=adjustments&workspaceEmbed=20260818-2`；运行时再次确认 `embed-adjustments=true`、相机和伽马区域均为 `display:none`、调整项为 `display:block`。390px 工作台截图只显示调整项模块栈，不会回退为完整旧版参数区。
+
 ## 模块顺序
 
 原版的工作区依次组织：白平衡、PSST-CDL、ASC-CDL、多色调、高光色域、膝点、黑电平 / 高光电平、黑伽马、显示色彩空间转换、色域限制、伪色、LUTAnalyst。

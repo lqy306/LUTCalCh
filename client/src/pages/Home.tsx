@@ -42,6 +42,7 @@ type EngineField = "cameraMaker" | "cameraModel" | "cineEI" | "stopShift" | "rec
 
 const WORKFLOW_KEY = "lutcalc-apple-workflows";
 const PROFILE_KEY = "lutcalc-log-gamma-profiles";
+const ADJUSTMENTS_EMBED_SRC = "/lutcalc/index.html?embed=adjustments&workspaceEmbed=20260818-2";
 const EMPTY_STATE: Record<EngineField, string> = {
   cameraMaker: "", cameraModel: "", cineEI: "", stopShift: "", recGammaMaker: "", recGamma: "", recGamutMaker: "", recGamut: "", outGammaMaker: "", outGamma: "", outGamutMaker: "", outGamut: "", title: "", lutFormat: "", hardClip: "",
 };
@@ -71,6 +72,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const adjustmentFrameVerifiedRef = useRef(false);
   const workflowFileRef = useRef<HTMLInputElement>(null);
   const profileFileRef = useRef<HTMLInputElement>(null);
   const isReplayingRef = useRef(false);
@@ -111,6 +113,21 @@ export default function Home() {
     frame.adjustmentObserver.observe(adjustments);
     syncAdjustmentFrameHeight();
   }, [syncAdjustmentFrameHeight]);
+
+  const verifyAdjustmentEmbed = useCallback(() => {
+    const frame = iframeRef.current;
+    const documentRef = frame?.contentDocument;
+    if (!frame || !documentRef) return false;
+    if (!documentRef.documentElement.classList.contains("embed-adjustments")) {
+      if (!adjustmentFrameVerifiedRef.current) {
+        adjustmentFrameVerifiedRef.current = true;
+        frame.src = ADJUSTMENTS_EMBED_SRC;
+      }
+      return false;
+    }
+    adjustmentFrameVerifiedRef.current = true;
+    return true;
+  }, []);
 
   const refreshPreview = useCallback(() => {
     const documentRef = engineDocument();
@@ -287,7 +304,7 @@ export default function Home() {
             <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
             <section className="native-card pipeline-card"><div className="card-title"><span>02</span><div><h3>色彩管线</h3><p>定义记录伽马、色域与目标输出。</p></div></div><div className="pipeline-groups"><div><h4>记录设置</h4><div className="form-grid">{select("recGammaMaker", "伽马品牌")}{select("recGamma", "记录伽马")}{select("recGamutMaker", "色域品牌")}{select("recGamut", "记录色域")}</div></div><div><h4>输出设置</h4><div className="form-grid">{select("outGammaMaker", "伽马品牌")}{select("outGamma", "输出伽马")}{select("outGamutMaker", "色域品牌")}{select("outGamut", "输出色域")}</div></div></div></section>
             <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>命名、选择编码与生成导出文件。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field>{select("lutFormat", "输出格式")}{select("hardClip", "硬裁切")}</div><div className="native-actions"><button className="apple-button" onClick={() => engineAction(["Preview", "预览"], "预览已更新")}><Eye size={15} />更新预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
-            <section className="native-card adjust-card original-adjust-card" aria-label="调整项"><iframe ref={iframeRef} className="adjustments-engine-frame" src="/lutcalc/index.html?embed=adjustments" title="原版 LUTCalc 调整项" onLoad={() => { hydrateEngine(); window.setTimeout(hydrateEngine, 720); window.setTimeout(observeAdjustmentFrame, 760); }} /></section>
+            <section className="native-card adjust-card original-adjust-card" aria-label="调整项"><iframe ref={iframeRef} className="adjustments-engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="原版 LUTCalc 调整项" onLoad={() => { if (!verifyAdjustmentEmbed()) return; hydrateEngine(); window.setTimeout(hydrateEngine, 720); window.setTimeout(observeAdjustmentFrame, 760); }} /></section>
             <section className="native-card preview-card"><div className="card-title"><span>05</span><div><h3>曲线预览</h3><p>{previewHint}</p></div></div><div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div><div className="preview-footnote"><span>状态</span><strong>{engineReady ? "参数已同步" : "加载中"}</strong><span>工作流程记录会自动捕获原生参数调整。</span></div></section>
           </div>
         </section>
