@@ -412,3 +412,47 @@ h1 em { color: #647222; font-style: normal; }
 .apple-app-shell .workflow-reopen, .apple-app-shell .profile-reopen { color: #fff; background: #1d1d1f; border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.16); font-family: inherit; }
 @media (max-width: 1080px) { .capture-card, .pipeline-card, .export-card, .adjust-card { grid-column: span 6; } .pipeline-groups, .export-fields { grid-template-columns: 1fr; } .camera-grid { grid-template-columns: 1fr 1fr; } .camera-grid .native-field:nth-last-child(-n+2) { grid-column: auto; } }
 @media (max-width: 760px) { .apple-topbar { grid-template-columns: 1fr auto; } .apple-topbar > :nth-child(2) { display: none; } .native-calculator-pane { padding: 16px; } .native-calculator-head { align-items: flex-start; flex-direction: column; } .native-calculator-grid { display: block; } .native-card { margin-bottom: 12px; } .capture-card, .pipeline-card, .export-card, .adjust-card { grid-column: auto; } .form-grid, .camera-grid, .toggle-grid { grid-template-columns: 1fr; } .pipeline-groups { grid-template-columns: 1fr; } .preview-surface { min-height: 180px; } }
+
+/* Ubuntu 桌面主题最终覆盖：石墨标题栏、Ubuntu 橙强调、清晰表单边界和低圆角工具面板。 */
+.apple-app-shell { color: #242424; background: #deddda; font-family: Ubuntu, "Noto Sans SC", sans-serif; }
+.apple-topbar { color: #fff; background: #2c001e; border-bottom-color: rgba(0,0,0,.32); box-shadow: 0 1px 0 rgba(0,0,0,.35); backdrop-filter: none; -webkit-backdrop-filter: none; font-family: inherit; }
+.apple-brand { font-weight: 700; }
+.apple-brand span { border-radius: 50%; background: #e95420; }
+.apple-status { color: #deddda; font-family: inherit; }
+.apple-status i { background: #8ae234; }
+.apple-workspace, .native-calculator-pane { background: #deddda; }
+.apple-app-shell .workflow-sidebar, .apple-app-shell .profile-sidebar { background: #f7f7f7; border-color: #d6d6d6; }
+.apple-app-shell .eyebrow { color: #e95420; font-weight: 700; }
+.apple-app-shell .workflow-name-label input, .native-field input, .native-field select, .native-output { color: #242424; background: #fff; border-color: #c7c7c7; border-radius: 4px; font-family: Ubuntu, "Noto Sans SC", sans-serif; }
+.apple-app-shell .workflow-name-label input:focus, .native-field input:focus, .native-field select:focus { outline-color: rgba(233,84,32,.35); border-color: #e95420; }
+.apple-button { color: #242424; background: #ededed; border-color: #c7c7c7; border-radius: 4px; box-shadow: none; font-family: Ubuntu, "Noto Sans SC", sans-serif; }
+.apple-button:hover { background: #e2e2e2; border-color: #ababab; }
+.apple-button.is-primary { color: #fff; background: #e95420; border-color: #c74316; }
+.apple-button.is-primary:hover { background: #d94818; border-color: #c74316; }
+.apple-button.is-recording { background: #a51d2d; border-color: #8b1625; }
+.apple-button.is-quiet { color: #666; }
+.native-calculator-head h2, .card-title h3 { color: #242424; font-family: Ubuntu, "Noto Sans SC", sans-serif; letter-spacing: -.02em; }
+.native-calculator-head p, .card-title p, .engine-indicator { color: #6b6b6b; }
+.engine-indicator { background: #f7f7f7; border-color: #d6d6d6; border-radius: 4px; }
+.engine-indicator.is-ready i { background: #33d17a; }
+.native-card { background: #fff; border-color: #d6d6d6; border-radius: 5px; box-shadow: 0 1px 2px rgba(0,0,0,.1); }
+.card-title > span { color: #fff; background: #e95420; border-radius: 4px; }
+.pipeline-groups > div, .native-toggle, .preview-surface { background: #f7f7f7; border-color: #d6d6d6; border-radius: 4px; }
+.native-toggle.is-on { color: #242424; background: #fff3ed; border-color: #f3b69f; }
+.native-toggle.is-on .toggle-track { background: #e95420; }
+.preview-footnote strong { color: #299c5c; }
+.apple-app-shell .workflow-item, .apple-app-shell .profile-item { background: #fff; border-color: #d6d6d6; border-radius: 4px; box-shadow: none; }
+.apple-app-shell .workflow-item-actions button, .apple-app-shell .profile-item-actions button { color: #e95420; font-family: Ubuntu, "Noto Sans SC", sans-serif; }
+.apple-app-shell .workflow-reopen, .apple-app-shell .profile-reopen { color: #fff; background: #2c001e; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+.tool-sidebar { flex-basis: 310px; }
+.tool-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 16px 0 13px; padding: 4px; background: #e3e3e3; border: 1px solid #d0d0d0; border-radius: 4px; }
+.tool-tabs button, .analyst-mode button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 30px; padding: 5px 6px; color: #5b5b5b; background: transparent; border: 1px solid transparent; border-radius: 3px; font: 500 11px Ubuntu, "Noto Sans SC", sans-serif; }
+.tool-tabs button.is-active, .analyst-mode button.is-active { color: #242424; background: #fff; border-color: #c9c9c9; box-shadow: 0 1px 1px rgba(0,0,0,.08); }
+.tool-panel { min-width: 0; }
+.analyst-panel { display: grid; gap: 10px; }
+.analyst-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 4px; background: #e3e3e3; border: 1px solid #d0d0d0; border-radius: 4px; }
+.analyst-file { display: flex; align-items: center; gap: 8px; min-height: 42px; padding: 9px; color: #5b5b5b; background: #fff; border: 1px dashed #bababa; border-radius: 4px; font-size: 11px; overflow: hidden; }
+.analyst-file span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.analyst-file svg { flex: 0 0 auto; color: #e95420; }
+.analyst-note { margin: 0; color: #6b6b6b; font-size: 11px; line-height: 1.48; }
+@media (max-width: 760px) { .tool-sidebar { width: min(310px, 90vw); } }

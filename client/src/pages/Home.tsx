@@ -76,9 +76,10 @@ export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const workflowFileRef = useRef<HTMLInputElement>(null);
   const profileFileRef = useRef<HTMLInputElement>(null);
+  const analystFileRef = useRef<HTMLInputElement>(null);
   const [engineReady, setEngineReady] = useState(false);
   const [workflowOpen, setWorkflowOpen] = useState(true);
-  const [profileOpen, setProfileOpen] = useState(false);
+  const [toolTab, setToolTab] = useState<"workflow" | "profiles" | "analyst">("workflow");
   const [recording, setRecording] = useState(false);
   const [workflowName, setWorkflowName] = useState("未命名流程");
   const [events, setEvents] = useState<WorkflowEvent[]>([]);
@@ -89,6 +90,8 @@ export default function Home() {
   const [choices, setChoices] = useState<Partial<Record<EngineField, Choice[]>>>({});
   const [tweaks, setTweaks] = useState<boolean[]>(TWEAK_LABELS.map(() => false));
   const [previewSrc, setPreviewSrc] = useState("");
+  const [analysisMode, setAnalysisMode] = useState<"new" | "existing">("new");
+  const [analysisFileName, setAnalysisFileName] = useState("");
 
   const engineDocument = () => iframeRef.current?.contentDocument || null;
   const engineWindow = () => iframeRef.current?.contentWindow || null;
@@ -223,6 +226,43 @@ export default function Home() {
     window.setTimeout(refreshPreview, 250);
   };
 
+  const setAnalysisEngineMode = (mode: "new" | "existing") => {
+    const documentRef = engineDocument();
+    const windowRef = engineWindow();
+    const target = documentRef?.querySelectorAll("#box-twk input[name=newOrLoad]")[mode === "new" ? 0 : 1] as HTMLInputElement | undefined;
+    if (!target || !windowRef) return;
+    target.checked = true;
+    const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
+    target.dispatchEvent(new IframeEvent("change", { bubbles: true }));
+    setAnalysisMode(mode);
+  };
+
+  const importLutForAnalysis = (file?: File) => {
+    if (!file) return;
+    const documentRef = engineDocument();
+    const windowRef = engineWindow();
+    const target = documentRef?.querySelector("#box-twk input[type=file]") as HTMLInputElement | null;
+    if (!target || !windowRef) { setMessage("LUT 解析引擎尚未就绪"); return; }
+    const IframeDataTransfer = (windowRef as unknown as { DataTransfer: typeof DataTransfer }).DataTransfer;
+    const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
+    const transfer = new IframeDataTransfer();
+    transfer.items.add(file);
+    Object.defineProperty(target, "files", { configurable: true, value: transfer.files });
+    target.dispatchEvent(new IframeEvent("change", { bubbles: true }));
+    setAnalysisFileName(file.name);
+    setMessage(`已导入待解析 LUT：${file.name}`);
+    window.setTimeout(hydrateEngine, 320);
+  };
+
+  const runLutAnalysis = () => {
+    const documentRef = engineDocument();
+    const candidate = Array.from(documentRef?.querySelectorAll("#box-twk input[type=button]") || []).find((node) => /Analyse/i.test((node as HTMLInputElement).value)) as HTMLInputElement | undefined;
+    if (!candidate) { setMessage("请先导入可解析的 LUT 文件"); return; }
+    candidate.click();
+    setMessage("正在解析 LUT 并同步色彩信息");
+    window.setTimeout(() => { hydrateEngine(); refreshPreview(); setMessage("LUT 解析已完成，结果已同步到主计算器"); }, 900);
+  };
+
   const saveWorkflow = () => {
     if (!events.length) { setMessage("请先调整参数，再保存流程"); return; }
     const workflow: WorkflowFile = { version: 1, name: workflowName.trim() || "未命名流程", createdAt: new Date().toISOString(), events };
@@ -262,19 +302,16 @@ export default function Home() {
     <main className="apple-app-shell" aria-label="LUTCalc 中文计算器工作台">
       <header className="apple-topbar"><div className="apple-brand"><span />LUTCalc 中文计算器</div><div>主工作台</div><div className="apple-status"><i />{message}</div></header>
       <div className="apple-workspace">
-        <aside className={`workflow-sidebar ${workflowOpen ? "is-open" : "is-closed"}`} aria-label="工作流程">
-          <div className="workflow-sidebar-head"><div><span className="eyebrow">工具</span><h1><Workflow size={17} />工作流程</h1></div><button className="icon-button" onClick={() => setWorkflowOpen(false)} aria-label="关闭工作流程"><X size={16} /></button></div>
-          <p className="workflow-intro">录制当前计算器中的参数调整，并将它们保存为可重复执行的流程。</p>
-          <label className="workflow-name-label">流程名称<input value={workflowName} onChange={(event) => setWorkflowName(event.target.value)} /></label>
-          <div className="workflow-record-row"><button className={`apple-button ${recording ? "is-recording" : "is-primary"}`} onClick={() => { setRecording((value) => !value); setMessage(recording ? "已停止记录" : "正在记录参数操作"); }}>{recording ? <Square size={14} /> : <span className="record-dot" />}{recording ? "停止记录" : "开始记录"}</button><span className="workflow-count">{events.length} 步</span></div>
-          <div className="workflow-actions"><button className="apple-button" onClick={saveWorkflow}><Save size={14} />保存流程</button><button className="apple-button" onClick={() => exportWorkflow()}><Download size={14} />导出文件</button><button className="apple-button" onClick={() => workflowFileRef.current?.click()}><Upload size={14} />导入文件</button><button className="apple-button is-quiet" onClick={() => { setEvents([]); setMessage("已清空当前流程"); }}><Trash2 size={14} />清空当前</button><input ref={workflowFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importWorkflow(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div>
-          <div className="workflow-list-head"><span>已保存流程</span><span>{savedWorkflows.length}</span></div>
-          <div className="workflow-list">{savedWorkflows.length === 0 && <div className="workflow-empty"><Plus size={16} />保存后会出现在这里</div>}{savedWorkflows.map((workflow) => <article className="workflow-item" key={`${workflow.name}-${workflow.createdAt}`}><div className="workflow-item-title"><FolderOpen size={14} /><strong>{workflow.name}</strong></div><div className="workflow-item-meta">{workflow.events.length} 步操作</div><div className="workflow-item-actions"><button onClick={() => replayWorkflow(workflow)}><Play size={13} />执行</button><button onClick={() => exportWorkflow(workflow)}><Download size={13} />导出</button></div></article>)}</div>
+        <aside className={`workflow-sidebar tool-sidebar ${workflowOpen ? "is-open" : "is-closed"}`} aria-label="工具中心">
+          <div className="workflow-sidebar-head"><div><span className="eyebrow">工具中心</span><h1><SlidersHorizontal size={17} />工作台工具</h1></div><button className="icon-button" onClick={() => setWorkflowOpen(false)} aria-label="关闭工具中心"><X size={16} /></button></div>
+          <div className="tool-tabs" role="tablist"><button className={toolTab === "workflow" ? "is-active" : ""} onClick={() => setToolTab("workflow")}><Workflow size={14} />流程</button><button className={toolTab === "profiles" ? "is-active" : ""} onClick={() => setToolTab("profiles")}><Settings2 size={14} />曲线</button><button className={toolTab === "analyst" ? "is-active" : ""} onClick={() => setToolTab("analyst")}><FileJson size={14} />解析</button></div>
+          {toolTab === "workflow" && <div className="tool-panel"><p className="workflow-intro">录制当前计算器中的参数调整，并将它们保存为可重复执行的流程。</p><label className="workflow-name-label">流程名称<input value={workflowName} onChange={(event) => setWorkflowName(event.target.value)} /></label><div className="workflow-record-row"><button className={`apple-button ${recording ? "is-recording" : "is-primary"}`} onClick={() => { setRecording((value) => !value); setMessage(recording ? "已停止记录" : "正在记录参数操作"); }}>{recording ? <Square size={14} /> : <span className="record-dot" />}{recording ? "停止记录" : "开始记录"}</button><span className="workflow-count">{events.length} 步</span></div><div className="workflow-actions"><button className="apple-button" onClick={saveWorkflow}><Save size={14} />保存流程</button><button className="apple-button" onClick={() => exportWorkflow()}><Download size={14} />导出文件</button><button className="apple-button" onClick={() => workflowFileRef.current?.click()}><Upload size={14} />导入文件</button><button className="apple-button is-quiet" onClick={() => { setEvents([]); setMessage("已清空当前流程"); }}><Trash2 size={14} />清空当前</button><input ref={workflowFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importWorkflow(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div><div className="workflow-list-head"><span>已保存流程</span><span>{savedWorkflows.length}</span></div><div className="workflow-list">{savedWorkflows.length === 0 && <div className="workflow-empty"><Plus size={16} />保存后会出现在这里</div>}{savedWorkflows.map((workflow) => <article className="workflow-item" key={`${workflow.name}-${workflow.createdAt}`}><div className="workflow-item-title"><FolderOpen size={14} /><strong>{workflow.name}</strong></div><div className="workflow-item-meta">{workflow.events.length} 步操作</div><div className="workflow-item-actions"><button onClick={() => replayWorkflow(workflow)}><Play size={13} />执行</button><button onClick={() => exportWorkflow(workflow)}><Download size={13} />导出</button></div></article>)}</div></div>}
+          {toolTab === "profiles" && <div className="tool-panel"><p className="profile-help">导入个人或官方的日志 / 伽马配置。配置独立保存，可在不同流程中复用。</p><div className="profile-actions"><button className="apple-button" onClick={() => profileFileRef.current?.click()}><Upload size={14} />导入配置</button><input ref={profileFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importProfile(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div><div className="workflow-list-head"><span>已导入配置</span><span>{profiles.length}</span></div><div className="profile-list">{profiles.length === 0 && <div className="profile-empty"><FileJson size={16} />等待导入配置文件</div>}{profiles.map((profile) => <article className="profile-item" key={profile.id}><div className="profile-item-title"><CheckCircle2 size={14} /><strong>{profile.name}</strong></div><div className="profile-item-meta">{profile.kind === "log" ? "日志曲线" : "伽马曲线"} · {profile.curve.type === "samples" ? `${profile.curve.samples?.length ?? 0} 个采样点` : "公式曲线"}</div><div className="profile-item-actions"><button onClick={() => exportProfile(profile)}><Download size={13} />导出</button><button onClick={() => { persistProfiles(profiles.filter((item) => item.id !== profile.id)); setMessage(`已删除配置：${profile.name}`); }}><Trash2 size={13} />删除</button></div></article>)}</div></div>}
+          {toolTab === "analyst" && <div className="tool-panel analyst-panel"><p className="profile-help">导入已有 LUT，使用原始 LUTAnalyst 读取其曲线和色彩信息，并同步到主计算器。</p><div className="analyst-mode"><button className={analysisMode === "new" ? "is-active" : ""} onClick={() => setAnalysisEngineMode("new")}>解析新 LUT</button><button className={analysisMode === "existing" ? "is-active" : ""} onClick={() => setAnalysisEngineMode("existing")}>载入已解析 LUT</button></div><div className="analyst-file"><FileJson size={17} /><span>{analysisFileName || "尚未选择 LUT 文件"}</span></div><button className="apple-button" onClick={() => analystFileRef.current?.click()}><Upload size={14} />选择 LUT 文件</button><input ref={analystFileRef} type="file" accept=".cube,.3dl,.lut,.txt,.xml,.bin" hidden onChange={(event) => { importLutForAnalysis(event.target.files?.[0]); event.currentTarget.value = ""; }} /><button className="apple-button is-primary" disabled={!analysisFileName} onClick={runLutAnalysis}><WandSparkles size={14} />开始解析</button><p className="analyst-note">解析完成后，输入 / 输出色彩信息会同步到主计算器；可继续生成新的 LUT。</p></div>}
         </aside>
 
         <section className="native-calculator-pane">
-          {!workflowOpen && <button className="workflow-reopen" onClick={() => setWorkflowOpen(true)}><Workflow size={15} />工作流程</button>}
-          {!profileOpen && <button className="profile-reopen" onClick={() => setProfileOpen(true)}><Settings2 size={15} />曲线配置</button>}
+          {!workflowOpen && <button className="workflow-reopen" onClick={() => setWorkflowOpen(true)}><SlidersHorizontal size={15} />工具中心</button>}
           <div className="native-calculator-head"><div><span className="eyebrow">LUT 转换</span><h2>主计算器</h2><p>所有参数直接驱动兼容计算引擎；旧界面不再显示。</p></div><div className={`engine-indicator ${engineReady ? "is-ready" : ""}`}><i />{engineReady ? "引擎已连接" : "正在连接"}</div></div>
           <div className="native-calculator-grid">
             <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
@@ -286,7 +323,6 @@ export default function Home() {
           <iframe ref={iframeRef} className="engine-frame" src="/lutcalc/index.html" title="LUTCalc 兼容计算引擎" aria-hidden="true" onLoad={() => { hydrateEngine(); window.setTimeout(hydrateEngine, 720); }} />
         </section>
 
-        <aside className={`profile-sidebar ${profileOpen ? "is-open" : "is-closed"}`} aria-label="曲线配置"><div className="workflow-sidebar-head"><div><span className="eyebrow">工具</span><h2><Settings2 size={17} />曲线配置</h2></div><button className="icon-button" onClick={() => setProfileOpen(false)} aria-label="关闭曲线配置"><X size={16} /></button></div><p className="profile-help">导入个人或官方的日志 / 伽马配置。配置单独管理，不会混入工作流程。</p><div className="profile-actions"><button className="apple-button" onClick={() => profileFileRef.current?.click()}><Upload size={14} />导入配置</button><input ref={profileFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importProfile(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div><div className="workflow-list-head"><span>已导入配置</span><span>{profiles.length}</span></div><div className="profile-list">{profiles.length === 0 && <div className="profile-empty"><FileJson size={16} />等待导入配置文件</div>}{profiles.map((profile) => <article className="profile-item" key={profile.id}><div className="profile-item-title"><CheckCircle2 size={14} /><strong>{profile.name}</strong></div><div className="profile-item-meta">{profile.kind === "log" ? "日志曲线" : "伽马曲线"} · {profile.curve.type === "samples" ? `${profile.curve.samples?.length ?? 0} 个采样点` : "公式曲线"}</div><div className="profile-item-actions"><button onClick={() => exportProfile(profile)}><Download size={13} />导出</button><button onClick={() => { persistProfiles(profiles.filter((item) => item.id !== profile.id)); setMessage(`已删除配置：${profile.name}`); }}><Trash2 size={13} />删除</button></div></article>)}</div></aside>
       </div>
     </main>
   );

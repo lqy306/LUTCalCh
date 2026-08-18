@@ -1,0 +1,34 @@
+const targets = await fetch('http://127.0.0.1:9222/json').then((response) => response.json());
+const target = targets.find((item) => typeof item.url === 'string' && item.url.includes('3000-') && item.type === 'page');
+if (!target) throw new Error('未找到 LUTCalc 页面');
+
+const socket = new WebSocket(target.webSocketDebuggerUrl);
+let id = 1;
+const pending = new Map();
+socket.addEventListener('message', (event) => { const message = JSON.parse(event.data); const resolve = pending.get(message.id); if (resolve) { pending.delete(message.id); resolve(message); } });
+await new Promise((resolve, reject) => { socket.addEventListener('open', resolve, { once: true }); socket.addEventListener('error', reject, { once: true }); });
+const command = (method, params = {}) => new Promise((resolve, reject) => { const currentId = id++; pending.set(currentId, (message) => message.error ? reject(new Error(message.error.message)) : resolve(message.result)); socket.send(JSON.stringify({ id: currentId, method, params })); });
+const response = await command('Runtime.evaluate', { expression: `(async () => {
+  const tab = Array.from(document.querySelectorAll('button')).find((button) => button.textContent?.trim() === '解析');
+  tab?.click();
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  const targetInput = document.querySelector('input[accept*=".cube"]');
+  if (!targetInput) return { ok: false, reason: '未找到原生 LUT 文件输入' };
+  const cube = 'TITLE "回归测试"\\nLUT_3D_SIZE 2\\nDOMAIN_MIN 0.0 0.0 0.0\\nDOMAIN_MAX 1.0 1.0 1.0\\n0 0 0\\n0 0 1\\n0 1 0\\n0 1 1\\n1 0 0\\n1 0 1\\n1 1 0\\n1 1 1\\n';
+  const file = new File([cube], 'bridge-test.cube', { type: 'text/plain' });
+  const transfer = new DataTransfer(); transfer.items.add(file);
+  Object.defineProperty(targetInput, 'files', { configurable: true, value: transfer.files });
+  targetInput.dispatchEvent(new Event('change', { bubbles: true }));
+  await new Promise((resolve) => setTimeout(resolve, 600));
+  const engineName = document.querySelector('iframe')?.contentDocument?.querySelector('#box-twk input[type=file]')?.files?.[0]?.name;
+  const visibleName = Array.from(document.querySelectorAll('.analyst-file span')).map((node) => node.textContent).find(Boolean);
+  const analyse = Array.from(document.querySelectorAll('button')).find((button) => button.textContent?.includes('开始解析'));
+  analyse?.click();
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+  const buttons = Array.from(document.querySelector('iframe')?.contentDocument?.querySelectorAll('#box-twk input[type=button]') || []).map((node) => node.value).filter((value) => /Analyse|LUT|Cube|Binary/i.test(value));
+  const analystReady = buttons.some((value) => /Analyse/i.test(value));
+  return { ok: engineName === 'bridge-test.cube' && visibleName === 'bridge-test.cube' && analystReady, engineName, visibleName, buttons };
+})()`, awaitPromise: true, returnByValue: true });
+socket.close();
+console.log(JSON.stringify(response.result.value));
+if (!response.result.value?.ok) process.exitCode = 1;
