@@ -20,6 +20,12 @@
 
 页面底部“关于与许可”菜单已经按原生 `details` 交互测试：展开后会完整显示“基于原版 LUTCalc 的界面复刻与工作台扩展”“GNU GPL-2.0”“由 Manus 开发”以及“可能不稳定、不保证持续更新、支持或兼容性”的说明。
 
+## 独立原版页面移动端回归
+
+在 `/lutcalc/index.html` 的 390px 宽度视图中，旧移动布局会把相机型号、CineEI ISO 与原生 ISO 的定位规则叠加，导致文本和数值输入框重叠；曲线与图表本身单独位于上方。该问题发生在独立原版页面，不是主工作台内的 `?embed=adjustments` 模式。修复应仅为独立页面补充现代单列布局覆盖，同时保留嵌入模式已经稳定的专用规则。
+
+运行时检查确认 `#box-cam` 只有一个原始 `fieldset`，其中依次包含相机品牌 `select`、型号 `select`、隐藏输入、原生 ISO `label`、CineEI `div`（内含 `.iso-input`）及挡位修正 `div`（内含 `.shift-input`）。这些节点没有稳定的业务类名或内联样式；移动端补丁应通过 `#box-cam fieldset` 的直接子节点顺序、`.iso-input` 和 `.shift-input` 进行 scoped 覆盖，强制回到单列 grid/flow。
+
 ## 模块顺序
 
 原版的工作区依次组织：白平衡、PSST-CDL、ASC-CDL、多色调、高光色域、膝点、黑电平 / 高光电平、黑伽马、显示色彩空间转换、色域限制、伪色、LUTAnalyst。

@@ -416,3 +416,76 @@ html, body { background: #f5f5f7 !important; color: #1d1d1f !important; font-fam
 	vertical-align: middle !important;
 	accent-color: #e95420 !important;
 }
+
+/* 独立原版页面的窄屏回流：覆盖上游旧版 fixed/absolute 布局；不影响 ?embed=adjustments 的工作台专用视图。 */
+@media only screen and (max-width: 40em) {
+	html:not(.embed-adjustments),
+	html:not(.embed-adjustments) body {
+		position: static !important;
+		min-width: 0 !important;
+		max-width: none !important;
+		width: auto !important;
+		height: auto !important;
+		margin: 0 !important;
+		padding: 12px !important;
+		overflow-x: hidden !important;
+	}
+	html:not(.embed-adjustments) #main,
+	html:not(.embed-adjustments) #lutcalcform,
+	html:not(.embed-adjustments) #left,
+	html:not(.embed-adjustments) #right,
+	html:not(.embed-adjustments) #box-cam,
+	html:not(.embed-adjustments) #box-gam,
+	html:not(.embed-adjustments) #box-lut,
+	html:not(.embed-adjustments) #box-twk {
+		float: none !important;
+		position: static !important;
+		inset: auto !important;
+		width: 100% !important;
+		height: auto !important;
+		min-width: 0 !important;
+		margin: 0 0 10px !important;
+		padding: 0 !important;
+		overflow: visible !important;
+	}
+	html:not(.embed-adjustments) #lutcalcform {
+		display: flex !important;
+		flex-direction: column !important;
+		gap: 10px !important;
+	}
+	html:not(.embed-adjustments) #box-cam fieldset,
+	html:not(.embed-adjustments) #box-gam fieldset {
+		display: block !important;
+		width: 100% !important;
+		min-width: 0 !important;
+		margin: 0 !important;
+		padding: 14px !important;
+		text-align: left !important;
+	}
+	html:not(.embed-adjustments) #box-cam fieldset > *,
+	html:not(.embed-adjustments) #box-gam fieldset > * {
+		float: none !important;
+		position: static !important;
+		display: block !important;
+		box-sizing: border-box !important;
+		width: 100% !important;
+		max-width: 100% !important;
+		min-height: 0 !important;
+		margin: 0 0 10px !important;
+		padding: 0 !important;
+		transform: none !important;
+	}
+	html:not(.embed-adjustments) #box-cam fieldset > input[type="hidden"],
+	html:not(.embed-adjustments) #box-gam fieldset > input[type="hidden"] { display: none !important; }
+	html:not(.embed-adjustments) #box-cam fieldset > label,
+	html:not(.embed-adjustments) #box-gam fieldset > label { padding: 4px 0 !important; }
+	html:not(.embed-adjustments) #box-cam .iso-input,
+	html:not(.embed-adjustments) #box-cam .shift-input,
+	html:not(.embed-adjustments) #box-gam input,
+	html:not(.embed-adjustments) #box-gam select {
+		box-sizing: border-box !important;
+		width: 100% !important;
+		max-width: 100% !important;
+		margin-top: 5px !important;
+	}
+}
