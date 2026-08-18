@@ -562,3 +562,17 @@ html[data-workbench-mode="dark"] { color-scheme: dark; }
 .theme-mode-button:hover { background: color-mix(in srgb, var(--theme-topbar-text) 18%, transparent); }
 .theme-mode-button:active { transform: scale(.97); }
 @media (max-width: 760px) { .topbar-actions { gap: 7px; } .theme-controls > svg, .theme-mode-button span { display: none; } .theme-controls select { max-width: 86px; } .apple-status { max-width: 86px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
+
+/* 曲线预览是数据可读性区域，永远使用不透明白底，不随主题反转。 */
+.preview-surface,
+.preview-surface img,
+.preview-surface canvas,
+.curve-preview,
+.curve-preview canvas {
+  background: #ffffff !important;
+}
+.preview-surface img,
+.preview-surface canvas,
+.curve-preview canvas {
+  mix-blend-mode: normal !important;
+}

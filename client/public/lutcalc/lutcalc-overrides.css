@@ -647,3 +647,55 @@ html.embed-adjustments #box-twk .tweak input[type="radio"] {
 	padding: 0 !important;
 	accent-color: var(--theme-accent, #e95420) !important;
 }
+
+/*
+ * 深色模式下不能继续使用浏览器默认的白色复选框。
+ * 统一改为工作台控件表面，并保留原版 input 的事件语义。
+ */
+html.embed-adjustments #box-twk input[type="checkbox"],
+html.embed-adjustments #box-twk input[type="radio"] {
+	appearance: none !important;
+	-webkit-appearance: none !important;
+	box-sizing: border-box !important;
+	width: 18px !important;
+	height: 18px !important;
+	min-width: 18px !important;
+	min-height: 18px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: var(--theme-control, #3a3a41) !important;
+	border: 2px solid var(--theme-border, #4b4b52) !important;
+	border-radius: var(--theme-radius, 4px) !important;
+	box-shadow: none !important;
+	vertical-align: middle !important;
+	cursor: pointer !important;
+}
+html.embed-adjustments #box-twk input[type="radio"] {
+	border-radius: 50% !important;
+}
+html.embed-adjustments #box-twk input[type="checkbox"]:checked,
+html.embed-adjustments #box-twk input[type="radio"]:checked {
+	background-color: var(--theme-accent, #ff784b) !important;
+	border-color: var(--theme-accent, #ff784b) !important;
+}
+html.embed-adjustments #box-twk input[type="checkbox"]:checked {
+	background-image: linear-gradient(45deg, transparent 44%, var(--theme-topbar-text, #fff) 44%, var(--theme-topbar-text, #fff) 59%, transparent 59%), linear-gradient(-45deg, transparent 53%, var(--theme-topbar-text, #fff) 53%, var(--theme-topbar-text, #fff) 67%, transparent 67%) !important;
+	background-position: 3px 7px, 8px 3px !important;
+	background-size: 7px 7px, 7px 10px !important;
+	background-repeat: no-repeat !important;
+}
+html.embed-adjustments #box-twk input[type="radio"]:checked {
+	box-shadow: inset 0 0 0 4px var(--theme-card, #303036) !important;
+}
+html.embed-adjustments #box-twk input:focus-visible,
+html.embed-adjustments #box-twk select:focus-visible,
+html.embed-adjustments #box-twk button:focus-visible {
+	outline: 2px solid var(--theme-focus, rgba(255, 120, 75, .4)) !important;
+	outline-offset: 2px !important;
+}
+
+/* 原版布局在嵌入模式会留下空白占位条；删除后由统一卡片标题行承担层级。 */
+html.embed-adjustments #box-twk > div:empty,
+html.embed-adjustments #box-twk > fieldset > div:empty {
+	display: none !important;
+}
