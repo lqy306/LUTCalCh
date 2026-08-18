@@ -1,0 +1,20 @@
+/* LUTCalc UI override — keep the original GPL-2.0 calculation engine untouched. */
+:root { --lc-ink:#24241f; --lc-paper:#f4f2ea; --lc-card:#fbfaf5; --lc-line:rgba(36,36,31,.16); --lc-sulfur:#e3f24f; --lc-cyan:#9ed9d4; }
+html, body { background: var(--lc-paper) !important; color: var(--lc-ink) !important; font-family: "DM Sans", Arial, sans-serif !important; }
+body { padding: 1.2rem !important; text-align: left !important; }
+#titlebar { max-width: 1180px; margin: 0 auto 1.4rem !important; padding: 1rem 1.2rem !important; background: var(--lc-ink) !important; color: var(--lc-paper) !important; text-align: left !important; font: 600 1.15rem/1.2 "Space Grotesk", sans-serif !important; letter-spacing: -.02em; border-left: 6px solid var(--lc-sulfur); box-shadow: 6px 6px 0 var(--lc-sulfur); }
+#version { color: var(--lc-sulfur) !important; font: 500 .7rem "IBM Plex Mono", monospace !important; margin-left: .75rem; }
+#main { max-width: 1180px; margin: 0 auto !important; }
+#javascriptwarning { padding: .75rem 1rem !important; color: #725000 !important; background: #fff6c8 !important; border: 1px solid #e6d673 !important; font-size: .75rem; }
+#javascriptwarning p { margin: 0 !important; }
+#lutcalcform { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: .75rem; align-items: start; }
+#lutcalcform > section, #lutcalcform > div, #lutcalcform > fieldset { background: var(--lc-card) !important; border: 1px solid var(--lc-line) !important; border-radius: 2px !important; padding: .85rem !important; box-shadow: 3px 3px 0 rgba(36,36,31,.06) !important; }
+#lutcalcform h2, #lutcalcform h3, #lutcalcform h4 { color: var(--lc-ink) !important; text-align: left !important; font-family: "Space Grotesk", sans-serif !important; letter-spacing: -.02em; border-bottom: 2px solid var(--lc-sulfur); padding-bottom: .45rem; margin-bottom: .7rem !important; }
+#lutcalcform label { color: rgba(36,36,31,.72) !important; font: 500 .72rem/1.35 "IBM Plex Mono", monospace !important; }
+#lutcalcform input, #lutcalcform select, #lutcalcform textarea { min-height: 2rem; border: 1px solid var(--lc-line) !important; border-radius: 2px !important; background: #fffef9 !important; color: var(--lc-ink) !important; padding: .35rem .5rem !important; box-shadow: none !important; }
+#lutcalcform input:focus, #lutcalcform select:focus, #lutcalcform textarea:focus { outline: 2px solid var(--lc-sulfur) !important; outline-offset: 1px; }
+#lutcalcform button, #lutcalcform input[type="button"], #lutcalcform input[type="submit"] { border: 1px solid var(--lc-ink) !important; border-radius: 2px !important; background: var(--lc-ink) !important; color: var(--lc-paper) !important; padding: .5rem .8rem !important; font: 600 .72rem "IBM Plex Mono", monospace !important; transition: transform .16s ease, background .16s ease, color .16s ease !important; }
+#lutcalcform button:hover, #lutcalcform input[type="button"]:hover, #lutcalcform input[type="submit"]:hover { background: var(--lc-sulfur) !important; color: var(--lc-ink) !important; transform: translateY(-1px); }
+#lutcalcform input[type="range"] { accent-color: #8fa92f; padding: 0 !important; }
+#footer { max-width: 1180px; margin: 1.5rem auto 0 !important; color: rgba(36,36,31,.5) !important; text-align: right !important; font: .65rem "IBM Plex Mono", monospace !important; }
+@media (max-width: 700px) { body { padding: .7rem !important; } #titlebar { font-size: 1rem !important; box-shadow: 4px 4px 0 var(--lc-sulfur); } #lutcalcform { display: block; } #lutcalcform > section, #lutcalcform > div, #lutcalcform > fieldset { margin-bottom: .7rem; } }
