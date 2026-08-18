@@ -1,5 +1,11 @@
-/* 设计方向：统一 Apple 工作台。所有可见控件使用同一 React 参数卡与 Apple 控件系统；原始 LutCalc iframe 仅作为离屏同源计算、预览与导出兼容引擎。 */
-/* Ubuntu 工作台：主计算器保持低圆角、石墨面板与 Ubuntu 橙强调；“调整项”直接呈现同源原版模块栈，保证交互结构不被简化。 */
+/*
+ * 设计方向：统一 Ubuntu 工作台。
+ * 所有可见控件使用同一 React 参数卡与 Ubuntu 控件系统；原始 LutCalc iframe
+ * 仅作为同源计算、预览、导出和调整项兼容引擎，不承担第二套品牌界面。
+ * 主计算器保持低圆角、石墨面板与 Ubuntu 橙强调。
+ * 调整项直接呈现同源原版模块栈，保证交互结构不被简化。
+ * 本文件遵循 BSD Allman 大括号风格；复杂桥接逻辑使用中文注释说明边界。
+ */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CheckCircle2,
@@ -51,28 +57,108 @@ const EMPTY_STATE: Record<EngineField, string> = {
   cameraMaker: "", cameraModel: "", cineEI: "", stopShift: "", recGammaMaker: "", recGamma: "", recGamutMaker: "", recGamut: "", outGammaMaker: "", outGamma: "", outGamutMaker: "", outGamut: "", title: "", lutFormat: "", hardClip: "",
 };
 
-function normalizeText(value: string) { return value.replace(/\s+/g, " ").trim(); }
-function readWorkflows(): WorkflowFile[] { try { const value = JSON.parse(localStorage.getItem(WORKFLOW_KEY) || "[]"); return Array.isArray(value) ? value : []; } catch { return []; } }
-function readProfiles(): LogGammaProfile[] { try { const value = JSON.parse(localStorage.getItem(PROFILE_KEY) || "[]"); return Array.isArray(value) ? value : []; } catch { return []; } }
-function validateProfile(value: unknown): value is LogGammaProfile {
-  if (!value || typeof value !== "object") return false;
+function normalizeText(value: string)
+{
+  return value.replace(/\s+/g, " ").trim();
+}
+
+/** 从本地存储恢复流程；损坏数据只能回退为空数组，不能阻塞主计算器。 */
+function readWorkflows(): WorkflowFile[]
+{
+  try
+  {
+    const value = JSON.parse(localStorage.getItem(WORKFLOW_KEY) || "[]");
+    return Array.isArray(value) ? value : [];
+  }
+  catch
+  {
+    return [];
+  }
+}
+
+/** 从本地存储恢复用户配置；独立配置仍只保存在本地，不自动注册到引擎。 */
+function readProfiles(): LogGammaProfile[]
+{
+  try
+  {
+    const value = JSON.parse(localStorage.getItem(PROFILE_KEY) || "[]");
+    return Array.isArray(value) ? value : [];
+  }
+  catch
+  {
+    return [];
+  }
+}
+function validateProfile(value: unknown): value is LogGammaProfile
+{
+  if (!value || typeof value !== "object")
+  {
+    return false;
+  }
+
   const profile = value as Partial<LogGammaProfile>;
-  if (profile.schema !== "lutcalc-log-gamma-profile" || profile.version !== 1 || !profile.id || !profile.name) return false;
-  if (profile.kind !== "log" && profile.kind !== "gamma") return false;
-  if (!profile.curve || (profile.curve.type !== "samples" && profile.curve.type !== "formula")) return false;
-  if (profile.curve.type === "samples" && (!Array.isArray(profile.curve.samples) || profile.curve.samples.length < 2)) return false;
+
+  if (profile.schema !== "lutcalc-log-gamma-profile" || profile.version !== 1 || !profile.id || !profile.name)
+  {
+    return false;
+  }
+
+  if (profile.kind !== "log" && profile.kind !== "gamma")
+  {
+    return false;
+  }
+
+  if (!profile.curve || (profile.curve.type !== "samples" && profile.curve.type !== "formula"))
+  {
+    return false;
+  }
+
+  if (profile.curve.type === "samples" && (!Array.isArray(profile.curve.samples) || profile.curve.samples.length < 2))
+  {
+    return false;
+  }
+
   return !(profile.curve.type === "formula" && !profile.curve.encode && !profile.curve.decode);
 }
-function elementLabel(element: Element) { return normalizeText(element.closest("label")?.textContent || element.getAttribute("aria-label") || element.getAttribute("title") || element.parentElement?.textContent || element.tagName); }
-function elementSelector(element: Element) {
+
+function elementLabel(element: Element)
+{
+  return normalizeText(
+    element.closest("label")?.textContent ||
+    element.getAttribute("aria-label") ||
+    element.getAttribute("title") ||
+    element.parentElement?.textContent ||
+    element.tagName,
+  );
+}
+
+function elementSelector(element: Element)
+{
   const html = element as HTMLElement;
   const workflowId = html.getAttribute("data-lutcalc-workflow-id");
-  if (workflowId) return `[data-lutcalc-workflow-id="${workflowId}"]`;
-  if (html.id) return `#${html.id}`;
+
+  if (workflowId)
+  {
+    return `[data-lutcalc-workflow-id="${workflowId}"]`;
+  }
+
+  if (html.id)
+  {
+    return `#${html.id}`;
+  }
+
   return html.tagName.toLowerCase();
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) { return <label className="native-field"><span>{label}</span>{children}</label>; }
+function Field({ label, children }: { label: string; children: React.ReactNode })
+{
+  return (
+    <label className="native-field">
+      <span>{label}</span>
+      {children}
+    </label>
+  );
+}
 
 export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);

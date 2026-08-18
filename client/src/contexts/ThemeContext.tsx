@@ -2,7 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 type Theme = "light" | "dark";
 
-interface ThemeContextType {
+interface ThemeContextType
+{
   theme: Theme;
   toggleTheme?: () => void;
   switchable: boolean;
@@ -10,41 +11,57 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-interface ThemeProviderProps {
+interface ThemeProviderProps
+{
   children: React.ReactNode;
   defaultTheme?: Theme;
   switchable?: boolean;
 }
 
+/**
+ * 提供基础明暗模式上下文。
+ * 工作台的完整主题由 themeRegistry 负责；这里仅保留模板级兼容接口。
+ */
 export function ThemeProvider({
   children,
   defaultTheme = "light",
   switchable = false,
-}: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (switchable) {
+}: ThemeProviderProps)
+{
+  const [theme, setTheme] = useState<Theme>(() =>
+  {
+    if (switchable)
+    {
       const stored = localStorage.getItem("theme");
       return (stored as Theme) || defaultTheme;
     }
+
     return defaultTheme;
   });
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     const root = document.documentElement;
-    if (theme === "dark") {
+
+    if (theme === "dark")
+    {
       root.classList.add("dark");
-    } else {
+    }
+    else
+    {
       root.classList.remove("dark");
     }
 
-    if (switchable) {
+    if (switchable)
+    {
       localStorage.setItem("theme", theme);
     }
   }, [theme, switchable]);
 
   const toggleTheme = switchable
-    ? () => {
-        setTheme(prev => (prev === "light" ? "dark" : "light"));
+    ? () =>
+      {
+        setTheme((previous) => (previous === "light" ? "dark" : "light"));
       }
     : undefined;
 
@@ -55,10 +72,14 @@ export function ThemeProvider({
   );
 }
 
-export function useTheme() {
+export function useTheme()
+{
   const context = useContext(ThemeContext);
-  if (!context) {
+
+  if (!context)
+  {
     throw new Error("useTheme must be used within ThemeProvider");
   }
+
   return context;
 }

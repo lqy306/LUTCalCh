@@ -490,66 +490,160 @@ html, body { background: #f5f5f7 !important; color: #1d1d1f !important; font-fam
 		}
 }
 
-/* 工作台主题桥接：外层将 --theme-* 令牌同步至同源 iframe；本覆盖只改变调整项外观，不触及原版计算逻辑。 */
+/*
+ * 工作台主题桥接：调整项必须复用外层原生卡片的主题令牌。
+ * 这里只覆盖显示层，不修改原版计算逻辑、事件监听和模块折叠状态。
+ */
 html.embed-adjustments,
 html.embed-adjustments body,
 html.embed-adjustments #main,
 html.embed-adjustments #lutcalcform,
+html.embed-adjustments #left,
 html.embed-adjustments #box-twk {
-	color: var(--theme-text, #242424) !important;
+	box-sizing: border-box !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	color: var(--theme-text, #24241f) !important;
 	background: transparent !important;
-	font-family: var(--theme-font, Ubuntu, sans-serif) !important;
+	font-family: var(--theme-font, Ubuntu, "Noto Sans SC", sans-serif) !important;
 }
-html.embed-adjustments #box-twk fieldset {
-	color: var(--theme-text, #242424) !important;
-	background: var(--theme-card, #fff) !important;
-	border-color: var(--theme-border, #d6d6d6) !important;
-	border-radius: var(--theme-radius, 4px) !important;
-	box-shadow: var(--theme-shadow, none) !important;
+
+/* 嵌入模式不显示原版标题栏，避免出现第二套品牌头部。 */
+html.embed-adjustments #titlebar,
+html.embed-adjustments #version,
+html.embed-adjustments #footer,
+html.embed-adjustments #mob-status {
+	display: none !important;
 }
-html.embed-adjustments #tweak-top,
-html.embed-adjustments #tweaksholder,
-html.embed-adjustments #box-twk label,
-html.embed-adjustments #box-twk .twk,
-html.embed-adjustments #box-twk .twk-title {
-	color: var(--theme-text, #242424) !important;
-	font-family: var(--theme-font, Ubuntu, sans-serif) !important;
+
+/* 调整项外壳与原生 .param-card 保持相同的表面、边框和间距。 */
+html.embed-adjustments #box-twk > fieldset {
+	box-sizing: border-box !important;
+	width: 100% !important;
+	margin: 0 !important;
+	padding: 14px !important;
+	color: var(--theme-text, #24241f) !important;
+	background: var(--theme-card, #fbfaf5) !important;
+	border: 1px solid var(--theme-border, rgba(36, 36, 31, .16)) !important;
+	border-radius: var(--theme-radius, 2px) !important;
+	box-shadow: var(--theme-shadow, 3px 3px 0 rgba(36, 36, 31, .06)) !important;
 }
-html.embed-adjustments #tweak-top {
-	background: var(--theme-surface, #f7f7f7) !important;
-	border-color: var(--theme-border, #d6d6d6) !important;
+
+/* 原版调整项总开关改为主工作台的标题行。 */
+html.embed-adjustments #box-twk > fieldset > div:first-child {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	gap: 12px !important;
+	min-height: 28px !important;
+	margin: 0 0 12px !important;
+	padding: 0 0 10px !important;
+	color: var(--theme-text, #24241f) !important;
+	border-bottom: 1px solid var(--theme-border, rgba(36, 36, 31, .16)) !important;
+	font: 650 15px/1.1 var(--theme-font, Ubuntu, "Noto Sans SC", sans-serif) !important;
 }
-html.embed-adjustments #tweak-top,
-html.embed-adjustments #tweak-top * {
-	color: var(--theme-text, #242424) !important;
+html.embed-adjustments #box-twk > fieldset > div:first-child * {
+	color: inherit !important;
+	font: inherit !important;
 }
-html.embed-adjustments #tweaksholder .tweakholder {
-	color: var(--theme-text, #242424) !important;
-	background: var(--theme-surface, #f7f7f7) !important;
-	border-color: var(--theme-border, #d6d6d6) !important;
+html.embed-adjustments #box-twk > fieldset > div:first-child input[type="checkbox"] {
+	width: 18px !important;
+	height: 18px !important;
+	margin: 0 !important;
+	accent-color: var(--theme-accent, #e95420) !important;
 }
-html.embed-adjustments #tweaksholder .tweakholder label,
-html.embed-adjustments #tweaksholder .tweakholder p,
-html.embed-adjustments #tweaksholder .tweakholder span,
-html.embed-adjustments #tweaksholder .tweakholder div {
-	color: var(--theme-text, #242424) !important;
+
+/* 每个调整模块使用与原生调整开关相同的横向条目结构。 */
+html.embed-adjustments #box-twk > fieldset > div:nth-child(2) {
+	display: grid !important;
+	gap: 6px !important;
 }
-html.embed-adjustments #box-twk input:not([type="checkbox"]):not([type="radio"]),
-html.embed-adjustments #box-twk select,
-html.embed-adjustments #box-twk textarea,
-html.embed-adjustments #box-twk button {
-	color: var(--theme-text, #242424) !important;
-	background: var(--theme-input, #fff) !important;
-	border-color: var(--theme-border, #d6d6d6) !important;
-	border-radius: var(--theme-radius, 4px) !important;
-	font-family: var(--theme-font, Ubuntu, sans-serif) !important;
+html.embed-adjustments #box-twk .tweakholder {
+	box-sizing: border-box !important;
+	display: grid !important;
+	grid-template-columns: minmax(0, 1fr) auto !important;
+	align-items: center !important;
+	gap: 8px !important;
+	min-height: 34px !important;
+	margin: 0 !important;
+	padding: 7px 8px !important;
+	color: var(--theme-muted, rgba(36, 36, 31, .62)) !important;
+	background: var(--theme-control, #f1efe7) !important;
+	border: 1px solid var(--theme-border, rgba(36, 36, 31, .14)) !important;
+	border-radius: var(--theme-radius, 2px) !important;
+	box-shadow: none !important;
+	font: 600 10px/1.35 var(--theme-font, Ubuntu, "Noto Sans SC", sans-serif) !important;
 }
-html.embed-adjustments #box-twk input:focus,
-html.embed-adjustments #box-twk select:focus,
-html.embed-adjustments #box-twk textarea:focus,
-html.embed-adjustments #box-twk button:focus {
-	outline-color: var(--theme-focus, rgba(233,84,32,.34)) !important;
+html.embed-adjustments #box-twk .tweakholder-hide {
+	display: none !important;
+}
+html.embed-adjustments #box-twk .tweakholder > label:first-child,
+html.embed-adjustments #box-twk .tweakholder > label:first-child * {
+	min-width: 0 !important;
+	margin: 0 !important;
+	color: inherit !important;
+	font: inherit !important;
+}
+html.embed-adjustments #box-twk .tweakholder > input.twk-checkbox,
+html.embed-adjustments #box-twk .tweakholder > input.twk-checkbox-hide {
+	width: 16px !important;
+	height: 16px !important;
+	margin: 0 !important;
+	accent-color: var(--theme-accent, #e95420) !important;
+}
+
+/* 展开的参数区使用主工作台输入框的表面，而不是原版灰色背景。 */
+html.embed-adjustments #box-twk .tweakholder > .tweak,
+html.embed-adjustments #box-twk .tweakholder > .tweak-hide {
+	grid-column: 1 / -1 !important;
+	width: 100% !important;
+}
+html.embed-adjustments #box-twk .tweakholder > .tweak {
+	display: block !important;
+	margin: 2px 0 0 !important;
+	padding: 10px !important;
+	color: var(--theme-text, #24241f) !important;
+	background: var(--theme-surface, #f1efe7) !important;
+	border-top: 1px solid var(--theme-border, rgba(36, 36, 31, .16)) !important;
+	font: 400 11px/1.45 var(--theme-font, Ubuntu, "Noto Sans SC", sans-serif) !important;
+}
+html.embed-adjustments #box-twk .tweakholder > .tweak-hide,
+html.embed-adjustments #box-twk .twk-tab-hide,
+html.embed-adjustments #box-twk .twk-advanced-hide,
+html.embed-adjustments #box-twk .twk-button-hide {
+	display: none !important;
+}
+html.embed-adjustments #box-twk .tweak input,
+html.embed-adjustments #box-twk .tweak select,
+html.embed-adjustments #box-twk .tweak textarea,
+html.embed-adjustments #box-twk .tweak button,
+html.embed-adjustments #box-twk .tweak .twk-button {
+	box-sizing: border-box !important;
+	max-width: 100% !important;
+	min-height: 32px !important;
+	margin: 3px 5px 3px 0 !important;
+	padding: 7px 9px !important;
+	color: var(--theme-text, #24241f) !important;
+	background: var(--theme-input, #fffef9) !important;
+	border: 1px solid var(--theme-border, rgba(36, 36, 31, .2)) !important;
+	border-radius: var(--theme-radius, 2px) !important;
+	font: 500 12px/1.2 var(--theme-font, Ubuntu, "Noto Sans SC", sans-serif) !important;
+}
+html.embed-adjustments #box-twk .tweak input[type="button"],
+html.embed-adjustments #box-twk .tweak .twk-button {
+	color: var(--theme-primary-foreground, #f2f0e9) !important;
+	background: var(--theme-accent, #e95420) !important;
 	border-color: var(--theme-accent, #e95420) !important;
 }
-html.embed-adjustments #box-twk input[type="checkbox"],
-html.embed-adjustments #box-twk input[type="radio"] { accent-color: var(--theme-accent, #e95420) !important; }
+html.embed-adjustments #box-twk .tweak input[type="checkbox"],
+html.embed-adjustments #box-twk .tweak input[type="radio"] {
+	width: auto !important;
+	min-width: 0 !important;
+	height: auto !important;
+	min-height: 0 !important;
+	margin: 0 4px 0 0 !important;
+	padding: 0 !important;
+	accent-color: var(--theme-accent, #e95420) !important;
+}

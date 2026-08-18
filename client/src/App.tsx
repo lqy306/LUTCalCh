@@ -1,4 +1,7 @@
-/* Design philosophy: 胶片实验室 / 编辑型新粗野主义；应用入口只负责稳定承载工作台，不引入额外的后台式导航。 */
+/*
+ * 应用入口：只负责路由、错误边界、主题上下文和全局提示。
+ * 具体计算器工作台由 Home 页面承载，避免入口文件混入业务桥接逻辑。
+ */
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
@@ -7,7 +10,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 
-function Router() {
+function Router()
+{
   return (
     <Switch>
       <Route path="/" component={Home} />
@@ -17,7 +21,8 @@ function Router() {
   );
 }
 
-export default function App() {
+export default function App()
+{
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">

@@ -1,0 +1,19 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 2
+trim_trailing_whitespace = true
+
+[*.{ts,tsx,js,jsx}]
+# TypeScript/JavaScript 统一采用 BSD Allman：控制语句和函数的大括号另起一行。
+# 面向业务桥接、主题和页面代码的注释使用简体中文，说明原因而非重复代码。
+
+[*.css]
+indent_size = 2
+
+[*.json]
+indent_size = 2
