@@ -32,6 +32,8 @@
 
 版本化验证已完成：工作台 iframe 现加载 `/lutcalc/index.html?embed=adjustments&workspaceEmbed=20260818-2`；运行时再次确认 `embed-adjustments=true`、相机和伽马区域均为 `display:none`、调整项为 `display:block`。390px 工作台截图只显示调整项模块栈，不会回退为完整旧版参数区。
 
+为彻底阻断任何遗留工作区通过裸 `/lutcalc/index.html` 加载完整旧版，原版入口现在默认直接添加 `embed-adjustments`。工作台 iframe 同时升级到 `workspaceEmbed=20260818-3`。最终验证显示：主工作台在 390px 下保持原生参数卡与调整项栈；裸原版入口也只显示调整项，不再能呈现完整旧版计算器布局。
+
 ## 模块顺序
 
 原版的工作区依次组织：白平衡、PSST-CDL、ASC-CDL、多色调、高光色域、膝点、黑电平 / 高光电平、黑伽马、显示色彩空间转换、色域限制、伪色、LUTAnalyst。

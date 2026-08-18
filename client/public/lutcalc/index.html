@@ -14,11 +14,10 @@
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<link rel="stylesheet" type="text/css" href="lutcalc-overrides.css" />
 		<link rel="stylesheet" type="text/css" href="apple-control-system.css" />
-		<script>
-			if (new URLSearchParams(window.location.search).get("embed") === "adjustments") {
+			<script>
+				/* 原版代码仅作为同源计算与调整项模块使用；默认禁止渲染完整旧工作区。 */
 				document.documentElement.classList.add("embed-adjustments");
-			}
-		</script>
+			</script>
 		<title>LUTCalc · 中文 LUT 计算器</title>
 </head>
 <body id="body">
