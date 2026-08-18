@@ -261,3 +261,67 @@ h1 em { color: #647222; font-style: normal; }
   .workflow-sidebar.is-closed { width: 0; }
   .calculator-pane .standalone-frame { min-height: 760px; }
 }
+
+/* Log/Gamma 配置管理：与工作流程侧栏共享 GNOME/Ubuntu 原生工具语言。 */
+.profile-section { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--ubuntu-border); }
+.profile-section .workflow-list-head span:first-child { display: inline-flex; align-items: center; gap: 5px; }
+.profile-help { margin: 0 0 10px; color: var(--ubuntu-muted); font-size: 11px; line-height: 1.45; }
+.profile-actions { display: flex; gap: 7px; margin-bottom: 9px; }
+.profile-actions .ubuntu-button { flex: 1; }
+.profile-list { display: grid; gap: 8px; }
+.profile-empty { display: grid; justify-items: center; gap: 6px; padding: 18px 8px; color: #888; border: 1px dashed #c6c6c6; border-radius: 4px; font-size: 11px; text-align: center; }
+.profile-item { padding: 9px; background: var(--ubuntu-panel); border: 1px solid var(--ubuntu-border); border-radius: 4px; }
+.profile-item-title { display: flex; align-items: center; gap: 7px; color: var(--ubuntu-ink); font-size: 12px; }
+.profile-item-title svg { color: #33d17a; }
+.profile-item-title strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.profile-item-meta { margin: 6px 0 8px 21px; color: var(--ubuntu-muted); font-size: 10px; }
+.profile-item-actions { display: flex; gap: 10px; margin-left: 21px; }
+.profile-item-actions button { display: inline-flex; align-items: center; gap: 4px; padding: 0; color: var(--ubuntu-orange); background: transparent; border: 0; font: 500 11px Ubuntu, "Noto Sans SC", sans-serif; }
+
+/* Apple 风格最终覆盖：系统字体、浅灰层次、蓝色操作色、柔和阴影和克制圆角；不再使用 Ubuntu 专属字体或深紫橙色主题。 */
+.ubuntu-app-shell {
+  --ubuntu-orange: #0071e3;
+  --ubuntu-aubergine: rgba(245, 245, 247, .86);
+  --ubuntu-ink: #1d1d1f;
+  --ubuntu-surface: #f5f5f7;
+  --ubuntu-panel: rgba(255,255,255,.92);
+  --ubuntu-border: #d2d2d7;
+  --ubuntu-muted: #6e6e73;
+  color: var(--ubuntu-ink);
+  background: #f5f5f7;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+}
+.ubuntu-topbar {
+  color: var(--ubuntu-ink);
+  background: rgba(245,245,247,.86);
+  border-bottom: 1px solid rgba(0,0,0,.12);
+  box-shadow: 0 1px 12px rgba(0,0,0,.06);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  font-family: inherit;
+}
+.ubuntu-brand-mark { color: #0071e3; }
+.ubuntu-topbar-actions { color: var(--ubuntu-muted); }
+.ubuntu-status-dot { background: #34c759; }
+.ubuntu-workspace, .calculator-pane { background: #f5f5f7; }
+.workflow-sidebar { background: rgba(255,255,255,.82); border-right-color: rgba(0,0,0,.1); }
+.workflow-sidebar h1 { font-weight: 600; letter-spacing: -.02em; }
+.eyebrow { color: #0071e3; text-transform: none; letter-spacing: 0; }
+.workflow-intro, .profile-help { color: #6e6e73; }
+.icon-button { border-radius: 8px; }
+.icon-button:hover { background: #e5e5ea; border-color: transparent; }
+.workflow-name-label input { background: #fff; border-color: #d2d2d7; border-radius: 8px; }
+.workflow-name-label input:focus { outline-color: rgba(0,113,227,.35); }
+.ubuntu-button { color: var(--ubuntu-ink); background: #fff; border-color: #d2d2d7; border-radius: 8px; box-shadow: 0 1px 1px rgba(0,0,0,.04); font-family: inherit; }
+.ubuntu-button:hover { background: #f5f5f7; border-color: #b8b8bf; }
+.ubuntu-button.is-primary { color: #fff; background: #0071e3; border-color: #0071e3; }
+.ubuntu-button.is-primary:hover { background: #0077ed; }
+.ubuntu-button.is-recording { background: #ff3b30; border-color: #ff3b30; }
+.ubuntu-button.is-quiet { color: #6e6e73; }
+.workflow-empty, .profile-empty { background: rgba(255,255,255,.5); border-color: #d2d2d7; border-radius: 10px; }
+.workflow-item, .profile-item { background: #fff; border-color: #d2d2d7; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,.04); }
+.workflow-item-actions button, .profile-item-actions button { color: #0071e3; font-family: inherit; }
+.profile-item-title svg { color: #34c759; }
+.workflow-reopen { color: #fff; background: #1d1d1f; border-radius: 8px; font-family: inherit; box-shadow: 0 4px 14px rgba(0,0,0,.16); }
+.standalone-loading { color: #1d1d1f; background: #f5f5f7; font-family: inherit; }
+@media (max-width: 760px) { .workflow-sidebar { background: rgba(255,255,255,.94); box-shadow: 8px 0 24px rgba(0,0,0,.14); } }

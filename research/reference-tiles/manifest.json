@@ -1,0 +1,35 @@
+{
+  "source": "/home/ubuntu/upload/pasted_file_VdsCNZ_image.png",
+  "pixel_width": 689,
+  "pixel_height": 183,
+  "aspect_ratio": "689:183",
+  "aspect_ratio_decimal_width_over_height": 3.765027,
+  "orientation": "landscape",
+  "tiled": true,
+  "mode": "horizontal",
+  "overlap_fraction_requested_target": 0.12,
+  "overlap_fraction_actual_minimum": {
+    "horizontal": 0.851667,
+    "vertical": 0.0
+  },
+  "reading_order": "left-to-right",
+  "tile_count": 2,
+  "tiles": [
+    {
+      "index": 1,
+      "path": "/home/ubuntu/lutcalc-redesign/research/reference-tiles/tile_001_x000000_y000000.png",
+      "x": 0,
+      "y": 0,
+      "pixel_width": 600,
+      "pixel_height": 183
+    },
+    {
+      "index": 2,
+      "path": "/home/ubuntu/lutcalc-redesign/research/reference-tiles/tile_002_x000089_y000000.png",
+      "x": 89,
+      "y": 0,
+      "pixel_width": 600,
+      "pixel_height": 183
+    }
+  ]
+}

@@ -1,0 +1,580 @@
+LEICA L-LOG
+REFERENCE MANUAL
+Contents
+1 Document Version History                      03
+2 Purpose of This Document                      03
+3 L-Log Curve Characteristics                   03
+  3.1 LSR-to-L-Log Conversion                   04
+  3.2 L-Log-to-LSR Conversion                   05
+  3.3 Mapping of LSR to IRE, DV and EV          05
+4 Colorimetric Characteristics                  07
+  4.1 Colorimetric Conversions                  08
+5 Camera Settings for Recording L-Log           08
+6 Recording L-Log Externally                    08
+7 Exposing L-Log                                09
+  7.1 Exposing for Easiest LUT Application      09
+  7.2 Exposing for Best Image Quality           10
+8 Editing L-Log Footage                         11
+9 Explanation on Higher ISO Value in L-Log      12
+
+List of Figures
+   1    Extended L-Log Curve                    03
+   2    L-Log Curve                             04
+   3    Relationship Between EV and 10 Bit DV   06
+   4    Relationship Between EV and 12 Bit DV   06
+   5    Comparison of Color Spaces              07
+   6    Gray Card Scene                         09
+   7    LUT Applied Without Correction          10
+   8    LUT Applied Before Correction           10
+   9    LUT Applied After Correction            10
+   10   Levels Interpretation Comparison        11
+   11   Tone Curve Comparison                   12
+
+List of Tables
+   1    LSR Mapped to IRE, DV and EV            05
+   2    L-Log Clipping Values                   05
+   3    L-Log Color Space Properties            07
+
+                                                     L-LOG REFERENCE MANUAL |   02
+1 Document Version History
+
+ Version                       Date        Comment
+
+    1.0             January 11, 2021       Initial revision
+    1.1                 May 5, 2022        Added 12 bit and RAW video info; added clipping values; general improvements
+    1.2             October 28, 2022       Added info on L-Log exposure
+    1.3             February 8, 2023       Added hint regarding levels interpretation
+    1.4         September 14, 2023         Added Q3 data and explanation on higher ISO value in L-Log
+
+
+2 Purpose of This Document
+This reference manual is meant as a technical guideline for dealing with 10 bit and 12 bit L-Log footage. While the main
+reason to record in log is to maximize dynamic range and latitude in post production, it can be important for certain appli-
+cations to be able to match footage from different sources in a defined manner. Requirements for this matching operation
+are the definition of the log curve and the color space used for recording, both of which are provided in this document.
+Additionally, section 5, 6, 7 and 8 include practical guidelines and tips for working with L-Log footage successfully.
+
+
+3 L-Log Curve Characteristics
+The L-Log gamma curve is plotted in Figure 1. Linear scene reflection (LSR) values are mapped to L-Log values following
+the calculation specification described in subsection 3.1.
+
+
+          L-Log(LSR)
+
+          1.0
+
+          0.9
+
+          0.8
+
+          0.7
+
+          0.6
+                              See Figure 2 for enlarged view
+          0.5
+
+          0.4
+
+          0.3
+
+          0.2
+
+          0.1
+
+           0                                                                                                          LSR
+                0       2     4        6         8      10     12      14       16      18      20       22   24
+
+                               Figure 1: Extended L-Log curve showing when L-Log(LSR) value approaches 1.0.
+
+
+
+
+                                                                                                                   L-LOG REFERENCE MANUAL |   03
+Figure 2 shows the L-Log gamma curve plotted until it reaches an LSR value of one.
+
+
+  L-Log(LSR)
+
+
+  0.7
+
+
+  0.6
+
+
+  0.5
+
+
+  0.4
+
+
+  0.3
+
+
+  0.2
+
+
+  0.1
+
+
+      0                                                                                                                      LSR
+           0                                                                                                       1
+                                      Figure 2: L-Log curve plotted until an LSR value of one is reached.
+
+
+
+
+3.1       LSR-to-L-Log Conversion
+For LSR-to-L-Log conversion the following calculation specification is given.
+
+
+                       ⎧
+                       ⎪
+                       ⎪ a ⋅ LSR + b
+                       ⎪                                  for LSR ≤ 0.006
+          L-Log(LSR) = ⎨                                                                                                           (1)
+                       ⎪
+                       ⎪ c ⋅ log (d ⋅ LSR + e) + f
+                       ⎪                                  else
+                       ⎩
+
+where
+
+          a=8
+          b = 0.09
+          c = 0.27
+          d = 1.3
+          e = 0.0115
+          f = 0.6
+
+
+
+
+                                                                                                            L-LOG REFERENCE MANUAL |   04
+3.2      L-Log-to-LSR Conversion
+For L-Log-to-LSR conversion the following calculation specification is given.
+
+
+              ⎧
+              ⎪
+              ⎪
+              ⎪
+              ⎪
+                L-Log(LSR)−b
+                                          for L-Log(LSR) ≤ 0.1380
+                      a
+        LSR = ⎨ ( L-Log(LSR)−f )                                                                                                                      (2)
+              ⎪
+              ⎪
+              ⎪ 10      c        −e
+              ⎪                           else
+              ⎩         d
+
+
+where
+
+        a=8
+        b = 0.09
+        c = 0.27
+        d = 1.3
+        e = 0.0115
+        f = 0.6
+
+
+3.3      Mapping of LSR to IRE, DV and EV
+Typical LSR values and their equivalent in IRE1 , 10 bit and 12 bit digital values (DV) as well as exposure values are given
+in Table 1 along with a practical meaning of each entry in the table.
+Figure 3 shows a plot of the relationship between digital and exposure values.
+
+                           LSR            IRE       L-Log Digital Value          Exposure
+                                                                                                  Practical Meaning
+                                 [%]      [%]       10 bit         12 bit            Value
+                     0.00         0         3         92             369             -8.0         Black Level
+                     0.02         2        18        220             880             -3.1         2% Black
+                     0.18        18        44        445           1782               0.0         Middle Gray
+                     0.90        90        65        634           2537               2.3         90% White
+                     5.59        559       90        852           3410              4.96         SL (Typ 601) White Limit
+                     8.15        815       95        897           3590               5.5         SL2 / SL2-S White Limit
+                     23.30     2330       109        1023          4095               7.0         L-Log White Limit
+
+                         Table 1: Typical LSR values and their equivalents in IRE, L-Log digital values and exposure values.
+
+
+
+L-Log is defined to offer a maximum dynamic range of 15 stops (as illustrated in Figure 3 and Figure 4). The maximum
+dynamic range each camera model can achieve is reflected in different white clipping limits. For reference, these values
+are listed in Table 2 for each camera capable of recording L-Log footage.
+
+                                                                            Clipping Value
+                                                           Camera
+                                                                            10 bit     12 bit
+                                                       SL (Typ 601)          852            –
+                                                           SL2, Q3           897            –
+                                                           SL2-S             897        3590
+
+                                                 Table 2: L-Log clipping values for different cameras.
+
+
+
+
+  1 See https://en.wikipedia.org/wiki/IRE_(unit)
+
+
+
+
+                                                                                                                               L-LOG REFERENCE MANUAL |   05
+       DV
+
+1024
+
+
+ 896                                                        SL2/SL2-S/Q3 saturation signal
+                                                               SL (Typ 601) saturation signal
+
+
+ 768
+
+
+ 640
+
+
+ 512
+  445
+
+ 384
+
+
+ 256
+
+
+ 128
+
+
+   0                                                                                                                                         EV
+       −8   −7       −6      −5       −4      −3       −2      −1         0         1           2   3      4       5        6          7
+            Figure 3: Relationship between linear scene reflection in exposure values and corresponding 10 bit digital values of the
+              L-Log curve. The value of 0 EV corresponds to 18% input reflection.
+
+
+
+
+       DV
+4096
+
+
+3584                                                                 SL2-S saturation signal
+
+
+
+3072
+
+
+2560
+
+
+2048
+ 1782
+
+1536
+
+
+1024
+
+
+ 512
+
+
+   0                                                                                                                                         EV
+       −8   −7       −6      −5       −4      −3       −2      −1         0         1           2   3      4       5        6          7
+            Figure 4: Relationship between linear scene reflection in exposure values and corresponding 12 bit digital values of the
+              L-Log curve. The value of 0 EV corresponds to 18% input reflection.
+
+
+
+
+                                                                                                                           L-LOG REFERENCE MANUAL |   06
+4 Colorimetric Characteristics
+The latest Leica cameras capable of L-Log recording use the ITU-R BT.2020 color space, while the SL (Typ 601) uses the
+ITU-R BT.709 color space. The properties of both spaces are shown in Table 3.
+Figure 5 shows a comparison of common color spaces on a CIE 1931 xy chromaticity diagram.
+
+                                             White Point                               Primary Colors
+         Camera             Color Space
+                                            xW          yW          xR         yR         xG        yG          xB         yB
+           SL2
+          SL2-S         ITU-R BT.2020      0.3127    0.3290       0.708      0.292       0.170    0.797        0.131     0.046
+            Q3
+       SL (Typ 601)         ITU-R BT.709   0.3127    0.3290       0.640      0.330       0.300    0.600        0.150     0.060
+
+                                              Table 3: L-Log color space properties.
+
+
+
+
+                      0.9
+                                520                                                    BT.2020 (L-Log)
+                                                                                       AdobeRGB
+                      0.8                        540                                   DCI-P3
+                                                                                       BT.709 / sRGB
+
+
+                      0.7
+                                                                  560
+                      0.6
+                  500
+                      0.5                                                          580
+                  y
+                      0.4                                                                        600
+
+                                                                                                         620
+                      0.3                                  D65
+                        490                                                                                    700
+
+                      0.2
+
+                              480
+                      0.1
+                                 470
+                                  460
+                      0.0                   380
+                        0.0         0.1    0.2        0.3         0.4         0.5        0.6        0.7         0.8
+                                                                   x
+                                              Figure 5: Comparison of color spaces.
+
+
+
+
+                                                                                                                  L-LOG REFERENCE MANUAL |   07
+4.1    Colorimetric Conversions
+Converting from BT.2020 to XYZ color space is defined as:
+
+                 ⎡                             ⎤
+                 ⎢ 0.6370        0.1446 0.1689 ⎥
+                 ⎢                             ⎥
+                 ⎢                             ⎥
+BT.2020 to XYZ = ⎢
+                 ⎢ 0.2627        0.6780 0.0593 ⎥
+                                               ⎥
+                 ⎢                             ⎥
+                 ⎢                             ⎥
+                 ⎢ 0.0000        0.0281 1.0610 ⎥
+                 ⎣                             ⎦
+
+The reverse conversion is defined as follows:
+
+                 ⎡                                  ⎤
+                 ⎢ 1.7167         −0.3557   −0.2534 ⎥
+                 ⎢                                  ⎥
+                 ⎢                                  ⎥
+XYZ to BT.2020 = ⎢
+                 ⎢ −0.6667         1.6165    0.0158 ⎥
+                                                    ⎥
+                 ⎢                                  ⎥
+                 ⎢                                  ⎥
+                 ⎢ 0.0176         −0.0428    0.9421 ⎥
+                 ⎣                                  ⎦
+
+Additional colorimetric conversions (i.e. between BT.2020 and BT.709) can be found in relevant literature.
+
+
+5 Camera Settings for Recording L-Log
+In order to record L-Log footage the appropriate Video Gamma setting must be enabled in the Video Settings menu of the
+Leica SL2, SL2-S or Q3:
+                                     Video Settings ▶ Video Gamma ▶ select L-Log
+
+In the case of the Leica SL (Typ 601), the option is as follows:
+
+                                   Video Settings ▶ Video Gamma L-Log ▶ select On
+
+Leica SL2, SL2-S and Q3 cameras come with an option to output a viewing LUT via HDMI. This can be used when a monitor
+is connected to the HDMI port, but should be avoided when the HDMI signal is being recorded. In order to record a clean
+L-Log signal externally
+                            Video Settings ▶ Video Gamma ▶ Settings ▶ L-Log ▶ Output
+
+should not be set to HDMI if a LUT Profile has been set. In case no LUT Profile has been set, the Output option can be
+ignored.
+
+ RAW Video: in the case of the Leica SL2-S it is possible to record L-Log as 12 bit RAW footage via an external recorder.
+ To enable this feature “HDMI RAW” must be selected in the “Video Format / Resolution” menu and a compatible recorder
+ must be connected via HDMI.
+
+
+6 Recording L-Log Externally
+In order to record an L-Log signal via HDMI the camera must be set to output L-Log, which is ensured by selecting the
+appropriate gamma setting (as described in section 5). The recorder can be set to display the signal “as is”, showing the
+“flat” appearance of the log footage. Or it can be set to apply a viewing LUT to give the camera operator a better idea
+of the final result (i.e. in ITU-R BT.709 color space and gamma). Suitable LUTs for this purpose can be uploaded to the
+recorder.
+It should be noted that LUTs can also be “baked in”, effectively recording the footage in the final look that the LUT provides.
+In most cases this should be avoided, because it limits the advantages of recording log footage and therefore represents
+a rather impractical workflow.
+
+
+
+
+                                                                                                           L-LOG REFERENCE MANUAL |   08
+ RAW Video: an externally connected video recorder must be set to accept a RAW video input via HDMI. Currently, the
+ following recorders are supported:
+
+                         Manufacturer               Model                          Recording Format
+
+                                                    Ninja V                        ProRes RAW, ProRes RAW HQ
+                         Atomos
+                                                    Ninja V+                       ProRes RAW, ProRes RAW HQ
+                         Blackmagic Design          Video Assist 12G HDR           Blackmagic RAW (BRAW)
+
+
+ Specific Atomos Ninja Settings:
+
+      ∎   Matching the camera signal in the “CAMERA OUTPUT” section on the “Input” tab is only required for in-recorder
+          HDR processing. For typical workflows “Log/HDR” can remain off.
+      ∎   When a RAW video signal is detected by the Ninja the camera output parameters are detected automatically.
+
+
+
+7 Exposing L-Log
+There are two approaches to exposing L-Log:
+Easiest LUT application: this is the exposure that L-Log LUTs are designed for.
+Best image quality (recommended): this is the exposure that ensures that the best image quality and dynamic range
+      are achieved, but it requires exposure correction in post if an L-Log LUT is intended to be used.
+
+The following subsections describe each approach in more detail.
+
+
+7.1       Exposing for Easiest LUT Application
+Since L-Log is designed to reproduce middle gray (18% reflectivity) at 44% IRE, it is important to hit this exposure relatively
+accurately if one desires do use LUTs designed for L-Log without any exposure correction in post. This means that the
+shot should include a gray card in the frame and a waveform monitor to help gauge the exposure.
+Figure 6 shows a scene with a gray card placed in it and the corresponding view of a waveform monitor. The exposure in
+this case is dialed in so that the gray card is exposed at about 44% IRE.
+
+
+
+
+              Figure 6: Left: gray card placed in the scene to set exposure; right: waveform monitor view of the scene on the left
+                showing an exposure of the gray card of approximately 44% IRE.
+
+
+
+
+                                                                                                                          L-LOG REFERENCE MANUAL |   09
+7.2    Exposing for Best Image Quality
+In case the goal is to capture the highest dynamic range along with the cleanest shadows with L-Log, the exposure should
+follow the principle of ETTR (exposure to the right). With this technique the footage is exposed as bright as possible without
+clipping anything in the highlights that is important to you as the cinematographer.
+When this approach is pursued it is important to remember that an exposure correction is necessary in post if a LUT is
+used that was designed for L-Log. Figure 7 shows the result of an L-Log LUT being applied to an image that was recorded
+brighter than what the LUT is designed to work with. If the LUT is applied before the exposure has been corrected, as
+shown in Figure 8, the result is plagued by posterization issues and thus a very flat impression. This issue is often much
+more subtle than in the given example, in which case it will typically be most noticeable in faces and show up as flat areas
+where details and gradients should be visible.
+The correct handling of this approach is illustrated in Figure 9, where the LUT is applied after the exposure correction to
+conform the exposure of the footage to that which the LUT was designed for.
+
+
+
+
+                                  Figure 7: LUT applied to ETTR footage without exposure correction.
+
+
+
+
+                                   Figure 8: LUT applied to ETTR footage before exposure correction.
+
+
+
+
+                                   Figure 9: LUT applied to ETTR footage after exposure correction.
+
+
+
+
+                                                                                                          L-LOG REFERENCE MANUAL |   10
+8 Editing L-Log Footage
+Non-RAW recorded L-Log footage can be edited just like any other log footage as long as the recorded format (container,
+codec, etc.) is supported by the editing application. Leica provides several LUTs to allow the editor to make use of an
+out-of-the-box look for both ITU-R BT.709 and BT.2020 workflows. These LUTs can be downloaded from the Leica website.
+
+L-Log is recorded with the full data range (0−1023 for 10 bit) instead of video levels (64−940). Depending on the software
+that is used to postprocess L-Log it might be necessary to manually set the levels to full data range to be able to correctly
+judge the contrast and colors of the recorded material. By recording a scene with over- and underexposed elements the
+correct interpretation can be verified with a waveform monitor as illustrated in Figure 10 and the values from Table 1.
+
+Please note that the provided L-Log LUTs were not designed to work with the Leica SL (Typ 601) since it records L-Log in
+the BT.709 color space.
+
+
+
+
+                           Figure 10: Comparison of L-Log interpretation with video levels and full data range.
+
+
+
+RAW video recorded with the SL2-S allows for the following changes in editing software that are not available with non-
+RAW footage. The following overview lists Adobe Premiere Pro (“Premiere”), Apple Final Cut Pro (“FCP”) and Blackmagic
+Design DaVinci Resolve (“Resolve”) capabilities at the time of writing. These capabilities are subject to change without
+notice.
+
+                  Adjustment                                         Apple ProRes RAW             Blackmagic RAW
+
+                  White Balancing                                    FCP                          Resolve, Premiere
+                  ISO                                                FCP                          Resolve
+                  Exposure                                           FCP, Premiere                Resolve, Premiere
+                  Interpretation (Color Space, Gamma)                FCP, Premiere                Resolve, Premiere
+
+
+
+
+                                                                                                                  L-LOG REFERENCE MANUAL |   11
+9 Explanation on Higher ISO Value in L-Log
+While recording L-Log the camera shows a higher ISO value compared to when a standard gamma is used. This does
+not reflect a different sensor gain. Instead, this change is required to increase consistency of the brighter middle gray
+rendering of the log curve with the applicable ISO standard2 . The brighter middle gray rendering of L-Log allows for a
+lower exposure, which in turn affords more dynamic range to be allocated to the highlights.
+Figure 11 illustrates the difference in brightness of middle gray.
+
+
+       DV
+
+1024
+
+
+ 896
+
+
+ 768
+
+
+ 640
+
+
+ 512
+
+
+ 384
+
+                                        L-Log                             Standard tone curve
+ 256
+
+
+ 128
+
+
+   0                                                                                                                          EV
+       −8       −7   −6    −5     −4     −3       −2      −1       0       1       2       3        4   5   6         7
+                                   Figure 11: Comparison of L-Log curve with standard tone curve.
+
+
+
+
+  2 ISO 12232
+
+
+
+
+                                                                                                            L-LOG REFERENCE MANUAL |   12
+DAS WESENTLICHE.
+Leica Camera AG | Am Leitz-Park 5 | 35578 WETZLAR | GERMANY
+Phone +49-6441-2080-0 | info@leica-camera.com | www.leica-camera.com
+

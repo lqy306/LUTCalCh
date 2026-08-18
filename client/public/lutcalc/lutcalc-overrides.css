@@ -258,3 +258,23 @@ html, body { background: #deddda !important; color: #242424 !important; font-fam
   html body #mob-status { background: #2c001e !important; border-left-color: #e95420 !important; box-shadow: 0 2px 4px rgba(0,0,0,.18) !important; }
   html body #mob-status-text { color: #fff !important; font-family: Ubuntu, "Noto Sans SC", sans-serif !important; }
 }
+
+/* Apple 参考图最终覆盖：参数区使用浅冷灰背景、系统字体、白色原生控件和 1px 细边框。 */
+html, body { background: #f5f5f7 !important; color: #1d1d1f !important; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, "Noto Sans SC", sans-serif !important; }
+#titlebar { color: #1d1d1f !important; background: #eef1f3 !important; border: 0 !important; border-bottom: 1px solid #d2d2d7 !important; border-radius: 0 !important; box-shadow: none !important; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, "Noto Sans SC", sans-serif !important; font-weight: 600 !important; }
+#version { color: #6e6e73 !important; font-family: inherit !important; }
+#lutcalcform > section, #lutcalcform > div, #lutcalcform > fieldset, #lutcalcform .box, #lutcalcform .fieldset { background: #eef1f3 !important; border: 1px solid #d2d2d7 !important; border-radius: 0 !important; box-shadow: 0 1px 2px rgba(0,0,0,.05) !important; }
+#lutcalcform h1, #lutcalcform h2, #lutcalcform h3, #lutcalcform h4, #lutcalcform legend { color: #1d1d1f !important; border-bottom: 1px solid #d2d2d7 !important; font-family: inherit !important; font-weight: 500 !important; }
+#lutcalcform label, #lutcalcform .label, #lutcalcform .param-label { color: #3a3a3c !important; font-family: inherit !important; }
+#lutcalcform input, #lutcalcform select, #lutcalcform textarea { color: #1d1d1f !important; background: #fff !important; border: 1px solid #d2d2d7 !important; border-radius: 4px !important; box-shadow: none !important; font-family: inherit !important; }
+#lutcalcform input:focus, #lutcalcform select:focus, #lutcalcform textarea:focus { outline: 2px solid rgba(0,113,227,.34) !important; }
+#lutcalcform input[type="checkbox"], #lutcalcform input[type="radio"], #lutcalcform input[type="range"] { accent-color: #0071e3; }
+#lutcalcform button, #lutcalcform input[type="button"], #lutcalcform input[type="submit"] { color: #fff !important; background: #0071e3 !important; border: 1px solid #0071e3 !important; border-radius: 6px !important; font-family: inherit !important; }
+#lutcalcform button:hover, #lutcalcform input[type="button"]:hover, #lutcalcform input[type="submit"]:hover { background: #0077ed !important; border-color: #0077ed !important; }
+#footer { color: #6e6e73 !important; background: transparent !important; border-top: 1px solid #d2d2d7 !important; font-family: inherit !important; }
+@media only screen and (max-width: 40em) {
+  #lutcalcform > section, #lutcalcform > div, #lutcalcform > fieldset, #lutcalcform .box, #lutcalcform .fieldset { background: #eef1f3 !important; border-radius: 0 !important; }
+  #lutcalcform .tweakbox, #lutcalcform .tweakholder { color: #1d1d1f !important; background: #fff !important; border: 1px solid #d2d2d7 !important; border-radius: 4px !important; }
+  html body #mob-status { background: #eef1f3 !important; border-left: 0 !important; border-bottom: 1px solid #d2d2d7 !important; box-shadow: none !important; }
+  html body #mob-status-text { color: #1d1d1f !important; font-family: inherit !important; }
+}

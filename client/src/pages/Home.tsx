@@ -1,7 +1,9 @@
 /* 设计方向：GNOME/Ubuntu 工作台。使用 Ubuntu 字体、Ubuntu 橙与深石墨色，强调清晰层级、低圆角、键盘可达和原生工具感；iframe 只承载 LutCalc 计算引擎，工作流程管理由 React 控制。 */
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
+  CheckCircle2,
   Download,
+  FileJson,
   FolderOpen,
   Play,
   Plus,
@@ -10,6 +12,7 @@ import {
   Trash2,
   Upload,
   Workflow,
+  Settings2,
   X,
 } from "lucide-react";
 
@@ -28,7 +31,23 @@ type WorkflowFile = {
   events: WorkflowEvent[];
 };
 
+type CurveSample = { input: number; output: number };
+type LogGammaProfile = {
+  schema: "lutcalc-log-gamma-profile";
+  version: 1;
+  id: string;
+  name: string;
+  kind: "log" | "gamma";
+  author?: string;
+  description?: string;
+  input?: { gamut?: string; range?: "full" | "video"; bitDepth?: number };
+  curve: { type: "samples" | "formula"; samples?: CurveSample[]; encode?: string; decode?: string };
+  colorSpace?: { primaries?: string; whitePoint?: string; toXYZ?: number[][] };
+  metadata?: { middleGrayIRE?: number; source?: string };
+};
+
 const WORKFLOW_KEY = "lutcalc-ubuntu-workflows";
+const PROFILE_KEY = "lutcalc-log-gamma-profiles";
 
 function normalizeText(value: string) {
   return value.replace(/\s+/g, " ").trim();
@@ -72,20 +91,47 @@ function readWorkflows(): WorkflowFile[] {
   }
 }
 
+function readProfiles(): LogGammaProfile[] {
+  try {
+    const stored = JSON.parse(localStorage.getItem(PROFILE_KEY) || "[]");
+    return Array.isArray(stored) ? stored : [];
+  } catch {
+    return [];
+  }
+}
+
+function validateProfile(value: unknown): value is LogGammaProfile {
+  if (!value || typeof value !== "object") return false;
+  const profile = value as Partial<LogGammaProfile>;
+  if (profile.schema !== "lutcalc-log-gamma-profile" || profile.version !== 1) return false;
+  if (!profile.id || !profile.name || (profile.kind !== "log" && profile.kind !== "gamma")) return false;
+  if (!profile.curve || (profile.curve.type !== "samples" && profile.curve.type !== "formula")) return false;
+  if (profile.curve.type === "samples" && (!Array.isArray(profile.curve.samples) || profile.curve.samples.length < 2)) return false;
+  if (profile.curve.type === "formula" && !profile.curve.encode && !profile.curve.decode) return false;
+  return true;
+}
+
 export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const profileFileRef = useRef<HTMLInputElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [recording, setRecording] = useState(false);
   const [workflowName, setWorkflowName] = useState("未命名流程");
   const [events, setEvents] = useState<WorkflowEvent[]>([]);
   const [savedWorkflows, setSavedWorkflows] = useState<WorkflowFile[]>(readWorkflows);
+  const [profiles, setProfiles] = useState<LogGammaProfile[]>(readProfiles);
   const [message, setMessage] = useState("就绪");
 
   const persist = useCallback((next: WorkflowFile[]) => {
     setSavedWorkflows(next);
     localStorage.setItem(WORKFLOW_KEY, JSON.stringify(next));
+  }, []);
+
+  const persistProfiles = useCallback((next: LogGammaProfile[]) => {
+    setProfiles(next);
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(next));
   }, []);
 
   const recordEvent = useCallback(
@@ -197,6 +243,38 @@ export default function Home() {
     setMessage("已清空当前流程");
   };
 
+  const exportProfile = (profile: LogGammaProfile) => {
+    const blob = new Blob([JSON.stringify(profile, null, 2)], { type: "application/json;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${profile.id}.lut配置.json`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+    setMessage(`已导出配置：${profile.name}`);
+  };
+
+  const importProfile = (file?: File) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const profile = JSON.parse(String(reader.result)) as LogGammaProfile;
+        if (!validateProfile(profile)) throw new Error("invalid");
+        persistProfiles([profile, ...profiles.filter((item) => item.id !== profile.id)]);
+        setMessage(`已导入配置：${profile.name}`);
+      } catch {
+        setMessage("配置文件无效：请检查版本、曲线类型和采样数据");
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  const removeProfile = (profile: LogGammaProfile) => {
+    persistProfiles(profiles.filter((item) => item.id !== profile.id));
+    setMessage(`已删除配置：${profile.name}`);
+  };
+
   return (
     <main className="ubuntu-app-shell" aria-label="LUTCalc 中文计算器工作台">
       <header className="ubuntu-topbar">
@@ -235,6 +313,24 @@ export default function Home() {
                 <div className="workflow-item-actions"><button onClick={() => replayWorkflow(workflow)} aria-label={`执行${workflow.name}`}><Play size={13} />执行</button><button onClick={() => exportWorkflow(workflow)} aria-label={`导出${workflow.name}`}><Download size={13} />导出</button></div>
               </article>
             ))}
+          </div>
+          <div className="profile-section">
+            <div className="workflow-list-head"><span><Settings2 size={13} />曲线配置</span><span>{profiles.length}</span></div>
+            <p className="profile-help">导入个人或官方的日志 / 伽马配置。配置会保存于本机，并可作为流程文件的一部分分享。</p>
+            <div className="profile-actions">
+              <button className="ubuntu-button" onClick={() => profileFileRef.current?.click()}><Upload size={14} />导入配置</button>
+              <input ref={profileFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importProfile(event.target.files?.[0]); event.currentTarget.value = ""; }} />
+            </div>
+            <div className="profile-list">
+              {profiles.length === 0 && <div className="profile-empty"><FileJson size={16} />等待导入配置文件</div>}
+              {profiles.map((profile) => (
+                <article className="profile-item" key={profile.id}>
+                  <div className="profile-item-title"><CheckCircle2 size={14} /><strong>{profile.name}</strong></div>
+                  <div className="profile-item-meta">{profile.kind === "log" ? "日志曲线" : "伽马曲线"} · {profile.curve.type === "samples" ? `${profile.curve.samples?.length ?? 0} 个采样点` : "公式曲线"}</div>
+                  <div className="profile-item-actions"><button onClick={() => exportProfile(profile)}><Download size={13} />导出</button><button onClick={() => removeProfile(profile)}><Trash2 size={13} />删除</button></div>
+                </article>
+              ))}
+            </div>
           </div>
         </aside>
         <section className="calculator-pane">
