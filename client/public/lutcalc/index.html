@@ -14,7 +14,12 @@
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<link rel="stylesheet" type="text/css" href="lutcalc-overrides.css" />
 		<link rel="stylesheet" type="text/css" href="apple-control-system.css" />
-	<title>LUTCalc · 中文 LUT 计算器</title>
+		<script>
+			if (new URLSearchParams(window.location.search).get("embed") === "adjustments") {
+				document.documentElement.classList.add("embed-adjustments");
+			}
+		</script>
+		<title>LUTCalc · 中文 LUT 计算器</title>
 </head>
 <body id="body">
 	<h1 id="titlebar">LUTCalc · 1D 与 3D 立方体 LUT 计算器 <span id="version"></span></h1>

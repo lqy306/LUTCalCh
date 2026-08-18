@@ -464,3 +464,18 @@ h1 em { color: #647222; font-style: normal; }
 .analyst-drawer-body > p { margin: 0; color: #6d584f; font-size: 11px; line-height: 1.45; }
 .analyst-actions { display: flex; flex-wrap: wrap; gap: 7px; }
 @media (max-width: 760px) { .tool-sidebar { width: min(310px, 90vw); } }
+
+/* 原版调整项嵌入：纵向模块栈由同源 LUTCalc DOM 渲染；外层只负责 Ubuntu 工作台的边界与自适应高度。 */
+.original-adjust-card { padding: 14px; overflow: hidden; }
+.adjustments-engine-frame { display: block; width: 100%; min-height: 360px; height: 640px; border: 0; background: transparent; transition: height 180ms var(--ease-out); }
+@media (max-width: 760px) { .original-adjust-card { padding: 12px; } .adjustments-engine-frame { min-height: 410px; } }
+
+/* 许可菜单：保持低干扰，展开后提供清晰的 GPL-2.0 与稳定性说明。 */
+.project-disclosure { padding: 10px 16px 18px; color: #666; background: #deddda; font: 400 11px/1.55 Ubuntu, "Noto Sans SC", sans-serif; }
+.project-disclosure details { width: min(1280px, calc(100% - 32px)); margin: 0 auto; }
+.project-disclosure summary { width: fit-content; color: #5b5b5b; cursor: pointer; font-size: 11px; }
+.project-disclosure summary:hover { color: #2c001e; }
+.project-disclosure-body { max-width: 760px; margin-top: 8px; padding: 9px 11px; background: #f7f7f7; border: 1px solid #d6d6d6; border-radius: 4px; }
+.project-disclosure-body p { margin: 0; }
+.project-disclosure-body p + p { margin-top: 6px; }
+.project-disclosure-body a { color: #b5481e; text-decoration: underline; text-underline-offset: 2px; }

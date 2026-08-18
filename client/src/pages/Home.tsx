@@ -1,4 +1,5 @@
 /* 设计方向：统一 Apple 工作台。所有可见控件使用同一 React 参数卡与 Apple 控件系统；原始 LutCalc iframe 仅作为离屏同源计算、预览与导出兼容引擎。 */
+/* Ubuntu 工作台：主计算器保持低圆角、石墨面板与 Ubuntu 橙强调；“调整项”直接呈现同源原版模块栈，保证交互结构不被简化。 */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CheckCircle2,
@@ -41,15 +42,6 @@ type EngineField = "cameraMaker" | "cameraModel" | "cineEI" | "stopShift" | "rec
 
 const WORKFLOW_KEY = "lutcalc-apple-workflows";
 const PROFILE_KEY = "lutcalc-log-gamma-profiles";
-const TWEAK_LABELS = ["白平衡", "PSST-CDL", "ASC-CDL", "多色调", "高光色域", "膝点", "黑电平 / 高光电平", "黑伽马", "显示色彩空间转换", "色域限制", "伪色", "LUT 分析"];
-const TWEAK_ENGINE_LABELS = [
-  ["白平衡", "White Balance"], ["PSST-CDL"], ["ASC-CDL"], ["多色调", "Multitone"], ["高光色域", "Highlight Gamut"], ["膝点", "Knee"], ["黑电平", "Black Level"], ["黑伽马", "Black Gamma"], ["显示色彩空间转换", "Display Colourspace Converter"], ["色域限制", "Gamut Limiter"], ["伪色", "False Colour"], ["LUT分析", "LUT 分析", "LUTAnalyst"],
-];
-
-function getTweakControls(documentRef: Document) {
-  const controls = Array.from(documentRef.querySelectorAll("#box-twk input.twk-checkbox, #box-twk input.twk-checkbox-hide")) as HTMLInputElement[];
-  return TWEAK_ENGINE_LABELS.map((needles) => controls.find((control) => needles.some((needle) => control.parentElement?.textContent?.includes(needle))) ?? null);
-}
 const EMPTY_STATE: Record<EngineField, string> = {
   cameraMaker: "", cameraModel: "", cineEI: "", stopShift: "", recGammaMaker: "", recGamma: "", recGamutMaker: "", recGamut: "", outGammaMaker: "", outGamma: "", outGamutMaker: "", outGamut: "", title: "", lutFormat: "", hardClip: "",
 };
@@ -76,15 +68,11 @@ function elementSelector(element: Element) {
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) { return <label className="native-field"><span>{label}</span>{children}</label>; }
-function Toggle({ label, checked, disabled, onChange }: { label: string; checked: boolean; disabled?: boolean; onChange: (checked: boolean) => void }) {
-  return <label className={`native-toggle ${checked ? "is-on" : ""}`}><input type="checkbox" checked={checked} disabled={disabled} onChange={(event) => onChange(event.target.checked)} /><span className="toggle-track"><i /></span><span>{label}</span></label>;
-}
 
 export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const workflowFileRef = useRef<HTMLInputElement>(null);
   const profileFileRef = useRef<HTMLInputElement>(null);
-  const analystFileRef = useRef<HTMLInputElement>(null);
   const isReplayingRef = useRef(false);
   const [engineReady, setEngineReady] = useState(false);
   const [workflowOpen, setWorkflowOpen] = useState(true);
@@ -97,15 +85,32 @@ export default function Home() {
   const [message, setMessage] = useState("正在连接计算引擎");
   const [engineState, setEngineState] = useState<Record<EngineField, string>>(EMPTY_STATE);
   const [choices, setChoices] = useState<Partial<Record<EngineField, Choice[]>>>({});
-  const [tweaks, setTweaks] = useState<boolean[]>(TWEAK_LABELS.map(() => false));
   const [previewSrc, setPreviewSrc] = useState("");
-  const [analysisMode, setAnalysisMode] = useState<"new" | "existing">("new");
-  const [analysisFileName, setAnalysisFileName] = useState("");
 
   const engineDocument = () => iframeRef.current?.contentDocument || null;
   const engineWindow = () => iframeRef.current?.contentWindow || null;
   const persistWorkflows = useCallback((next: WorkflowFile[]) => { setSavedWorkflows(next); localStorage.setItem(WORKFLOW_KEY, JSON.stringify(next)); }, []);
   const persistProfiles = useCallback((next: LogGammaProfile[]) => { setProfiles(next); localStorage.setItem(PROFILE_KEY, JSON.stringify(next)); }, []);
+
+  const syncAdjustmentFrameHeight = useCallback(() => {
+    const documentRef = engineDocument();
+    const frame = iframeRef.current;
+    const adjustments = documentRef?.querySelector("#box-twk") as HTMLElement | null;
+    if (!frame || !adjustments) return;
+    const nextHeight = Math.ceil(adjustments.getBoundingClientRect().height + 2);
+    frame.style.height = `${Math.max(360, nextHeight)}px`;
+  }, []);
+
+  const observeAdjustmentFrame = useCallback(() => {
+    const documentRef = engineDocument();
+    const frame = iframeRef.current as (HTMLIFrameElement & { adjustmentObserver?: ResizeObserver }) | null;
+    const adjustments = documentRef?.querySelector("#box-twk") as HTMLElement | null;
+    if (!frame || !adjustments) return;
+    frame.adjustmentObserver?.disconnect();
+    frame.adjustmentObserver = new ResizeObserver(() => window.setTimeout(syncAdjustmentFrameHeight, 0));
+    frame.adjustmentObserver.observe(adjustments);
+    syncAdjustmentFrameHeight();
+  }, [syncAdjustmentFrameHeight]);
 
   const refreshPreview = useCallback(() => {
     const documentRef = engineDocument();
@@ -165,14 +170,13 @@ export default function Home() {
       // iframe 内的 select 属于另一个 Window，不能使用父窗口的 instanceof HTMLSelectElement。
       if (node?.tagName === "SELECT") nextChoices[field] = optionsOf(node as HTMLSelectElement);
     });
-    const nextTweaks = getTweakControls(documentRef).map((control) => Boolean(control?.checked));
     setEngineState(nextState);
     setChoices(nextChoices);
-    setTweaks(nextTweaks.length ? nextTweaks : TWEAK_LABELS.map(() => false));
     setEngineReady(true);
     setMessage("计算引擎已就绪");
     window.setTimeout(refreshPreview, 260);
-  }, [fieldNode, refreshPreview]);
+    window.setTimeout(syncAdjustmentFrameHeight, 60);
+  }, [fieldNode, refreshPreview, syncAdjustmentFrameHeight]);
 
   const recordEvent = useCallback((event: Event) => {
     if (!recording || isReplayingRef.current) return;
@@ -211,17 +215,6 @@ export default function Home() {
     window.setTimeout(refreshPreview, 120);
   };
 
-  const setEngineTweak = (index: number, checked: boolean) => {
-    const documentRef = engineDocument();
-    const windowRef = engineWindow();
-    const node = documentRef ? getTweakControls(documentRef)[index] : null;
-    if (!node || !windowRef) return;
-    node.checked = checked;
-    const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
-    node.dispatchEvent(new IframeEvent("change", { bubbles: true }));
-    setTweaks((current) => current.map((value, itemIndex) => itemIndex === index ? checked : value));
-  };
-
   const engineAction = (labels: string[], success: string) => {
     const documentRef = engineDocument();
     if (!documentRef) return;
@@ -233,43 +226,6 @@ export default function Home() {
     candidate?.click();
     setMessage(candidate ? success : "未找到对应的计算引擎操作");
     window.setTimeout(refreshPreview, 250);
-  };
-
-  const setAnalysisEngineMode = (mode: "new" | "existing") => {
-    const documentRef = engineDocument();
-    const windowRef = engineWindow();
-    const target = documentRef?.querySelectorAll("#box-twk input[name=newOrLoad]")[mode === "new" ? 0 : 1] as HTMLInputElement | undefined;
-    if (!target || !windowRef) return;
-    target.checked = true;
-    const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
-    target.dispatchEvent(new IframeEvent("change", { bubbles: true }));
-    setAnalysisMode(mode);
-  };
-
-  const importLutForAnalysis = (file?: File) => {
-    if (!file) return;
-    const documentRef = engineDocument();
-    const windowRef = engineWindow();
-    const target = documentRef?.querySelector("#box-twk input[type=file]") as HTMLInputElement | null;
-    if (!target || !windowRef) { setMessage("LUT 解析引擎尚未就绪"); return; }
-    const IframeDataTransfer = (windowRef as unknown as { DataTransfer: typeof DataTransfer }).DataTransfer;
-    const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
-    const transfer = new IframeDataTransfer();
-    transfer.items.add(file);
-    Object.defineProperty(target, "files", { configurable: true, value: transfer.files });
-    target.dispatchEvent(new IframeEvent("change", { bubbles: true }));
-    setAnalysisFileName(file.name);
-    setMessage(`已导入待解析 LUT：${file.name}`);
-    window.setTimeout(hydrateEngine, 320);
-  };
-
-  const runLutAnalysis = () => {
-    const documentRef = engineDocument();
-    const candidate = Array.from(documentRef?.querySelectorAll("#box-twk input[type=button]") || []).find((node) => /Analyse/i.test((node as HTMLInputElement).value)) as HTMLInputElement | undefined;
-    if (!candidate) { setMessage("请先导入可解析的 LUT 文件"); return; }
-    candidate.click();
-    setMessage("正在解析 LUT 并同步色彩信息");
-    window.setTimeout(() => { hydrateEngine(); refreshPreview(); setMessage("LUT 解析已完成，结果已同步到主计算器"); }, 900);
   };
 
   const saveWorkflow = () => {
@@ -331,13 +287,22 @@ export default function Home() {
             <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
             <section className="native-card pipeline-card"><div className="card-title"><span>02</span><div><h3>色彩管线</h3><p>定义记录伽马、色域与目标输出。</p></div></div><div className="pipeline-groups"><div><h4>记录设置</h4><div className="form-grid">{select("recGammaMaker", "伽马品牌")}{select("recGamma", "记录伽马")}{select("recGamutMaker", "色域品牌")}{select("recGamut", "记录色域")}</div></div><div><h4>输出设置</h4><div className="form-grid">{select("outGammaMaker", "伽马品牌")}{select("outGamma", "输出伽马")}{select("outGamutMaker", "色域品牌")}{select("outGamut", "输出色域")}</div></div></div></section>
             <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>命名、选择编码与生成导出文件。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field>{select("lutFormat", "输出格式")}{select("hardClip", "硬裁切")}</div><div className="native-actions"><button className="apple-button" onClick={() => engineAction(["Preview", "预览"], "预览已更新")}><Eye size={15} />更新预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
-            <section className="native-card adjust-card"><div className="card-title"><span>04</span><div><h3>调整项</h3><p>按需开启需要参与 LUT 计算的高级处理；启用后会显示对应的折叠设置。</p></div></div><div className="toggle-grid">{TWEAK_LABELS.map((label, index) => <Toggle key={label} label={label} checked={Boolean(tweaks[index])} disabled={!engineReady} onChange={(checked) => setEngineTweak(index, checked)} />)}</div>{tweaks[11] && <details className="analyst-drawer" open><summary><span><FileJson size={15} />LUT 解析设置</span><small>可折叠</small></summary><div className="analyst-drawer-body"><p>导入已有 LUT，使用原始 LUTAnalyst 读取其曲线和色彩信息，并同步到主计算器。</p><div className="analyst-mode"><button className={analysisMode === "new" ? "is-active" : ""} onClick={() => setAnalysisEngineMode("new")}>解析新 LUT</button><button className={analysisMode === "existing" ? "is-active" : ""} onClick={() => setAnalysisEngineMode("existing")}>载入已解析 LUT</button></div><div className="analyst-file"><FileJson size={17} /><span>{analysisFileName || "尚未选择 LUT 文件"}</span></div><div className="analyst-actions"><button className="apple-button" onClick={() => analystFileRef.current?.click()}><Upload size={14} />选择 LUT 文件</button><button className="apple-button is-primary" disabled={!analysisFileName} onClick={runLutAnalysis}><WandSparkles size={14} />开始解析</button></div><input ref={analystFileRef} type="file" accept=".cube,.3dl,.lut,.txt,.xml,.bin" hidden onChange={(event) => { importLutForAnalysis(event.target.files?.[0]); event.currentTarget.value = ""; }} /><p className="analyst-note">关闭“LUT 分析”会折叠本面板；重新打开后可继续导入或分析 LUT。</p></div></details>}</section>
+            <section className="native-card adjust-card original-adjust-card" aria-label="调整项"><iframe ref={iframeRef} className="adjustments-engine-frame" src="/lutcalc/index.html?embed=adjustments" title="原版 LUTCalc 调整项" onLoad={() => { hydrateEngine(); window.setTimeout(hydrateEngine, 720); window.setTimeout(observeAdjustmentFrame, 760); }} /></section>
             <section className="native-card preview-card"><div className="card-title"><span>05</span><div><h3>曲线预览</h3><p>{previewHint}</p></div></div><div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div><div className="preview-footnote"><span>状态</span><strong>{engineReady ? "参数已同步" : "加载中"}</strong><span>工作流程记录会自动捕获原生参数调整。</span></div></section>
           </div>
-          <iframe ref={iframeRef} className="engine-frame" src="/lutcalc/index.html" title="LUTCalc 兼容计算引擎" aria-hidden="true" onLoad={() => { hydrateEngine(); window.setTimeout(hydrateEngine, 720); }} />
         </section>
 
       </div>
+      <footer className="project-disclosure" aria-label="关于与许可">
+        <details>
+          <summary>关于与许可</summary>
+          <div className="project-disclosure-body">
+            <p>本项目是基于 <a href="https://github.com/cameramanben/LUTCalc" target="_blank" rel="noreferrer">原版 LUTCalc</a> 的界面复刻与工作台扩展，并非官方发行版本。</p>
+            <p>原版 LUTCalc 与本复刻项目均采用 <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank" rel="noreferrer">GNU GPL-2.0</a> 许可；原始项目版权归其原作者及权利人所有。</p>
+            <p>界面与工作台扩展由 Manus 开发。本版本可能不稳定，且不保证持续更新、技术支持或长期兼容性。</p>
+          </div>
+        </details>
+      </footer>
     </main>
   );
 }

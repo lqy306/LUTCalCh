@@ -278,3 +278,141 @@ html, body { background: #f5f5f7 !important; color: #1d1d1f !important; font-fam
   html body #mob-status { background: #eef1f3 !important; border-left: 0 !important; border-bottom: 1px solid #d2d2d7 !important; box-shadow: none !important; }
   html body #mob-status-text { color: #1d1d1f !important; font-family: inherit !important; }
 }
+
+/* Ubuntu 工作台嵌入模式：仅显示同源原版“调整项”DOM，保留原始总开关、模块容器和模块级展开逻辑。 */
+.embed-adjustments,
+.embed-adjustments body {
+	min-width: 0 !important;
+	min-height: 0 !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	background: transparent !important;
+	overflow: hidden !important;
+}
+.embed-adjustments #titlebar,
+.embed-adjustments #mob-status,
+.embed-adjustments #footer,
+.embed-adjustments #printable,
+.embed-adjustments #shed,
+.embed-adjustments #javascriptwarning,
+.embed-adjustments #box-lut,
+.embed-adjustments #box-cam,
+.embed-adjustments #box-gam,
+.embed-adjustments #right,
+.embed-adjustments .modalbox-hide {
+	display: none !important;
+}
+.embed-adjustments #main,
+.embed-adjustments #lutcalcform,
+.embed-adjustments #left,
+.embed-adjustments #box-twk,
+.embed-adjustments #box-twk > fieldset {
+	float: none !important;
+	width: 100% !important;
+	min-width: 0 !important;
+	height: auto !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+}
+.embed-adjustments #box-twk { display: block !important; }
+.embed-adjustments #box-twk > fieldset > div:first-child {
+	display: flex !important;
+	align-items: center !important;
+	justify-content: space-between !important;
+	gap: 10px !important;
+	margin: 0 0 10px !important;
+	padding: 0 0 10px !important;
+	border-bottom: 1px solid #d6d6d6 !important;
+	color: #242424 !important;
+	font: 600 16px/1.2 Ubuntu, "Noto Sans SC", sans-serif !important;
+}
+.embed-adjustments #box-twk > fieldset > div:first-child input[type="checkbox"] {
+	width: 17px !important;
+	height: 17px !important;
+	margin: 0 !important;
+	accent-color: #e95420 !important;
+}
+.embed-adjustments #box-twk > fieldset > div:nth-child(2) {
+	display: grid !important;
+	gap: 7px !important;
+}
+.embed-adjustments #box-twk .tweakholder {
+	display: grid !important;
+	grid-template-columns: minmax(0, 1fr) auto !important;
+	align-items: center !important;
+	gap: 7px 10px !important;
+	margin: 0 !important;
+	padding: 8px 10px !important;
+	color: #242424 !important;
+	background: #f7f7f7 !important;
+	border: 1px solid #d6d6d6 !important;
+	border-radius: 4px !important;
+	box-shadow: none !important;
+	font: 500 12px/1.35 Ubuntu, "Noto Sans SC", sans-serif !important;
+}
+.embed-adjustments #box-twk .tweakholder-hide { display: none !important; }
+.embed-adjustments #box-twk .tweakholder > label:first-child {
+	min-width: 0 !important;
+	margin: 0 !important;
+	color: #242424 !important;
+	font: inherit !important;
+}
+.embed-adjustments #box-twk .tweakholder > input.twk-checkbox,
+.embed-adjustments #box-twk .tweakholder > input.twk-checkbox-hide {
+	width: 16px !important;
+	height: 16px !important;
+	margin: 0 !important;
+	accent-color: #e95420 !important;
+}
+.embed-adjustments #box-twk .tweakholder > .tweak,
+.embed-adjustments #box-twk .tweakholder > .tweak-hide {
+	grid-column: 1 / -1 !important;
+	width: 100% !important;
+}
+.embed-adjustments #box-twk .tweakholder > .tweak {
+	display: block !important;
+	margin-top: 2px !important;
+	padding: 10px !important;
+	color: #3a3a3a !important;
+	background: #fff !important;
+	border-top: 1px solid #deddda !important;
+	font: 400 11px/1.45 Ubuntu, "Noto Sans SC", sans-serif !important;
+}
+.embed-adjustments #box-twk .tweakholder > .tweak-hide,
+.embed-adjustments #box-twk .twk-tab-hide,
+.embed-adjustments #box-twk .twk-advanced-hide,
+.embed-adjustments #box-twk .twk-button-hide { display: none !important; }
+.embed-adjustments #box-twk .tweak input,
+.embed-adjustments #box-twk .tweak select,
+.embed-adjustments #box-twk .tweak button,
+.embed-adjustments #box-twk .tweak .twk-button {
+	max-width: 100% !important;
+	min-height: 30px !important;
+	margin: 3px 5px 3px 0 !important;
+	padding: 5px 7px !important;
+	color: #242424 !important;
+	background: #fff !important;
+	border: 1px solid #c7c7c7 !important;
+	border-radius: 3px !important;
+	font: 400 12px Ubuntu, "Noto Sans SC", sans-serif !important;
+}
+.embed-adjustments #box-twk .tweak input[type="button"],
+.embed-adjustments #box-twk .tweak .twk-button {
+	color: #fff !important;
+	background: #e95420 !important;
+	border-color: #c74316 !important;
+}
+.embed-adjustments #box-twk .tweak input[type="checkbox"],
+.embed-adjustments #box-twk .tweak input[type="radio"] {
+	width: auto !important;
+	min-width: 0 !important;
+	height: auto !important;
+	min-height: 0 !important;
+	margin: 0 4px 0 0 !important;
+	padding: 0 !important;
+	vertical-align: middle !important;
+	accent-color: #e95420 !important;
+}
