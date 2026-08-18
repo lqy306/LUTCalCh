@@ -16,10 +16,19 @@ async function startServer() {
       ? path.resolve(__dirname, "public")
       : path.resolve(__dirname, "..", "dist", "public");
 
+  // 工作台入口和同源引擎入口必须随发布立即重新验证，避免浏览器复用旧版完整 iframe 页面。
+  app.use((req, res, next) => {
+    if (req.path === "/" || req.path.endsWith(".html") || req.path.startsWith("/lutcalc/")) {
+      res.setHeader("Cache-Control", "no-store, max-age=0, must-revalidate");
+    }
+    next();
+  });
+
   app.use(express.static(staticPath));
 
   // Handle client-side routing - serve index.html for all routes
   app.get("*", (_req, res) => {
+    res.setHeader("Cache-Control", "no-store, max-age=0, must-revalidate");
     res.sendFile(path.join(staticPath, "index.html"));
   });
 
