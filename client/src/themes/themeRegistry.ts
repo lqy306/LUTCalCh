@@ -39,7 +39,7 @@ export type WorkbenchTheme = {
   name: string;
   description: string;
   fontFamily: string;
-  fontFace?: { family: string; source: string; weight?: string; style?: string };
+  fontFace?: { family: string; source: string; format?: string; weight?: string; style?: string };
   radius: string;
   modes: Record<ThemeMode, { label: string; colors: ThemeColors }>;
 };
@@ -78,7 +78,7 @@ export function applyWorkbenchTheme(theme: WorkbenchTheme, mode: ThemeMode, targ
       style.id = styleId;
       targetDocument.head.appendChild(style);
     }
-    style.textContent = `@font-face{font-family:${theme.fontFace.family};src:url("${theme.fontFace.source}") format("opentype");font-weight:${theme.fontFace.weight || "400"};font-style:${theme.fontFace.style || "normal"};font-display:swap;}`;
+    style.textContent = `@font-face{font-family:${theme.fontFace.family};src:url("${theme.fontFace.source}") format("${theme.fontFace.format || "opentype"}");font-weight:${theme.fontFace.weight || "400"};font-style:${theme.fontFace.style || "normal"};font-display:swap;}`;
   }
   root.style.setProperty("--theme-radius", theme.radius);
   Object.entries(colors).forEach(([token, value]) => root.style.setProperty(`--theme-${token.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}`, value));

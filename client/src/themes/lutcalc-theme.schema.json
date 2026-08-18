@@ -16,6 +16,7 @@
       "properties": {
         "family": { "type": "string" },
         "source": { "type": "string" },
+        "format": { "type": "string" },
         "weight": { "type": "string" },
         "style": { "type": "string" }
       },
