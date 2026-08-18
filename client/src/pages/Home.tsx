@@ -42,6 +42,14 @@ type EngineField = "cameraMaker" | "cameraModel" | "cineEI" | "stopShift" | "rec
 const WORKFLOW_KEY = "lutcalc-apple-workflows";
 const PROFILE_KEY = "lutcalc-log-gamma-profiles";
 const TWEAK_LABELS = ["白平衡", "PSST-CDL", "ASC-CDL", "多色调", "高光色域", "膝点", "黑电平 / 高光电平", "黑伽马", "显示色彩空间转换", "色域限制", "伪色", "LUT 分析"];
+const TWEAK_ENGINE_LABELS = [
+  ["白平衡", "White Balance"], ["PSST-CDL"], ["ASC-CDL"], ["多色调", "Multitone"], ["高光色域", "Highlight Gamut"], ["膝点", "Knee"], ["黑电平", "Black Level"], ["黑伽马", "Black Gamma"], ["显示色彩空间转换", "Display Colourspace Converter"], ["色域限制", "Gamut Limiter"], ["伪色", "False Colour"], ["LUT分析", "LUT 分析", "LUTAnalyst"],
+];
+
+function getTweakControls(documentRef: Document) {
+  const controls = Array.from(documentRef.querySelectorAll("#box-twk input.twk-checkbox, #box-twk input.twk-checkbox-hide")) as HTMLInputElement[];
+  return TWEAK_ENGINE_LABELS.map((needles) => controls.find((control) => needles.some((needle) => control.parentElement?.textContent?.includes(needle))) ?? null);
+}
 const EMPTY_STATE: Record<EngineField, string> = {
   cameraMaker: "", cameraModel: "", cineEI: "", stopShift: "", recGammaMaker: "", recGamma: "", recGamutMaker: "", recGamut: "", outGammaMaker: "", outGamma: "", outGamutMaker: "", outGamut: "", title: "", lutFormat: "", hardClip: "",
 };
@@ -77,9 +85,10 @@ export default function Home() {
   const workflowFileRef = useRef<HTMLInputElement>(null);
   const profileFileRef = useRef<HTMLInputElement>(null);
   const analystFileRef = useRef<HTMLInputElement>(null);
+  const isReplayingRef = useRef(false);
   const [engineReady, setEngineReady] = useState(false);
   const [workflowOpen, setWorkflowOpen] = useState(true);
-  const [toolTab, setToolTab] = useState<"workflow" | "profiles" | "analyst">("workflow");
+  const [toolTab, setToolTab] = useState<"workflow" | "profiles">("workflow");
   const [recording, setRecording] = useState(false);
   const [workflowName, setWorkflowName] = useState("未命名流程");
   const [events, setEvents] = useState<WorkflowEvent[]>([]);
@@ -156,7 +165,7 @@ export default function Home() {
       // iframe 内的 select 属于另一个 Window，不能使用父窗口的 instanceof HTMLSelectElement。
       if (node?.tagName === "SELECT") nextChoices[field] = optionsOf(node as HTMLSelectElement);
     });
-    const nextTweaks = Array.from(documentRef.querySelectorAll("#box-twk input[type=checkbox]")).slice(0, TWEAK_LABELS.length).map((control) => (control as HTMLInputElement).checked);
+    const nextTweaks = getTweakControls(documentRef).map((control) => Boolean(control?.checked));
     setEngineState(nextState);
     setChoices(nextChoices);
     setTweaks(nextTweaks.length ? nextTweaks : TWEAK_LABELS.map(() => false));
@@ -166,7 +175,7 @@ export default function Home() {
   }, [fieldNode, refreshPreview]);
 
   const recordEvent = useCallback((event: Event) => {
-    if (!recording) return;
+    if (!recording || isReplayingRef.current) return;
     const target = event.target as Element | null;
     if (!target || typeof target.matches !== "function" || !target.matches("select, input, textarea, button, [role=button]")) return;
     const input = target as unknown as HTMLInputElement;
@@ -205,7 +214,7 @@ export default function Home() {
   const setEngineTweak = (index: number, checked: boolean) => {
     const documentRef = engineDocument();
     const windowRef = engineWindow();
-    const node = documentRef?.querySelectorAll("#box-twk input[type=checkbox]")[index] as HTMLInputElement | undefined;
+    const node = documentRef ? getTweakControls(documentRef)[index] : null;
     if (!node || !windowRef) return;
     node.checked = checked;
     const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
@@ -282,15 +291,21 @@ export default function Home() {
   };
   const replayWorkflow = async (workflow: WorkflowFile) => {
     const documentRef = engineDocument(); const windowRef = engineWindow(); if (!documentRef || !windowRef) return;
-    setMessage(`正在执行：${workflow.name}`);
-    for (const step of workflow.events) {
-      const target = documentRef.querySelector(step.selector) as HTMLInputElement | HTMLSelectElement | HTMLButtonElement | null;
-      if (!target) continue;
-      if (step.action === "click") target.click();
-      else { if (step.value !== undefined) target.value = step.value; if (step.checked !== undefined && "checked" in target) target.checked = step.checked; const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event; target.dispatchEvent(new IframeEvent("input", { bubbles: true })); target.dispatchEvent(new IframeEvent("change", { bubbles: true })); }
-      await new Promise((resolve) => window.setTimeout(resolve, 80));
+    isReplayingRef.current = true;
+    setRecording(false);
+    setMessage(`正在执行：${workflow.name}（已停止录制）`);
+    try {
+      for (const step of workflow.events) {
+        const target = documentRef.querySelector(step.selector) as HTMLInputElement | HTMLSelectElement | HTMLButtonElement | null;
+        if (!target) continue;
+        if (step.action === "click") target.click();
+        else { if (step.value !== undefined) target.value = step.value; if (step.checked !== undefined && "checked" in target) target.checked = step.checked; const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event; target.dispatchEvent(new IframeEvent("input", { bubbles: true })); target.dispatchEvent(new IframeEvent("change", { bubbles: true })); }
+        await new Promise((resolve) => window.setTimeout(resolve, 80));
+      }
+      hydrateEngine(); setMessage("流程执行完成");
+    } finally {
+      isReplayingRef.current = false;
     }
-    hydrateEngine(); setMessage("流程执行完成");
   };
   const exportProfile = (profile: LogGammaProfile) => { const url = URL.createObjectURL(new Blob([JSON.stringify(profile, null, 2)], { type: "application/json;charset=utf-8" })); const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${profile.id}.lut配置.json`; anchor.click(); URL.revokeObjectURL(url); setMessage(`已导出配置：${profile.name}`); };
   const importProfile = (file?: File) => { if (!file) return; const reader = new FileReader(); reader.onload = () => { try { const profile = JSON.parse(String(reader.result)) as LogGammaProfile; if (!validateProfile(profile)) throw new Error("invalid"); const next = [profile, ...profiles.filter((item) => item.id !== profile.id)]; persistProfiles(next); setMessage(`已导入配置：${profile.name}`); } catch { setMessage("配置文件无效：请检查版本、曲线类型和采样数据"); } }; reader.readAsText(file); };
@@ -304,10 +319,9 @@ export default function Home() {
       <div className="apple-workspace">
         <aside className={`workflow-sidebar tool-sidebar ${workflowOpen ? "is-open" : "is-closed"}`} aria-label="工具中心">
           <div className="workflow-sidebar-head"><div><span className="eyebrow">工具中心</span><h1><SlidersHorizontal size={17} />工作台工具</h1></div><button className="icon-button" onClick={() => setWorkflowOpen(false)} aria-label="关闭工具中心"><X size={16} /></button></div>
-          <div className="tool-tabs" role="tablist"><button className={toolTab === "workflow" ? "is-active" : ""} onClick={() => setToolTab("workflow")}><Workflow size={14} />流程</button><button className={toolTab === "profiles" ? "is-active" : ""} onClick={() => setToolTab("profiles")}><Settings2 size={14} />曲线</button><button className={toolTab === "analyst" ? "is-active" : ""} onClick={() => setToolTab("analyst")}><FileJson size={14} />解析</button></div>
+          <div className="tool-tabs" role="tablist"><button className={toolTab === "workflow" ? "is-active" : ""} onClick={() => setToolTab("workflow")}><Workflow size={14} />流程</button><button className={toolTab === "profiles" ? "is-active" : ""} onClick={() => setToolTab("profiles")}><Settings2 size={14} />曲线</button></div>
           {toolTab === "workflow" && <div className="tool-panel"><p className="workflow-intro">录制当前计算器中的参数调整，并将它们保存为可重复执行的流程。</p><label className="workflow-name-label">流程名称<input value={workflowName} onChange={(event) => setWorkflowName(event.target.value)} /></label><div className="workflow-record-row"><button className={`apple-button ${recording ? "is-recording" : "is-primary"}`} onClick={() => { setRecording((value) => !value); setMessage(recording ? "已停止记录" : "正在记录参数操作"); }}>{recording ? <Square size={14} /> : <span className="record-dot" />}{recording ? "停止记录" : "开始记录"}</button><span className="workflow-count">{events.length} 步</span></div><div className="workflow-actions"><button className="apple-button" onClick={saveWorkflow}><Save size={14} />保存流程</button><button className="apple-button" onClick={() => exportWorkflow()}><Download size={14} />导出文件</button><button className="apple-button" onClick={() => workflowFileRef.current?.click()}><Upload size={14} />导入文件</button><button className="apple-button is-quiet" onClick={() => { setEvents([]); setMessage("已清空当前流程"); }}><Trash2 size={14} />清空当前</button><input ref={workflowFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importWorkflow(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div><div className="workflow-list-head"><span>已保存流程</span><span>{savedWorkflows.length}</span></div><div className="workflow-list">{savedWorkflows.length === 0 && <div className="workflow-empty"><Plus size={16} />保存后会出现在这里</div>}{savedWorkflows.map((workflow) => <article className="workflow-item" key={`${workflow.name}-${workflow.createdAt}`}><div className="workflow-item-title"><FolderOpen size={14} /><strong>{workflow.name}</strong></div><div className="workflow-item-meta">{workflow.events.length} 步操作</div><div className="workflow-item-actions"><button onClick={() => replayWorkflow(workflow)}><Play size={13} />执行</button><button onClick={() => exportWorkflow(workflow)}><Download size={13} />导出</button></div></article>)}</div></div>}
           {toolTab === "profiles" && <div className="tool-panel"><p className="profile-help">导入个人或官方的日志 / 伽马配置。配置独立保存，可在不同流程中复用。</p><div className="profile-actions"><button className="apple-button" onClick={() => profileFileRef.current?.click()}><Upload size={14} />导入配置</button><input ref={profileFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importProfile(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div><div className="workflow-list-head"><span>已导入配置</span><span>{profiles.length}</span></div><div className="profile-list">{profiles.length === 0 && <div className="profile-empty"><FileJson size={16} />等待导入配置文件</div>}{profiles.map((profile) => <article className="profile-item" key={profile.id}><div className="profile-item-title"><CheckCircle2 size={14} /><strong>{profile.name}</strong></div><div className="profile-item-meta">{profile.kind === "log" ? "日志曲线" : "伽马曲线"} · {profile.curve.type === "samples" ? `${profile.curve.samples?.length ?? 0} 个采样点` : "公式曲线"}</div><div className="profile-item-actions"><button onClick={() => exportProfile(profile)}><Download size={13} />导出</button><button onClick={() => { persistProfiles(profiles.filter((item) => item.id !== profile.id)); setMessage(`已删除配置：${profile.name}`); }}><Trash2 size={13} />删除</button></div></article>)}</div></div>}
-          {toolTab === "analyst" && <div className="tool-panel analyst-panel"><p className="profile-help">导入已有 LUT，使用原始 LUTAnalyst 读取其曲线和色彩信息，并同步到主计算器。</p><div className="analyst-mode"><button className={analysisMode === "new" ? "is-active" : ""} onClick={() => setAnalysisEngineMode("new")}>解析新 LUT</button><button className={analysisMode === "existing" ? "is-active" : ""} onClick={() => setAnalysisEngineMode("existing")}>载入已解析 LUT</button></div><div className="analyst-file"><FileJson size={17} /><span>{analysisFileName || "尚未选择 LUT 文件"}</span></div><button className="apple-button" onClick={() => analystFileRef.current?.click()}><Upload size={14} />选择 LUT 文件</button><input ref={analystFileRef} type="file" accept=".cube,.3dl,.lut,.txt,.xml,.bin" hidden onChange={(event) => { importLutForAnalysis(event.target.files?.[0]); event.currentTarget.value = ""; }} /><button className="apple-button is-primary" disabled={!analysisFileName} onClick={runLutAnalysis}><WandSparkles size={14} />开始解析</button><p className="analyst-note">解析完成后，输入 / 输出色彩信息会同步到主计算器；可继续生成新的 LUT。</p></div>}
         </aside>
 
         <section className="native-calculator-pane">
@@ -317,7 +331,7 @@ export default function Home() {
             <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
             <section className="native-card pipeline-card"><div className="card-title"><span>02</span><div><h3>色彩管线</h3><p>定义记录伽马、色域与目标输出。</p></div></div><div className="pipeline-groups"><div><h4>记录设置</h4><div className="form-grid">{select("recGammaMaker", "伽马品牌")}{select("recGamma", "记录伽马")}{select("recGamutMaker", "色域品牌")}{select("recGamut", "记录色域")}</div></div><div><h4>输出设置</h4><div className="form-grid">{select("outGammaMaker", "伽马品牌")}{select("outGamma", "输出伽马")}{select("outGamutMaker", "色域品牌")}{select("outGamut", "输出色域")}</div></div></div></section>
             <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>命名、选择编码与生成导出文件。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field>{select("lutFormat", "输出格式")}{select("hardClip", "硬裁切")}</div><div className="native-actions"><button className="apple-button" onClick={() => engineAction(["Preview", "预览"], "预览已更新")}><Eye size={15} />更新预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
-            <section className="native-card adjust-card"><div className="card-title"><span>04</span><div><h3>调整项</h3><p>按需开启需要参与 LUT 计算的高级处理。</p></div></div><div className="toggle-grid">{TWEAK_LABELS.map((label, index) => <Toggle key={label} label={label} checked={Boolean(tweaks[index])} disabled={!engineReady} onChange={(checked) => setEngineTweak(index, checked)} />)}</div></section>
+            <section className="native-card adjust-card"><div className="card-title"><span>04</span><div><h3>调整项</h3><p>按需开启需要参与 LUT 计算的高级处理；启用后会显示对应的折叠设置。</p></div></div><div className="toggle-grid">{TWEAK_LABELS.map((label, index) => <Toggle key={label} label={label} checked={Boolean(tweaks[index])} disabled={!engineReady} onChange={(checked) => setEngineTweak(index, checked)} />)}</div>{tweaks[11] && <details className="analyst-drawer" open><summary><span><FileJson size={15} />LUT 解析设置</span><small>可折叠</small></summary><div className="analyst-drawer-body"><p>导入已有 LUT，使用原始 LUTAnalyst 读取其曲线和色彩信息，并同步到主计算器。</p><div className="analyst-mode"><button className={analysisMode === "new" ? "is-active" : ""} onClick={() => setAnalysisEngineMode("new")}>解析新 LUT</button><button className={analysisMode === "existing" ? "is-active" : ""} onClick={() => setAnalysisEngineMode("existing")}>载入已解析 LUT</button></div><div className="analyst-file"><FileJson size={17} /><span>{analysisFileName || "尚未选择 LUT 文件"}</span></div><div className="analyst-actions"><button className="apple-button" onClick={() => analystFileRef.current?.click()}><Upload size={14} />选择 LUT 文件</button><button className="apple-button is-primary" disabled={!analysisFileName} onClick={runLutAnalysis}><WandSparkles size={14} />开始解析</button></div><input ref={analystFileRef} type="file" accept=".cube,.3dl,.lut,.txt,.xml,.bin" hidden onChange={(event) => { importLutForAnalysis(event.target.files?.[0]); event.currentTarget.value = ""; }} /><p className="analyst-note">关闭“LUT 分析”会折叠本面板；重新打开后可继续导入或分析 LUT。</p></div></details>}</section>
             <section className="native-card preview-card"><div className="card-title"><span>05</span><div><h3>曲线预览</h3><p>{previewHint}</p></div></div><div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div><div className="preview-footnote"><span>状态</span><strong>{engineReady ? "参数已同步" : "加载中"}</strong><span>工作流程记录会自动捕获原生参数调整。</span></div></section>
           </div>
           <iframe ref={iframeRef} className="engine-frame" src="/lutcalc/index.html" title="LUTCalc 兼容计算引擎" aria-hidden="true" onLoad={() => { hydrateEngine(); window.setTimeout(hydrateEngine, 720); }} />

@@ -445,7 +445,7 @@ h1 em { color: #647222; font-style: normal; }
 .apple-app-shell .workflow-item-actions button, .apple-app-shell .profile-item-actions button { color: #e95420; font-family: Ubuntu, "Noto Sans SC", sans-serif; }
 .apple-app-shell .workflow-reopen, .apple-app-shell .profile-reopen { color: #fff; background: #2c001e; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
 .tool-sidebar { flex-basis: 310px; }
-.tool-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin: 16px 0 13px; padding: 4px; background: #e3e3e3; border: 1px solid #d0d0d0; border-radius: 4px; }
+.tool-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; margin: 16px 0 13px; padding: 4px; background: #e3e3e3; border: 1px solid #d0d0d0; border-radius: 4px; }
 .tool-tabs button, .analyst-mode button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 30px; padding: 5px 6px; color: #5b5b5b; background: transparent; border: 1px solid transparent; border-radius: 3px; font: 500 11px Ubuntu, "Noto Sans SC", sans-serif; }
 .tool-tabs button.is-active, .analyst-mode button.is-active { color: #242424; background: #fff; border-color: #c9c9c9; box-shadow: 0 1px 1px rgba(0,0,0,.08); }
 .tool-panel { min-width: 0; }
@@ -455,4 +455,12 @@ h1 em { color: #647222; font-style: normal; }
 .analyst-file span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .analyst-file svg { flex: 0 0 auto; color: #e95420; }
 .analyst-note { margin: 0; color: #6b6b6b; font-size: 11px; line-height: 1.48; }
+.analyst-drawer { grid-column: 1 / -1; margin-top: 10px; background: #fff7f3; border: 1px solid #f0b69f; border-radius: 4px; overflow: hidden; }
+.analyst-drawer summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 11px; color: #54200f; cursor: pointer; font-size: 12px; font-weight: 700; list-style: none; }
+.analyst-drawer summary::-webkit-details-marker { display: none; }
+.analyst-drawer summary span { display: inline-flex; align-items: center; gap: 7px; }
+.analyst-drawer summary small { color: #8b4b31; font-size: 10px; font-weight: 400; }
+.analyst-drawer-body { display: grid; gap: 9px; padding: 11px; border-top: 1px solid #f0b69f; }
+.analyst-drawer-body > p { margin: 0; color: #6d584f; font-size: 11px; line-height: 1.45; }
+.analyst-actions { display: flex; flex-wrap: wrap; gap: 7px; }
 @media (max-width: 760px) { .tool-sidebar { width: min(310px, 90vw); } }
