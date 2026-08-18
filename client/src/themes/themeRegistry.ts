@@ -2,6 +2,8 @@ import kde from "./kde.theme.json";
 import macos from "./macos.theme.json";
 import omarchy from "./omarchy.theme.json";
 import ubuntu from "./ubuntu.theme.json";
+import leica from "./leica.theme.json";
+import lumix from "./lumix.theme.json";
 
 export type ThemeMode = "light" | "dark";
 
@@ -37,6 +39,7 @@ export type WorkbenchTheme = {
   name: string;
   description: string;
   fontFamily: string;
+  fontFace?: { family: string; source: string; weight?: string; style?: string };
   radius: string;
   modes: Record<ThemeMode, { label: string; colors: ThemeColors }>;
 };
@@ -45,7 +48,7 @@ export const THEME_STORAGE_KEY = "lutcalc-workbench-theme";
 export const THEME_MODE_STORAGE_KEY = "lutcalc-workbench-mode";
 export const DEFAULT_THEME_ID = "ubuntu";
 
-export const BUILTIN_THEMES = [ubuntu, kde, macos, omarchy] as unknown as WorkbenchTheme[];
+export const BUILTIN_THEMES = [ubuntu, kde, macos, omarchy, leica, lumix] as unknown as WorkbenchTheme[];
 
 export function resolveTheme(id: string | null | undefined) {
   return BUILTIN_THEMES.find((theme) => theme.id === id) || BUILTIN_THEMES[0];
@@ -67,6 +70,16 @@ export function applyWorkbenchTheme(theme: WorkbenchTheme, mode: ThemeMode, targ
   root.dataset.workbenchMode = mode;
   root.classList.toggle("dark", mode === "dark");
   root.style.setProperty("--theme-font", theme.fontFamily);
+  if (theme.fontFace) {
+    const styleId = "lutcalc-theme-font-face";
+    let style = targetDocument.getElementById(styleId) as HTMLStyleElement | null;
+    if (!style) {
+      style = targetDocument.createElement("style");
+      style.id = styleId;
+      targetDocument.head.appendChild(style);
+    }
+    style.textContent = `@font-face{font-family:${theme.fontFace.family};src:url("${theme.fontFace.source}") format("opentype");font-weight:${theme.fontFace.weight || "400"};font-style:${theme.fontFace.style || "normal"};font-display:swap;}`;
+  }
   root.style.setProperty("--theme-radius", theme.radius);
   Object.entries(colors).forEach(([token, value]) => root.style.setProperty(`--theme-${token.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}`, value));
 }

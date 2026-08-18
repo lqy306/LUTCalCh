@@ -10,6 +10,17 @@
     "name": { "type": "string" },
     "description": { "type": "string" },
     "fontFamily": { "type": "string" },
+    "fontFace": {
+      "type": "object",
+      "required": ["family", "source"],
+      "properties": {
+        "family": { "type": "string" },
+        "source": { "type": "string" },
+        "weight": { "type": "string" },
+        "style": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "radius": { "type": "string" },
     "modes": {
       "type": "object",
