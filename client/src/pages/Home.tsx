@@ -1,36 +1,26 @@
-/* 设计方向：GNOME/Ubuntu 工作台。使用 Ubuntu 字体、Ubuntu 橙与深石墨色，强调清晰层级、低圆角、键盘可达和原生工具感；iframe 只承载 LutCalc 计算引擎，工作流程管理由 React 控制。 */
-import { useCallback, useEffect, useRef, useState } from "react";
+/* 设计方向：统一 Apple 工作台。所有可见控件使用同一 React 参数卡与 Apple 控件系统；原始 LutCalc iframe 仅作为离屏同源计算、预览与导出兼容引擎。 */
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CheckCircle2,
   Download,
+  Eye,
   FileJson,
   FolderOpen,
   Play,
   Plus,
   Save,
+  Settings2,
+  SlidersHorizontal,
   Square,
   Trash2,
   Upload,
+  WandSparkles,
   Workflow,
-  Settings2,
   X,
 } from "lucide-react";
 
-type WorkflowEvent = {
-  action: "change" | "click";
-  selector: string;
-  value?: string;
-  checked?: boolean;
-  label: string;
-};
-
-type WorkflowFile = {
-  version: 1;
-  name: string;
-  createdAt: string;
-  events: WorkflowEvent[];
-};
-
+type WorkflowEvent = { action: "change" | "click"; selector: string; value?: string; checked?: boolean; label: string };
+type WorkflowFile = { version: 1; name: string; createdAt: string; events: WorkflowEvent[] };
 type CurveSample = { input: number; output: number };
 type LogGammaProfile = {
   schema: "lutcalc-log-gamma-profile";
@@ -46,78 +36,47 @@ type LogGammaProfile = {
   metadata?: { middleGrayIRE?: number; source?: string };
 };
 
-const WORKFLOW_KEY = "lutcalc-ubuntu-workflows";
+type Choice = { value: string; label: string };
+type EngineField = "cameraMaker" | "cameraModel" | "cineEI" | "stopShift" | "recGammaMaker" | "recGamma" | "recGamutMaker" | "recGamut" | "outGammaMaker" | "outGamma" | "outGamutMaker" | "outGamut" | "title" | "lutFormat" | "hardClip";
+
+const WORKFLOW_KEY = "lutcalc-apple-workflows";
 const PROFILE_KEY = "lutcalc-log-gamma-profiles";
+const TWEAK_LABELS = ["白平衡", "PSST-CDL", "ASC-CDL", "多色调", "高光色域", "膝点", "黑电平 / 高光电平", "黑伽马", "显示色彩空间转换", "色域限制", "伪色", "LUT 分析"];
+const EMPTY_STATE: Record<EngineField, string> = {
+  cameraMaker: "", cameraModel: "", cineEI: "", stopShift: "", recGammaMaker: "", recGamma: "", recGamutMaker: "", recGamut: "", outGammaMaker: "", outGamma: "", outGamutMaker: "", outGamut: "", title: "", lutFormat: "", hardClip: "",
+};
 
-function normalizeText(value: string) {
-  return value.replace(/\s+/g, " ").trim();
-}
-
-function elementLabel(element: Element) {
-  const htmlElement = element as HTMLElement;
-  const fromLabel = element.closest("label")?.textContent;
-  const fromAria = element.getAttribute("aria-label") || element.getAttribute("title");
-  const fromPlaceholder = element.getAttribute("placeholder");
-  const fromParent = element.parentElement?.textContent;
-  return normalizeText(fromLabel || fromAria || fromPlaceholder || fromParent || htmlElement.tagName);
-}
-
-function elementSelector(element: Element) {
-  const htmlElement = element as HTMLElement;
-  const workflowId = htmlElement.getAttribute("data-lutcalc-workflow-id");
-  if (workflowId) return `[data-lutcalc-workflow-id="${workflowId}"]`;
-  if (htmlElement.id) return `#${htmlElement.id}`;
-  if (htmlElement.getAttribute("name")) {
-    return `${htmlElement.tagName.toLowerCase()}[name="${htmlElement.getAttribute("name")}"]`;
-  }
-  const parts: string[] = [];
-  let current: Element | null = element;
-  while (current && current.tagName.toLowerCase() !== "body" && parts.length < 8) {
-    const parent: Element | null = current.parentElement;
-    if (!parent) break;
-    const currentTagName = current.tagName;
-    const siblings = Array.from(parent.children).filter((child: Element) => child.tagName === currentTagName);
-    const index = siblings.indexOf(current) + 1;
-    parts.unshift(`${current.tagName.toLowerCase()}:nth-of-type(${index})`);
-    current = parent;
-  }
-  return parts.join(" > ");
-}
-
-function readWorkflows(): WorkflowFile[] {
-  try {
-    const stored = JSON.parse(localStorage.getItem(WORKFLOW_KEY) || "[]");
-    return Array.isArray(stored) ? stored : [];
-  } catch {
-    return [];
-  }
-}
-
-function readProfiles(): LogGammaProfile[] {
-  try {
-    const stored = JSON.parse(localStorage.getItem(PROFILE_KEY) || "[]");
-    return Array.isArray(stored) ? stored : [];
-  } catch {
-    return [];
-  }
-}
-
+function normalizeText(value: string) { return value.replace(/\s+/g, " ").trim(); }
+function readWorkflows(): WorkflowFile[] { try { const value = JSON.parse(localStorage.getItem(WORKFLOW_KEY) || "[]"); return Array.isArray(value) ? value : []; } catch { return []; } }
+function readProfiles(): LogGammaProfile[] { try { const value = JSON.parse(localStorage.getItem(PROFILE_KEY) || "[]"); return Array.isArray(value) ? value : []; } catch { return []; } }
 function validateProfile(value: unknown): value is LogGammaProfile {
   if (!value || typeof value !== "object") return false;
   const profile = value as Partial<LogGammaProfile>;
-  if (profile.schema !== "lutcalc-log-gamma-profile" || profile.version !== 1) return false;
-  if (!profile.id || !profile.name || (profile.kind !== "log" && profile.kind !== "gamma")) return false;
+  if (profile.schema !== "lutcalc-log-gamma-profile" || profile.version !== 1 || !profile.id || !profile.name) return false;
+  if (profile.kind !== "log" && profile.kind !== "gamma") return false;
   if (!profile.curve || (profile.curve.type !== "samples" && profile.curve.type !== "formula")) return false;
   if (profile.curve.type === "samples" && (!Array.isArray(profile.curve.samples) || profile.curve.samples.length < 2)) return false;
-  if (profile.curve.type === "formula" && !profile.curve.encode && !profile.curve.decode) return false;
-  return true;
+  return !(profile.curve.type === "formula" && !profile.curve.encode && !profile.curve.decode);
+}
+function elementLabel(element: Element) { return normalizeText(element.closest("label")?.textContent || element.getAttribute("aria-label") || element.getAttribute("title") || element.parentElement?.textContent || element.tagName); }
+function elementSelector(element: Element) {
+  const html = element as HTMLElement;
+  const workflowId = html.getAttribute("data-lutcalc-workflow-id");
+  if (workflowId) return `[data-lutcalc-workflow-id="${workflowId}"]`;
+  if (html.id) return `#${html.id}`;
+  return html.tagName.toLowerCase();
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) { return <label className="native-field"><span>{label}</span>{children}</label>; }
+function Toggle({ label, checked, disabled, onChange }: { label: string; checked: boolean; disabled?: boolean; onChange: (checked: boolean) => void }) {
+  return <label className={`native-toggle ${checked ? "is-on" : ""}`}><input type="checkbox" checked={checked} disabled={disabled} onChange={(event) => onChange(event.target.checked)} /><span className="toggle-track"><i /></span><span>{label}</span></label>;
 }
 
 export default function Home() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const workflowFileRef = useRef<HTMLInputElement>(null);
   const profileFileRef = useRef<HTMLInputElement>(null);
-  const [loaded, setLoaded] = useState(false);
+  const [engineReady, setEngineReady] = useState(false);
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [profileOpen, setProfileOpen] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -125,233 +84,209 @@ export default function Home() {
   const [events, setEvents] = useState<WorkflowEvent[]>([]);
   const [savedWorkflows, setSavedWorkflows] = useState<WorkflowFile[]>(readWorkflows);
   const [profiles, setProfiles] = useState<LogGammaProfile[]>(readProfiles);
-  const [message, setMessage] = useState("就绪");
+  const [message, setMessage] = useState("正在连接计算引擎");
+  const [engineState, setEngineState] = useState<Record<EngineField, string>>(EMPTY_STATE);
+  const [choices, setChoices] = useState<Partial<Record<EngineField, Choice[]>>>({});
+  const [tweaks, setTweaks] = useState<boolean[]>(TWEAK_LABELS.map(() => false));
+  const [previewSrc, setPreviewSrc] = useState("");
 
-  const persist = useCallback((next: WorkflowFile[]) => {
-    setSavedWorkflows(next);
-    localStorage.setItem(WORKFLOW_KEY, JSON.stringify(next));
+  const engineDocument = () => iframeRef.current?.contentDocument || null;
+  const engineWindow = () => iframeRef.current?.contentWindow || null;
+  const persistWorkflows = useCallback((next: WorkflowFile[]) => { setSavedWorkflows(next); localStorage.setItem(WORKFLOW_KEY, JSON.stringify(next)); }, []);
+  const persistProfiles = useCallback((next: LogGammaProfile[]) => { setProfiles(next); localStorage.setItem(PROFILE_KEY, JSON.stringify(next)); }, []);
+
+  const refreshPreview = useCallback(() => {
+    const documentRef = engineDocument();
+    if (!documentRef) return;
+    const sources = ["#can-stop-bgrnd", "#can-stop-clip", "#can-stop-rec", "#can-stop-out"].map((selector) => documentRef.querySelector(selector) as HTMLCanvasElement | null).filter(Boolean) as HTMLCanvasElement[];
+    if (!sources.length || !sources[0].width || !sources[0].height) return;
+    const canvas = document.createElement("canvas");
+    canvas.width = sources[0].width;
+    canvas.height = sources[0].height;
+    const context = canvas.getContext("2d");
+    if (!context) return;
+    sources.forEach((source) => context.drawImage(source, 0, 0));
+    setPreviewSrc(canvas.toDataURL("image/png"));
   }, []);
 
-  const persistProfiles = useCallback((next: LogGammaProfile[]) => {
-    setProfiles(next);
-    localStorage.setItem(PROFILE_KEY, JSON.stringify(next));
+  const fieldNode = useCallback((field: EngineField): HTMLInputElement | HTMLSelectElement | null => {
+    const documentRef = engineDocument();
+    if (!documentRef) return null;
+    const cam = Array.from(documentRef.querySelectorAll("#box-cam select")) as HTMLSelectElement[];
+    const gam = Array.from(documentRef.querySelectorAll("#box-gam select")) as HTMLSelectElement[];
+    const lut = Array.from(documentRef.querySelectorAll("#box-lut select")) as HTMLSelectElement[];
+    const map: Partial<Record<EngineField, HTMLInputElement | HTMLSelectElement | null>> = {
+      cameraMaker: cam[0] || null,
+      cameraModel: cam[1] || null,
+      cineEI: documentRef.querySelector("#box-cam .iso-input") as HTMLInputElement | null,
+      stopShift: documentRef.querySelector("#box-cam .shift-input") as HTMLInputElement | null,
+      recGammaMaker: gam[0] || null,
+      recGamma: gam[1] || null,
+      recGamutMaker: gam[4] || null,
+      recGamut: gam[5] || null,
+      outGammaMaker: gam[6] || null,
+      outGamma: gam[7] || null,
+      outGamutMaker: gam[10] || null,
+      outGamut: gam[11] || null,
+      title: documentRef.querySelector("#box-lut input[type=text]") as HTMLInputElement | null,
+      lutFormat: lut[0] || null,
+      hardClip: lut[5] || null,
+    };
+    return map[field] || null;
   }, []);
 
-  const recordEvent = useCallback(
-    (event: Event) => {
-      if (!recording) return;
-      const target = event.target as Element | null;
-      // iframe 内的 Element 来自另一个 Window，不能使用父窗口的 instanceof HTMLElement 判断。
-      if (!target || typeof (target as Element).matches !== "function") return;
-      const isControl = target.matches("select, input, textarea, button, [role=button]");
-      if (!isControl) return;
-      const isChange = event.type === "change";
-      const isClick = event.type === "click";
-      if (!isChange && !isClick) return;
-      const input = target as unknown as HTMLInputElement;
-      const next: WorkflowEvent = {
-        action: isChange ? "change" : "click",
-        selector: elementSelector(target),
-        label: elementLabel(target).slice(0, 80),
-      };
-      if ("value" in input) next.value = input.value;
-      if ("checked" in input) next.checked = input.checked;
-      setEvents((current) => [...current, next].slice(-80));
-    },
-    [recording],
-  );
+  const optionsOf = (node: HTMLSelectElement | null): Choice[] => node ? Array.from(node.options).map((option) => ({ value: option.value, label: option.textContent || option.value })) : [];
 
-  const attachRecorder = useCallback(() => {
-    const documentRef = iframeRef.current?.contentDocument;
-    if (!documentRef) return () => undefined;
+  const hydrateEngine = useCallback(() => {
+    const documentRef = engineDocument();
+    if (!documentRef) return;
     documentRef.querySelectorAll("select, input, textarea, button, [role=button]").forEach((control, index) => {
-      if (!control.getAttribute("data-lutcalc-workflow-id")) {
-        control.setAttribute("data-lutcalc-workflow-id", `lc-${String(index + 1).padStart(4, "0")}`);
-      }
+      if (!control.getAttribute("data-lutcalc-workflow-id")) control.setAttribute("data-lutcalc-workflow-id", `lc-${String(index + 1).padStart(4, "0")}`);
     });
+    const fields = Object.keys(EMPTY_STATE) as EngineField[];
+    const nextState = { ...EMPTY_STATE };
+    const nextChoices: Partial<Record<EngineField, Choice[]>> = {};
+    fields.forEach((field) => {
+      const node = fieldNode(field);
+      if (!node) return;
+      nextState[field] = node.value;
+      // iframe 内的 select 属于另一个 Window，不能使用父窗口的 instanceof HTMLSelectElement。
+      if (node?.tagName === "SELECT") nextChoices[field] = optionsOf(node as HTMLSelectElement);
+    });
+    const nextTweaks = Array.from(documentRef.querySelectorAll("#box-twk input[type=checkbox]")).slice(0, TWEAK_LABELS.length).map((control) => (control as HTMLInputElement).checked);
+    setEngineState(nextState);
+    setChoices(nextChoices);
+    setTweaks(nextTweaks.length ? nextTweaks : TWEAK_LABELS.map(() => false));
+    setEngineReady(true);
+    setMessage("计算引擎已就绪");
+    window.setTimeout(refreshPreview, 260);
+  }, [fieldNode, refreshPreview]);
+
+  const recordEvent = useCallback((event: Event) => {
+    if (!recording) return;
+    const target = event.target as Element | null;
+    if (!target || typeof target.matches !== "function" || !target.matches("select, input, textarea, button, [role=button]")) return;
+    const input = target as unknown as HTMLInputElement;
+    const action: WorkflowEvent["action"] = event.type === "click" ? "click" : "change";
+    const next: WorkflowEvent = { action, selector: elementSelector(target), label: elementLabel(target).slice(0, 80), value: "value" in input ? input.value : undefined, checked: "checked" in input ? input.checked : undefined };
+    setEvents((current) => [...current, next].slice(-100));
+  }, [recording]);
+
+  useEffect(() => {
+    const documentRef = engineDocument();
+    if (!engineReady || !documentRef) return;
     documentRef.addEventListener("change", recordEvent, true);
     documentRef.addEventListener("click", recordEvent, true);
-    return () => {
-      documentRef.removeEventListener("change", recordEvent, true);
-      documentRef.removeEventListener("click", recordEvent, true);
-    };
-  }, [recordEvent]);
+    return () => { documentRef.removeEventListener("change", recordEvent, true); documentRef.removeEventListener("click", recordEvent, true); };
+  }, [engineReady, recordEvent]);
 
-  useEffect(() => attachRecorder(), [attachRecorder, loaded]);
+  useEffect(() => {
+    if (!iframeRef.current?.contentDocument) return;
+    const timer = window.setTimeout(hydrateEngine, 120);
+    return () => window.clearTimeout(timer);
+  }, [hydrateEngine]);
+
+  const setEngineField = (field: EngineField, value: string) => {
+    const node = fieldNode(field);
+    const windowRef = engineWindow();
+    if (!node || !windowRef) return;
+    node.value = value;
+    const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
+    node.dispatchEvent(new IframeEvent("input", { bubbles: true }));
+    node.dispatchEvent(new IframeEvent("change", { bubbles: true }));
+    setEngineState((current) => ({ ...current, [field]: value }));
+    if (field === "cameraMaker" || field === "cameraModel") window.setTimeout(hydrateEngine, 90);
+    window.setTimeout(refreshPreview, 120);
+  };
+
+  const setEngineTweak = (index: number, checked: boolean) => {
+    const documentRef = engineDocument();
+    const windowRef = engineWindow();
+    const node = documentRef?.querySelectorAll("#box-twk input[type=checkbox]")[index] as HTMLInputElement | undefined;
+    if (!node || !windowRef) return;
+    node.checked = checked;
+    const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
+    node.dispatchEvent(new IframeEvent("change", { bubbles: true }));
+    setTweaks((current) => current.map((value, itemIndex) => itemIndex === index ? checked : value));
+  };
+
+  const engineAction = (labels: string[], success: string) => {
+    const documentRef = engineDocument();
+    if (!documentRef) return;
+    const candidate = Array.from(documentRef.querySelectorAll("button, input[type=button], input[type=submit]")).find((node) => {
+      const input = node as HTMLInputElement;
+      const text = `${input.value || ""} ${node.textContent || ""} ${node.getAttribute("data-lc-original-value") || ""}`;
+      return labels.some((label) => text.includes(label));
+    }) as HTMLElement | undefined;
+    candidate?.click();
+    setMessage(candidate ? success : "未找到对应的计算引擎操作");
+    window.setTimeout(refreshPreview, 250);
+  };
 
   const saveWorkflow = () => {
-    if (!events.length) {
-      setMessage("请先录制至少一个操作");
-      return;
-    }
-    const workflow: WorkflowFile = {
-      version: 1,
-      name: workflowName.trim() || "未命名流程",
-      createdAt: new Date().toISOString(),
-      events,
-    };
-    persist([workflow, ...savedWorkflows.filter((item) => item.name !== workflow.name)]);
-    setMessage(`已保存 ${events.length} 个操作`);
+    if (!events.length) { setMessage("请先调整参数，再保存流程"); return; }
+    const workflow: WorkflowFile = { version: 1, name: workflowName.trim() || "未命名流程", createdAt: new Date().toISOString(), events };
+    persistWorkflows([workflow, ...savedWorkflows.filter((item) => item.name !== workflow.name)]);
+    setMessage(`已保存 ${events.length} 个步骤`);
   };
-
   const exportWorkflow = (workflow: WorkflowFile = { version: 1, name: workflowName || "未命名流程", createdAt: new Date().toISOString(), events }) => {
-    if (!workflow.events.length) {
-      setMessage("当前没有可导出的操作");
-      return;
-    }
-    const blob = new Blob([JSON.stringify(workflow, null, 2)], { type: "application/json;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = `${workflow.name.replace(/[^\u4e00-\u9fa5\w-]+/g, "-")}.lut流程.json`;
-    anchor.click();
-    URL.revokeObjectURL(url);
-    setMessage("流程文件已导出");
+    if (!workflow.events.length) { setMessage("当前没有可导出的步骤"); return; }
+    const url = URL.createObjectURL(new Blob([JSON.stringify(workflow, null, 2)], { type: "application/json;charset=utf-8" }));
+    const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${workflow.name.replace(/[^\u4e00-\u9fa5\w-]+/g, "-")}.lut流程.json`; anchor.click(); URL.revokeObjectURL(url); setMessage("流程文件已导出");
   };
-
   const importWorkflow = (file?: File) => {
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const workflow = JSON.parse(String(reader.result)) as WorkflowFile;
-        if (!workflow?.name || !Array.isArray(workflow.events)) throw new Error("invalid");
-        persist([workflow, ...savedWorkflows.filter((item) => item.name !== workflow.name)]);
-        setWorkflowName(workflow.name);
-        setEvents(workflow.events);
-        setMessage(`已导入 ${workflow.events.length} 个操作`);
-      } catch {
-        setMessage("流程文件格式不正确");
-      }
-    };
+    reader.onload = () => { try { const workflow = JSON.parse(String(reader.result)) as WorkflowFile; if (!workflow?.name || !Array.isArray(workflow.events)) throw new Error("invalid"); persistWorkflows([workflow, ...savedWorkflows.filter((item) => item.name !== workflow.name)]); setWorkflowName(workflow.name); setEvents(workflow.events); setMessage(`已导入 ${workflow.events.length} 个步骤`); } catch { setMessage("流程文件格式不正确"); } };
     reader.readAsText(file);
   };
-
   const replayWorkflow = async (workflow: WorkflowFile) => {
-    const documentRef = iframeRef.current?.contentDocument;
-    if (!documentRef) return;
+    const documentRef = engineDocument(); const windowRef = engineWindow(); if (!documentRef || !windowRef) return;
     setMessage(`正在执行：${workflow.name}`);
     for (const step of workflow.events) {
       const target = documentRef.querySelector(step.selector) as HTMLInputElement | HTMLSelectElement | HTMLButtonElement | null;
       if (!target) continue;
-      if (step.action === "click") {
-        target.click();
-      } else {
-        if (step.value !== undefined && "value" in target) target.value = step.value;
-        if (step.checked !== undefined && "checked" in target) target.checked = step.checked;
-        target.dispatchEvent(new Event("input", { bubbles: true }));
-        target.dispatchEvent(new Event("change", { bubbles: true }));
-      }
-      await new Promise((resolve) => window.setTimeout(resolve, 90));
+      if (step.action === "click") target.click();
+      else { if (step.value !== undefined) target.value = step.value; if (step.checked !== undefined && "checked" in target) target.checked = step.checked; const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event; target.dispatchEvent(new IframeEvent("input", { bubbles: true })); target.dispatchEvent(new IframeEvent("change", { bubbles: true })); }
+      await new Promise((resolve) => window.setTimeout(resolve, 80));
     }
-    setMessage("流程执行完成");
+    hydrateEngine(); setMessage("流程执行完成");
   };
+  const exportProfile = (profile: LogGammaProfile) => { const url = URL.createObjectURL(new Blob([JSON.stringify(profile, null, 2)], { type: "application/json;charset=utf-8" })); const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${profile.id}.lut配置.json`; anchor.click(); URL.revokeObjectURL(url); setMessage(`已导出配置：${profile.name}`); };
+  const importProfile = (file?: File) => { if (!file) return; const reader = new FileReader(); reader.onload = () => { try { const profile = JSON.parse(String(reader.result)) as LogGammaProfile; if (!validateProfile(profile)) throw new Error("invalid"); const next = [profile, ...profiles.filter((item) => item.id !== profile.id)]; persistProfiles(next); setMessage(`已导入配置：${profile.name}`); } catch { setMessage("配置文件无效：请检查版本、曲线类型和采样数据"); } }; reader.readAsText(file); };
 
-  const clearCurrent = () => {
-    setEvents([]);
-    setMessage("已清空当前流程");
-  };
-
-  const exportProfile = (profile: LogGammaProfile) => {
-    const blob = new Blob([JSON.stringify(profile, null, 2)], { type: "application/json;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = `${profile.id}.lut配置.json`;
-    anchor.click();
-    URL.revokeObjectURL(url);
-    setMessage(`已导出配置：${profile.name}`);
-  };
-
-  const importProfile = (file?: File) => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const profile = JSON.parse(String(reader.result)) as LogGammaProfile;
-        if (!validateProfile(profile)) throw new Error("invalid");
-        persistProfiles([profile, ...profiles.filter((item) => item.id !== profile.id)]);
-        setMessage(`已导入配置：${profile.name}`);
-      } catch {
-        setMessage("配置文件无效：请检查版本、曲线类型和采样数据");
-      }
-    };
-    reader.readAsText(file);
-  };
-
-  const removeProfile = (profile: LogGammaProfile) => {
-    persistProfiles(profiles.filter((item) => item.id !== profile.id));
-    setMessage(`已删除配置：${profile.name}`);
-  };
+  const previewHint = useMemo(() => engineReady ? "预览由原始计算引擎实时生成" : "正在读取原始计算引擎…", [engineReady]);
+  const select = (field: EngineField, label: string) => <Field label={label}><select value={engineState[field]} disabled={!engineReady} onChange={(event) => setEngineField(field, event.target.value)}>{(choices[field] || [{ value: "", label: "正在读取…" }]).map((item) => <option key={`${field}-${item.value}`} value={item.value}>{item.label}</option>)}</select></Field>;
 
   return (
-    <main className="ubuntu-app-shell" aria-label="LUTCalc 中文计算器工作台">
-      <header className="ubuntu-topbar">
-        <div className="ubuntu-brand"><span className="ubuntu-brand-mark">●</span><span>LUTCalc 中文计算器</span></div>
-        <div className="ubuntu-topbar-center">工作台</div>
-        <div className="ubuntu-topbar-actions"><span className="ubuntu-status-dot" />{message}</div>
-      </header>
-      <div className="ubuntu-workspace">
+    <main className="apple-app-shell" aria-label="LUTCalc 中文计算器工作台">
+      <header className="apple-topbar"><div className="apple-brand"><span />LUTCalc 中文计算器</div><div>主工作台</div><div className="apple-status"><i />{message}</div></header>
+      <div className="apple-workspace">
         <aside className={`workflow-sidebar ${workflowOpen ? "is-open" : "is-closed"}`} aria-label="工作流程">
-          <div className="workflow-sidebar-head">
-            <div><span className="eyebrow">工具</span><h1><Workflow size={17} />工作流程</h1></div>
-            <button className="icon-button" onClick={() => setWorkflowOpen(false)} aria-label="关闭工作流程"><X size={16} /></button>
-          </div>
-          <p className="workflow-intro">把一组参数调整记录为可重复执行的快捷流程。</p>
+          <div className="workflow-sidebar-head"><div><span className="eyebrow">工具</span><h1><Workflow size={17} />工作流程</h1></div><button className="icon-button" onClick={() => setWorkflowOpen(false)} aria-label="关闭工作流程"><X size={16} /></button></div>
+          <p className="workflow-intro">录制当前计算器中的参数调整，并将它们保存为可重复执行的流程。</p>
           <label className="workflow-name-label">流程名称<input value={workflowName} onChange={(event) => setWorkflowName(event.target.value)} /></label>
-          <div className="workflow-record-row">
-            <button className={`ubuntu-button ${recording ? "is-recording" : "is-primary"}`} onClick={() => { setRecording((current) => !current); setMessage(recording ? "已停止记录" : "正在记录操作"); }}>
-              {recording ? <Square size={14} /> : <span className="record-dot" />} {recording ? "停止记录" : "开始记录"}
-            </button>
-            <span className="workflow-count">{events.length} 步</span>
-          </div>
-          <div className="workflow-actions">
-            <button className="ubuntu-button" onClick={saveWorkflow}><Save size={14} />保存流程</button>
-            <button className="ubuntu-button" onClick={() => exportWorkflow()}><Download size={14} />导出文件</button>
-            <button className="ubuntu-button" onClick={() => fileRef.current?.click()}><Upload size={14} />导入文件</button>
-            <button className="ubuntu-button is-quiet" onClick={clearCurrent}><Trash2 size={14} />清空当前</button>
-            <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importWorkflow(event.target.files?.[0]); event.currentTarget.value = ""; }} />
-          </div>
+          <div className="workflow-record-row"><button className={`apple-button ${recording ? "is-recording" : "is-primary"}`} onClick={() => { setRecording((value) => !value); setMessage(recording ? "已停止记录" : "正在记录参数操作"); }}>{recording ? <Square size={14} /> : <span className="record-dot" />}{recording ? "停止记录" : "开始记录"}</button><span className="workflow-count">{events.length} 步</span></div>
+          <div className="workflow-actions"><button className="apple-button" onClick={saveWorkflow}><Save size={14} />保存流程</button><button className="apple-button" onClick={() => exportWorkflow()}><Download size={14} />导出文件</button><button className="apple-button" onClick={() => workflowFileRef.current?.click()}><Upload size={14} />导入文件</button><button className="apple-button is-quiet" onClick={() => { setEvents([]); setMessage("已清空当前流程"); }}><Trash2 size={14} />清空当前</button><input ref={workflowFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importWorkflow(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div>
           <div className="workflow-list-head"><span>已保存流程</span><span>{savedWorkflows.length}</span></div>
-          <div className="workflow-list">
-            {savedWorkflows.length === 0 && <div className="workflow-empty"><Plus size={16} />保存后会出现在这里</div>}
-            {savedWorkflows.map((workflow) => (
-              <article className="workflow-item" key={`${workflow.name}-${workflow.createdAt}`}>
-                <div className="workflow-item-title"><FolderOpen size={14} /><strong>{workflow.name}</strong></div>
-                <div className="workflow-item-meta">{workflow.events.length} 步操作</div>
-                <div className="workflow-item-actions"><button onClick={() => replayWorkflow(workflow)} aria-label={`执行${workflow.name}`}><Play size={13} />执行</button><button onClick={() => exportWorkflow(workflow)} aria-label={`导出${workflow.name}`}><Download size={13} />导出</button></div>
-              </article>
-            ))}
-          </div>
+          <div className="workflow-list">{savedWorkflows.length === 0 && <div className="workflow-empty"><Plus size={16} />保存后会出现在这里</div>}{savedWorkflows.map((workflow) => <article className="workflow-item" key={`${workflow.name}-${workflow.createdAt}`}><div className="workflow-item-title"><FolderOpen size={14} /><strong>{workflow.name}</strong></div><div className="workflow-item-meta">{workflow.events.length} 步操作</div><div className="workflow-item-actions"><button onClick={() => replayWorkflow(workflow)}><Play size={13} />执行</button><button onClick={() => exportWorkflow(workflow)}><Download size={13} />导出</button></div></article>)}</div>
         </aside>
-        <section className="calculator-pane">
+
+        <section className="native-calculator-pane">
           {!workflowOpen && <button className="workflow-reopen" onClick={() => setWorkflowOpen(true)}><Workflow size={15} />工作流程</button>}
           {!profileOpen && <button className="profile-reopen" onClick={() => setProfileOpen(true)}><Settings2 size={15} />曲线配置</button>}
-          <iframe ref={iframeRef} className={`standalone-frame ${loaded ? "is-loaded" : ""}`} src="/lutcalc/index.html" title="LUTCalc 中文 LUT 计算器" onLoad={() => setLoaded(true)} />
-          {!loaded && <div className="standalone-loading">正在加载计算器…</div>}
+          <div className="native-calculator-head"><div><span className="eyebrow">LUT 转换</span><h2>主计算器</h2><p>所有参数直接驱动兼容计算引擎；旧界面不再显示。</p></div><div className={`engine-indicator ${engineReady ? "is-ready" : ""}`}><i />{engineReady ? "引擎已连接" : "正在连接"}</div></div>
+          <div className="native-calculator-grid">
+            <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
+            <section className="native-card pipeline-card"><div className="card-title"><span>02</span><div><h3>色彩管线</h3><p>定义记录伽马、色域与目标输出。</p></div></div><div className="pipeline-groups"><div><h4>记录设置</h4><div className="form-grid">{select("recGammaMaker", "伽马品牌")}{select("recGamma", "记录伽马")}{select("recGamutMaker", "色域品牌")}{select("recGamut", "记录色域")}</div></div><div><h4>输出设置</h4><div className="form-grid">{select("outGammaMaker", "伽马品牌")}{select("outGamma", "输出伽马")}{select("outGamutMaker", "色域品牌")}{select("outGamut", "输出色域")}</div></div></div></section>
+            <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>命名、选择编码与生成导出文件。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field>{select("lutFormat", "输出格式")}{select("hardClip", "硬裁切")}</div><div className="native-actions"><button className="apple-button" onClick={() => engineAction(["Preview", "预览"], "预览已更新")}><Eye size={15} />更新预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
+            <section className="native-card adjust-card"><div className="card-title"><span>04</span><div><h3>调整项</h3><p>按需开启需要参与 LUT 计算的高级处理。</p></div></div><div className="toggle-grid">{TWEAK_LABELS.map((label, index) => <Toggle key={label} label={label} checked={Boolean(tweaks[index])} disabled={!engineReady} onChange={(checked) => setEngineTweak(index, checked)} />)}</div></section>
+            <section className="native-card preview-card"><div className="card-title"><span>05</span><div><h3>曲线预览</h3><p>{previewHint}</p></div></div><div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div><div className="preview-footnote"><span>状态</span><strong>{engineReady ? "参数已同步" : "加载中"}</strong><span>工作流程记录会自动捕获原生参数调整。</span></div></section>
+          </div>
+          <iframe ref={iframeRef} className="engine-frame" src="/lutcalc/index.html" title="LUTCalc 兼容计算引擎" aria-hidden="true" onLoad={() => { hydrateEngine(); window.setTimeout(hydrateEngine, 720); }} />
         </section>
-        <aside className={`profile-sidebar ${profileOpen ? "is-open" : "is-closed"}`} aria-label="曲线配置">
-          <div className="workflow-sidebar-head">
-            <div><span className="eyebrow">工具</span><h2><Settings2 size={17} />曲线配置</h2></div>
-            <button className="icon-button" onClick={() => setProfileOpen(false)} aria-label="关闭曲线配置"><X size={16} /></button>
-          </div>
-          <p className="profile-help">导入个人或官方的日志 / 伽马配置。配置单独管理，不会混入工作流程。</p>
-          <div className="profile-actions">
-            <button className="ubuntu-button" onClick={() => profileFileRef.current?.click()}><Upload size={14} />导入配置</button>
-            <input ref={profileFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importProfile(event.target.files?.[0]); event.currentTarget.value = ""; }} />
-          </div>
-          <div className="workflow-list-head"><span>已导入配置</span><span>{profiles.length}</span></div>
-          <div className="profile-list">
-            {profiles.length === 0 && <div className="profile-empty"><FileJson size={16} />等待导入配置文件</div>}
-            {profiles.map((profile) => (
-              <article className="profile-item" key={profile.id}>
-                <div className="profile-item-title"><CheckCircle2 size={14} /><strong>{profile.name}</strong></div>
-                <div className="profile-item-meta">{profile.kind === "log" ? "日志曲线" : "伽马曲线"} · {profile.curve.type === "samples" ? `${profile.curve.samples?.length ?? 0} 个采样点` : "公式曲线"}</div>
-                <div className="profile-item-actions"><button onClick={() => exportProfile(profile)}><Download size={13} />导出</button><button onClick={() => removeProfile(profile)}><Trash2 size={13} />删除</button></div>
-              </article>
-            ))}
-          </div>
-        </aside>
+
+        <aside className={`profile-sidebar ${profileOpen ? "is-open" : "is-closed"}`} aria-label="曲线配置"><div className="workflow-sidebar-head"><div><span className="eyebrow">工具</span><h2><Settings2 size={17} />曲线配置</h2></div><button className="icon-button" onClick={() => setProfileOpen(false)} aria-label="关闭曲线配置"><X size={16} /></button></div><p className="profile-help">导入个人或官方的日志 / 伽马配置。配置单独管理，不会混入工作流程。</p><div className="profile-actions"><button className="apple-button" onClick={() => profileFileRef.current?.click()}><Upload size={14} />导入配置</button><input ref={profileFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importProfile(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div><div className="workflow-list-head"><span>已导入配置</span><span>{profiles.length}</span></div><div className="profile-list">{profiles.length === 0 && <div className="profile-empty"><FileJson size={16} />等待导入配置文件</div>}{profiles.map((profile) => <article className="profile-item" key={profile.id}><div className="profile-item-title"><CheckCircle2 size={14} /><strong>{profile.name}</strong></div><div className="profile-item-meta">{profile.kind === "log" ? "日志曲线" : "伽马曲线"} · {profile.curve.type === "samples" ? `${profile.curve.samples?.length ?? 0} 个采样点` : "公式曲线"}</div><div className="profile-item-actions"><button onClick={() => exportProfile(profile)}><Download size={13} />导出</button><button onClick={() => { persistProfiles(profiles.filter((item) => item.id !== profile.id)); setMessage(`已删除配置：${profile.name}`); }}><Trash2 size={13} />删除</button></div></article>)}</div></aside>
       </div>
     </main>
   );

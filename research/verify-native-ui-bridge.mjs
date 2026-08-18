@@ -1,0 +1,37 @@
+const targets = await fetch('http://127.0.0.1:9222/json').then((response) => response.json());
+const target = targets.find((item) => typeof item.url === 'string' && item.url.includes('3000-') && item.type === 'page');
+if (!target) throw new Error('未找到 LUTCalc 页面');
+
+const socket = new WebSocket(target.webSocketDebuggerUrl);
+let id = 1;
+const pending = new Map();
+socket.addEventListener('message', (event) => { const message = JSON.parse(event.data); const resolve = pending.get(message.id); if (resolve) { pending.delete(message.id); resolve(message); } });
+await new Promise((resolve, reject) => { socket.addEventListener('open', resolve, { once: true }); socket.addEventListener('error', reject, { once: true }); });
+const command = (method, params = {}) => new Promise((resolve, reject) => { const currentId = id++; pending.set(currentId, (message) => message.error ? reject(new Error(message.error.message)) : resolve(message.result)); socket.send(JSON.stringify({ id: currentId, method, params })); });
+const response = await command('Runtime.evaluate', { expression: `(async () => {
+  const button = (text) => Array.from(document.querySelectorAll('button')).find((node) => node.textContent?.includes(text));
+  button('开始记录')?.click();
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  const inputs = document.querySelectorAll('.capture-card input[type=number]');
+  const stopShift = inputs[1];
+  if (!stopShift) return { ok: false, reason: '找不到原生挡位修正输入框' };
+  const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set;
+  setValue?.call(stopShift, '0.5');
+  stopShift.dispatchEvent(new Event('input', { bubbles: true }));
+  stopShift.dispatchEvent(new Event('change', { bubbles: true }));
+  await new Promise((resolve) => setTimeout(resolve, 260));
+  const engineValue = document.querySelector('iframe')?.contentDocument?.querySelector('#box-cam .shift-input')?.value;
+  const countText = Array.from(document.querySelectorAll('*')).map((node) => node.textContent?.trim()).find((text) => /^\\d+ 步$/.test(text || ''));
+  button('停止记录')?.click();
+  await new Promise((resolve) => setTimeout(resolve, 80));
+  setValue?.call(stopShift, '0');
+  stopShift.dispatchEvent(new Event('input', { bubbles: true }));
+  stopShift.dispatchEvent(new Event('change', { bubbles: true }));
+  const frame = document.querySelector('iframe');
+  const frameStyle = frame ? getComputedStyle(frame) : null;
+  const frameHidden = Boolean(frameStyle && frameStyle.opacity === '0' && frameStyle.pointerEvents === 'none');
+  return { ok: engineValue === '0.5' && Number.parseInt(countText || '0', 10) >= 1 && frameHidden, engineValue, countText, frameHidden };
+})()`, awaitPromise: true, returnByValue: true });
+socket.close();
+console.log(JSON.stringify(response.result.value));
+if (!response.result.value?.ok) process.exitCode = 1;
