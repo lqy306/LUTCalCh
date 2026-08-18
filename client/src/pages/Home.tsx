@@ -64,6 +64,8 @@ function elementLabel(element: Element) {
 
 function elementSelector(element: Element) {
   const htmlElement = element as HTMLElement;
+  const workflowId = htmlElement.getAttribute("data-lutcalc-workflow-id");
+  if (workflowId) return `[data-lutcalc-workflow-id="${workflowId}"]`;
   if (htmlElement.id) return `#${htmlElement.id}`;
   if (htmlElement.getAttribute("name")) {
     return `${htmlElement.tagName.toLowerCase()}[name="${htmlElement.getAttribute("name")}"]`;
@@ -117,6 +119,7 @@ export default function Home() {
   const profileFileRef = useRef<HTMLInputElement>(null);
   const [loaded, setLoaded] = useState(false);
   const [workflowOpen, setWorkflowOpen] = useState(true);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [recording, setRecording] = useState(false);
   const [workflowName, setWorkflowName] = useState("未命名流程");
   const [events, setEvents] = useState<WorkflowEvent[]>([]);
@@ -137,14 +140,15 @@ export default function Home() {
   const recordEvent = useCallback(
     (event: Event) => {
       if (!recording) return;
-      const target = event.target;
-      if (!(target instanceof HTMLElement)) return;
+      const target = event.target as Element | null;
+      // iframe 内的 Element 来自另一个 Window，不能使用父窗口的 instanceof HTMLElement 判断。
+      if (!target || typeof (target as Element).matches !== "function") return;
       const isControl = target.matches("select, input, textarea, button, [role=button]");
       if (!isControl) return;
       const isChange = event.type === "change";
       const isClick = event.type === "click";
       if (!isChange && !isClick) return;
-      const input = target as HTMLInputElement;
+      const input = target as unknown as HTMLInputElement;
       const next: WorkflowEvent = {
         action: isChange ? "change" : "click",
         selector: elementSelector(target),
@@ -160,6 +164,11 @@ export default function Home() {
   const attachRecorder = useCallback(() => {
     const documentRef = iframeRef.current?.contentDocument;
     if (!documentRef) return () => undefined;
+    documentRef.querySelectorAll("select, input, textarea, button, [role=button]").forEach((control, index) => {
+      if (!control.getAttribute("data-lutcalc-workflow-id")) {
+        control.setAttribute("data-lutcalc-workflow-id", `lc-${String(index + 1).padStart(4, "0")}`);
+      }
+    });
     documentRef.addEventListener("change", recordEvent, true);
     documentRef.addEventListener("click", recordEvent, true);
     return () => {
@@ -314,30 +323,35 @@ export default function Home() {
               </article>
             ))}
           </div>
-          <div className="profile-section">
-            <div className="workflow-list-head"><span><Settings2 size={13} />曲线配置</span><span>{profiles.length}</span></div>
-            <p className="profile-help">导入个人或官方的日志 / 伽马配置。配置会保存于本机，并可作为流程文件的一部分分享。</p>
-            <div className="profile-actions">
-              <button className="ubuntu-button" onClick={() => profileFileRef.current?.click()}><Upload size={14} />导入配置</button>
-              <input ref={profileFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importProfile(event.target.files?.[0]); event.currentTarget.value = ""; }} />
-            </div>
-            <div className="profile-list">
-              {profiles.length === 0 && <div className="profile-empty"><FileJson size={16} />等待导入配置文件</div>}
-              {profiles.map((profile) => (
-                <article className="profile-item" key={profile.id}>
-                  <div className="profile-item-title"><CheckCircle2 size={14} /><strong>{profile.name}</strong></div>
-                  <div className="profile-item-meta">{profile.kind === "log" ? "日志曲线" : "伽马曲线"} · {profile.curve.type === "samples" ? `${profile.curve.samples?.length ?? 0} 个采样点` : "公式曲线"}</div>
-                  <div className="profile-item-actions"><button onClick={() => exportProfile(profile)}><Download size={13} />导出</button><button onClick={() => removeProfile(profile)}><Trash2 size={13} />删除</button></div>
-                </article>
-              ))}
-            </div>
-          </div>
         </aside>
         <section className="calculator-pane">
           {!workflowOpen && <button className="workflow-reopen" onClick={() => setWorkflowOpen(true)}><Workflow size={15} />工作流程</button>}
+          {!profileOpen && <button className="profile-reopen" onClick={() => setProfileOpen(true)}><Settings2 size={15} />曲线配置</button>}
           <iframe ref={iframeRef} className={`standalone-frame ${loaded ? "is-loaded" : ""}`} src="/lutcalc/index.html" title="LUTCalc 中文 LUT 计算器" onLoad={() => setLoaded(true)} />
           {!loaded && <div className="standalone-loading">正在加载计算器…</div>}
         </section>
+        <aside className={`profile-sidebar ${profileOpen ? "is-open" : "is-closed"}`} aria-label="曲线配置">
+          <div className="workflow-sidebar-head">
+            <div><span className="eyebrow">工具</span><h2><Settings2 size={17} />曲线配置</h2></div>
+            <button className="icon-button" onClick={() => setProfileOpen(false)} aria-label="关闭曲线配置"><X size={16} /></button>
+          </div>
+          <p className="profile-help">导入个人或官方的日志 / 伽马配置。配置单独管理，不会混入工作流程。</p>
+          <div className="profile-actions">
+            <button className="ubuntu-button" onClick={() => profileFileRef.current?.click()}><Upload size={14} />导入配置</button>
+            <input ref={profileFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importProfile(event.target.files?.[0]); event.currentTarget.value = ""; }} />
+          </div>
+          <div className="workflow-list-head"><span>已导入配置</span><span>{profiles.length}</span></div>
+          <div className="profile-list">
+            {profiles.length === 0 && <div className="profile-empty"><FileJson size={16} />等待导入配置文件</div>}
+            {profiles.map((profile) => (
+              <article className="profile-item" key={profile.id}>
+                <div className="profile-item-title"><CheckCircle2 size={14} /><strong>{profile.name}</strong></div>
+                <div className="profile-item-meta">{profile.kind === "log" ? "日志曲线" : "伽马曲线"} · {profile.curve.type === "samples" ? `${profile.curve.samples?.length ?? 0} 个采样点` : "公式曲线"}</div>
+                <div className="profile-item-actions"><button onClick={() => exportProfile(profile)}><Download size={13} />导出</button><button onClick={() => removeProfile(profile)}><Trash2 size={13} />删除</button></div>
+              </article>
+            ))}
+          </div>
+        </aside>
       </div>
     </main>
   );

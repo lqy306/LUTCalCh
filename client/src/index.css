@@ -221,6 +221,9 @@ h1 em { color: #647222; font-style: normal; }
 .ubuntu-workspace { display: flex; min-height: calc(100vh - 42px); }
 .workflow-sidebar { flex: 0 0 292px; overflow: auto; padding: 18px 16px 24px; background: var(--ubuntu-surface); border-right: 1px solid var(--ubuntu-border); transition: flex-basis .18s ease, padding .18s ease; }
 .workflow-sidebar.is-closed { flex-basis: 0; width: 0; padding: 0; overflow: hidden; border: 0; }
+.profile-sidebar { flex: 0 0 276px; overflow: auto; padding: 18px 16px 24px; background: var(--ubuntu-surface); border-left: 1px solid var(--ubuntu-border); transition: flex-basis .18s ease, padding .18s ease; }
+.profile-sidebar.is-closed { flex-basis: 0; width: 0; padding: 0; overflow: hidden; border: 0; }
+.profile-sidebar h2 { display: flex; align-items: center; gap: 8px; margin: 5px 0 0; font-size: 18px; font-weight: 600; letter-spacing: -.02em; }
 .workflow-sidebar-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .workflow-sidebar h1 { display: flex; align-items: center; gap: 8px; margin: 5px 0 0; font-size: 18px; font-weight: 500; }
 .eyebrow { color: var(--ubuntu-orange); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
@@ -253,12 +256,15 @@ h1 em { color: #647222; font-style: normal; }
 .calculator-pane { position: relative; flex: 1; min-width: 0; background: #deddda; }
 .calculator-pane .standalone-frame { width: 100%; height: calc(100vh - 42px); min-height: 720px; }
 .workflow-reopen { position: absolute; z-index: 3; top: 12px; left: 12px; display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; color: #fff; background: var(--ubuntu-aubergine); border: 0; border-radius: 4px; font: 500 12px Ubuntu, "Noto Sans SC", sans-serif; }
+.profile-reopen { position: absolute; z-index: 3; top: 12px; right: 12px; display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; color: #fff; background: #1d1d1f; border: 0; border-radius: 8px; font: 500 12px -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, "Noto Sans SC", sans-serif; box-shadow: 0 4px 14px rgba(0,0,0,.16); }
 .standalone-loading { color: var(--ubuntu-ink); background: var(--ubuntu-surface); font-family: Ubuntu, "Noto Sans SC", sans-serif; }
 @media (max-width: 760px) {
   .ubuntu-topbar { grid-template-columns: 1fr auto; }
   .ubuntu-topbar-center { display: none; }
   .workflow-sidebar { position: absolute; z-index: 5; top: 42px; bottom: 0; left: 0; width: min(292px, 88vw); box-shadow: 8px 0 20px rgba(0,0,0,.18); }
   .workflow-sidebar.is-closed { width: 0; }
+  .profile-sidebar { position: absolute; z-index: 5; top: 42px; right: 0; bottom: 0; width: min(276px, 88vw); background: rgba(255,255,255,.94); box-shadow: -8px 0 24px rgba(0,0,0,.14); }
+  .profile-sidebar.is-closed { width: 0; }
   .calculator-pane .standalone-frame { min-height: 760px; }
 }
 
@@ -312,6 +318,13 @@ h1 em { color: #647222; font-style: normal; }
 .icon-button:hover { background: #e5e5ea; border-color: transparent; }
 .workflow-name-label input { background: #fff; border-color: #d2d2d7; border-radius: 8px; }
 .workflow-name-label input:focus { outline-color: rgba(0,113,227,.35); }
+.workflow-name-label input {
+  min-height: 38px;
+  padding: 8px 11px;
+  color: #1d1d1f;
+  border-radius: 8px;
+  font: 400 14px/1.2 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+}
 .ubuntu-button { color: var(--ubuntu-ink); background: #fff; border-color: #d2d2d7; border-radius: 8px; box-shadow: 0 1px 1px rgba(0,0,0,.04); font-family: inherit; }
 .ubuntu-button:hover { background: #f5f5f7; border-color: #b8b8bf; }
 .ubuntu-button.is-primary { color: #fff; background: #0071e3; border-color: #0071e3; }
