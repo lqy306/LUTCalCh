@@ -151,3 +151,38 @@ h1 em { color: #647222; font-style: normal; }
 @media (max-width: 1050px) { .workbench-grid { grid-template-columns: 160px minmax(0, 1fr); }.preview-rail { grid-column: 2; display: grid; grid-template-columns: 1fr 1fr; }.preview-image { min-height: 180px; }.preview-foot { grid-column: 1 / -1; }.signal-bars { padding-bottom: 10px; } }
 @media (max-width: 760px) { .native-workbench { display: block; padding: 10px; }.param-card { margin-bottom: 10px; }.param-card-title { display: block; }.param-card-title .dark-action { margin-top: 10px; }.param-field.wide { grid-column: auto; }.param-grid { grid-template-columns: 1fr; }.segmented-control { align-items: flex-start; flex-direction: column; gap: 7px; }.native-actions { display: grid; grid-template-columns: 1fr; }.native-actions button { width: 100%; }.adjustment-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }.app-shell { padding: 16px 12px; }.topbar-meta span:not(.status-dot) { display: none; }.workspace-heading { margin-top: 38px; display: block; }.heading-actions { margin-top: 18px; }.workbench-grid { display: block; }.project-rail { min-height: 0; margin-bottom: 10px; }.rail-bottom { display: none; }.rail-note { margin-bottom: 4px; }.calculator-stage { margin-bottom: 10px; }.legacy-frame-wrap { height: 880px; }.preview-rail { display: block; }.preview-image { min-height: 190px; }.output-strip { align-items: flex-start; flex-direction: column; }.output-strip > div { align-items: flex-start; flex-wrap: wrap; }.app-footer { display: block; line-height: 1.7; }.app-footer span { display: block; }.app-footer span + span { margin-top: 5px; } }
 @media (prefers-reduced-motion: no-preference) { .app-shell { animation: enter .45s var(--ease-out) both; } @keyframes enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } } }
+
+/* 主界面：独立 LutCalc 计算器全屏承载；胶片实验室的具体视觉由 /lutcalc/lutcalc-overrides.css 负责。 */
+.standalone-shell {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: #f2f0e8;
+}
+
+.standalone-frame {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  height: max(100vh, 860px);
+  border: 0;
+  opacity: 0;
+  transition: opacity 180ms ease-out;
+}
+
+.standalone-frame.is-loaded { opacity: 1; }
+
+.standalone-loading {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #24241f;
+  background: #f2f0e8;
+  font: 600 .75rem/1.4 "IBM Plex Mono", monospace;
+  letter-spacing: .08em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .standalone-frame { transition: none; }
+}

@@ -1,20 +1,239 @@
-/* LUTCalc UI override — keep the original GPL-2.0 calculation engine untouched. */
-:root { --lc-ink:#24241f; --lc-paper:#f4f2ea; --lc-card:#fbfaf5; --lc-line:rgba(36,36,31,.16); --lc-sulfur:#e3f24f; --lc-cyan:#9ed9d4; }
-html, body { background: var(--lc-paper) !important; color: var(--lc-ink) !important; font-family: "DM Sans", Arial, sans-serif !important; }
-body { padding: 1.2rem !important; text-align: left !important; }
-#titlebar { max-width: 1180px; margin: 0 auto 1.4rem !important; padding: 1rem 1.2rem !important; background: var(--lc-ink) !important; color: var(--lc-paper) !important; text-align: left !important; font: 600 1.15rem/1.2 "Space Grotesk", sans-serif !important; letter-spacing: -.02em; border-left: 6px solid var(--lc-sulfur); box-shadow: 6px 6px 0 var(--lc-sulfur); }
-#version { color: var(--lc-sulfur) !important; font: 500 .7rem "IBM Plex Mono", monospace !important; margin-left: .75rem; }
-#main { max-width: 1180px; margin: 0 auto !important; }
-#javascriptwarning { padding: .75rem 1rem !important; color: #725000 !important; background: #fff6c8 !important; border: 1px solid #e6d673 !important; font-size: .75rem; }
+/* 设计方向：胶片实验室 / 编辑型新粗野主义。独立计算器作为主界面，使用规则线、编号模块、墨黑操作块与校准黄 active state；不改动 LutCalc 计算逻辑。 */
+:root {
+  --lc-ink: #24241f;
+  --lc-paper: #f2f0e8;
+  --lc-card: #fbfaf5;
+  --lc-muted: #76756e;
+  --lc-line: rgba(36, 36, 31, .18);
+  --lc-sulfur: #e8f23f;
+  --lc-sulfur-deep: #b8c52a;
+  --lc-cyan: #9ed9d4;
+  --lc-shadow: 4px 4px 0 rgba(36, 36, 31, .09);
+}
+
+* { box-sizing: border-box; }
+html { background: var(--lc-paper) !important; }
+body {
+  max-width: 1440px;
+  margin: 0 auto !important;
+  padding: 28px 42px 34px !important;
+  background: var(--lc-paper) !important;
+  color: var(--lc-ink) !important;
+  font-family: "DM Sans", "Noto Sans SC", Arial, sans-serif !important;
+  text-align: left !important;
+  letter-spacing: .01em;
+}
+
+#titlebar {
+  margin: 0 0 26px !important;
+  padding: 18px 22px !important;
+  background: var(--lc-ink) !important;
+  color: var(--lc-paper) !important;
+  border: 0 !important;
+  border-left: 7px solid var(--lc-sulfur) !important;
+  box-shadow: 7px 7px 0 var(--lc-sulfur) !important;
+  text-align: left !important;
+  font: 700 clamp(1.25rem, 2.4vw, 2rem)/1.15 "Space Grotesk", "Noto Sans SC", sans-serif !important;
+  letter-spacing: -.035em !important;
+}
+#version {
+  display: inline-block;
+  margin-left: 12px;
+  color: var(--lc-sulfur) !important;
+  font: 500 .68rem/1 "IBM Plex Mono", monospace !important;
+  letter-spacing: .06em;
+}
+
+#main { max-width: none !important; margin: 0 !important; }
+#javascriptwarning {
+  margin: 0 0 16px !important;
+  padding: 12px 15px !important;
+  color: #655900 !important;
+  background: #fff7bc !important;
+  border: 1px solid #ded27c !important;
+  font: 600 .75rem/1.4 "IBM Plex Mono", monospace !important;
+}
 #javascriptwarning p { margin: 0 !important; }
-#lutcalcform { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: .75rem; align-items: start; }
-#lutcalcform > section, #lutcalcform > div, #lutcalcform > fieldset { background: var(--lc-card) !important; border: 1px solid var(--lc-line) !important; border-radius: 2px !important; padding: .85rem !important; box-shadow: 3px 3px 0 rgba(36,36,31,.06) !important; }
-#lutcalcform h2, #lutcalcform h3, #lutcalcform h4 { color: var(--lc-ink) !important; text-align: left !important; font-family: "Space Grotesk", sans-serif !important; letter-spacing: -.02em; border-bottom: 2px solid var(--lc-sulfur); padding-bottom: .45rem; margin-bottom: .7rem !important; }
-#lutcalcform label { color: rgba(36,36,31,.72) !important; font: 500 .72rem/1.35 "IBM Plex Mono", monospace !important; }
-#lutcalcform input, #lutcalcform select, #lutcalcform textarea { min-height: 2rem; border: 1px solid var(--lc-line) !important; border-radius: 2px !important; background: #fffef9 !important; color: var(--lc-ink) !important; padding: .35rem .5rem !important; box-shadow: none !important; }
-#lutcalcform input:focus, #lutcalcform select:focus, #lutcalcform textarea:focus { outline: 2px solid var(--lc-sulfur) !important; outline-offset: 1px; }
-#lutcalcform button, #lutcalcform input[type="button"], #lutcalcform input[type="submit"] { border: 1px solid var(--lc-ink) !important; border-radius: 2px !important; background: var(--lc-ink) !important; color: var(--lc-paper) !important; padding: .5rem .8rem !important; font: 600 .72rem "IBM Plex Mono", monospace !important; transition: transform .16s ease, background .16s ease, color .16s ease !important; }
-#lutcalcform button:hover, #lutcalcform input[type="button"]:hover, #lutcalcform input[type="submit"]:hover { background: var(--lc-sulfur) !important; color: var(--lc-ink) !important; transform: translateY(-1px); }
-#lutcalcform input[type="range"] { accent-color: #8fa92f; padding: 0 !important; }
-#footer { max-width: 1180px; margin: 1.5rem auto 0 !important; color: rgba(36,36,31,.5) !important; text-align: right !important; font: .65rem "IBM Plex Mono", monospace !important; }
-@media (max-width: 700px) { body { padding: .7rem !important; } #titlebar { font-size: 1rem !important; box-shadow: 4px 4px 0 var(--lc-sulfur); } #lutcalcform { display: block; } #lutcalcform > section, #lutcalcform > div, #lutcalcform > fieldset { margin-bottom: .7rem; } }
+#lutcalcform {
+  display: grid !important;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 14px !important;
+  align-items: start;
+}
+#lutcalcform > section,
+#lutcalcform > div,
+#lutcalcform > fieldset,
+#lutcalcform .box,
+#lutcalcform .fieldset {
+  min-width: 0;
+  padding: 16px !important;
+  background: var(--lc-card) !important;
+  border: 1px solid var(--lc-line) !important;
+  border-radius: 2px !important;
+  box-shadow: var(--lc-shadow) !important;
+}
+#lutcalcform > * { grid-column: span 4; }
+#lutcalcform > *:first-child { grid-column: span 8; }
+#lutcalcform > #box-cam,
+#lutcalcform > #box-gam,
+#lutcalcform > #box-lut,
+#lutcalcform > #box-twk { grid-column: span 6; }
+#lutcalcform > #box-lut { grid-column: span 4; }
+
+#lutcalcform h1,
+#lutcalcform h2,
+#lutcalcform h3,
+#lutcalcform h4,
+#lutcalcform legend {
+  margin: 0 0 14px !important;
+  padding: 0 0 9px !important;
+  color: var(--lc-ink) !important;
+  border-bottom: 2px solid var(--lc-sulfur) !important;
+  text-align: left !important;
+  font-family: "Space Grotesk", "Noto Sans SC", sans-serif !important;
+  font-weight: 700 !important;
+  letter-spacing: -.03em !important;
+}
+#lutcalcform label,
+#lutcalcform .label,
+#lutcalcform .param-label {
+  color: rgba(36, 36, 31, .72) !important;
+  font: 600 .66rem/1.4 "IBM Plex Mono", "Noto Sans SC", monospace !important;
+  letter-spacing: .045em;
+}
+#lutcalcform input,
+#lutcalcform select,
+#lutcalcform textarea {
+  min-height: 34px;
+  max-width: 100%;
+  margin-top: 5px;
+  padding: 7px 9px !important;
+  background: #fffef9 !important;
+  color: var(--lc-ink) !important;
+  border: 1px solid var(--lc-line) !important;
+  border-radius: 1px !important;
+  box-shadow: none !important;
+  font: 500 .78rem/1.2 "DM Sans", "Noto Sans SC", sans-serif !important;
+}
+#lutcalcform input:focus,
+#lutcalcform select:focus,
+#lutcalcform textarea:focus {
+  outline: 2px solid var(--lc-sulfur) !important;
+  outline-offset: 1px;
+}
+#lutcalcform input[type="checkbox"],
+#lutcalcform input[type="radio"] {
+  min-height: 0;
+  accent-color: var(--lc-sulfur-deep);
+}
+#lutcalcform input[type="range"] { padding: 0 !important; accent-color: var(--lc-sulfur-deep); }
+#lutcalcform button,
+#lutcalcform input[type="button"],
+#lutcalcform input[type="submit"] {
+  min-height: 36px;
+  padding: 8px 12px !important;
+  color: var(--lc-paper) !important;
+  background: var(--lc-ink) !important;
+  border: 1px solid var(--lc-ink) !important;
+  border-radius: 1px !important;
+  font: 700 .68rem/1.1 "IBM Plex Mono", "Noto Sans SC", monospace !important;
+  letter-spacing: .04em;
+  transition: transform .16s ease, background .16s ease, color .16s ease !important;
+}
+#lutcalcform button:hover,
+#lutcalcform input[type="button"]:hover,
+#lutcalcform input[type="submit"]:hover {
+  color: var(--lc-ink) !important;
+  background: var(--lc-sulfur) !important;
+  transform: translateY(-1px);
+}
+#lutcalcform a { color: var(--lc-ink) !important; text-decoration-thickness: 2px; text-decoration-color: var(--lc-sulfur-deep); }
+#footer {
+  margin: 28px 0 0 !important;
+  padding-top: 12px;
+  color: var(--lc-muted) !important;
+  border-top: 1px solid var(--lc-line);
+  text-align: right !important;
+  font: .66rem/1.4 "IBM Plex Mono", "Noto Sans SC", monospace !important;
+}
+
+@media (max-width: 980px) {
+  body { padding: 20px 22px 28px !important; }
+  #lutcalcform { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #lutcalcform > *, #lutcalcform > *:first-child,
+  #lutcalcform > #box-cam, #lutcalcform > #box-gam,
+  #lutcalcform > #box-lut, #lutcalcform > #box-twk { grid-column: span 1; }
+}
+@media (max-width: 620px) {
+  body { padding: 14px 12px 22px !important; }
+  #titlebar { margin-bottom: 18px !important; padding: 14px 15px !important; box-shadow: 5px 5px 0 var(--lc-sulfur) !important; font-size: 1.15rem !important; }
+  #version { display: block; margin: 8px 0 0; }
+  #lutcalcform { display: block !important; }
+  #lutcalcform > section,
+  #lutcalcform > div,
+  #lutcalcform > fieldset,
+  #lutcalcform .box,
+  #lutcalcform .fieldset { margin: 0 0 10px !important; padding: 12px !important; }
+  #lutcalcform input, #lutcalcform select { width: 100%; }
+  #footer { margin-top: 18px !important; text-align: left !important; }
+}
+
+/* 覆盖原始 style.css 的移动端旧布局规则。 */
+@media only screen and (max-width: 40em) {
+  html body {
+    position: static !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+    font-size: 100% !important;
+  }
+  html body #titlebar {
+    display: block !important;
+    position: relative !important;
+    width: auto !important;
+    color: var(--lc-paper) !important;
+    background: var(--lc-ink) !important;
+    text-align: left !important;
+  }
+  html body .titlebar { display: none !important; }
+  #lutcalcform .tweakbox,
+  #lutcalcform .tweakholder {
+    display: flex !important;
+    align-items: center;
+    min-height: 34px;
+    margin: 5px 0 !important;
+    padding: 7px 9px !important;
+    color: var(--lc-ink) !important;
+    background: var(--lc-card) !important;
+    border: 1px solid var(--lc-line) !important;
+    border-radius: 1px !important;
+    box-shadow: none !important;
+    text-align: left !important;
+  }
+}
+
+#javascriptwarning.lc-hide-splash { display: none !important; }
+
+#javascriptwarning.splash { display: none !important; }
+
+/* 主界面不需要原始启动警告层；计算器本体直接呈现。 */
+html body #javascriptwarning { display: none !important; }
+
+@media only screen and (max-width: 40em) {
+  html body #mob-status {
+    height: 42px !important;
+    background: var(--lc-ink) !important;
+    border-left: 5px solid var(--lc-sulfur) !important;
+    box-shadow: 4px 4px 0 var(--lc-sulfur) !important;
+  }
+  html body #mob-status-text {
+    color: var(--lc-paper) !important;
+    font: 700 1rem/1 "Space Grotesk", "Noto Sans SC", sans-serif !important;
+    letter-spacing: -.02em;
+  }
+  html body #mob-menu-button { color: var(--lc-sulfur) !important; }
+  html body #mob-menu-button div { background-color: var(--lc-sulfur) !important; }
+}
+
+@media only screen and (max-width: 40em) {
+  html body #mob-status img { display: none !important; }
+}
