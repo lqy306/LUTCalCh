@@ -186,3 +186,78 @@ h1 em { color: #647222; font-style: normal; }
 @media (prefers-reduced-motion: reduce) {
   .standalone-frame { transition: none; }
 }
+
+/* GNOME/Ubuntu 视觉系统：Ubuntu 字体、暖灰桌面、石墨面板、Ubuntu 橙强调；避免渐变与过度圆角。 */
+.ubuntu-app-shell {
+  --ubuntu-orange: #e95420;
+  --ubuntu-aubergine: #2c001e;
+  --ubuntu-ink: #242424;
+  --ubuntu-surface: #f7f7f7;
+  --ubuntu-panel: #ffffff;
+  --ubuntu-border: #d6d6d6;
+  --ubuntu-muted: #6b6b6b;
+  min-height: 100vh;
+  color: var(--ubuntu-ink);
+  background: #deddda;
+  font-family: Ubuntu, "Noto Sans SC", sans-serif;
+}
+.ubuntu-topbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 16px;
+  color: #fff;
+  background: var(--ubuntu-aubergine);
+  font-size: 13px;
+  box-shadow: 0 1px 0 rgba(0,0,0,.35);
+}
+.ubuntu-brand, .ubuntu-topbar-center, .ubuntu-topbar-actions { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ubuntu-brand { font-weight: 700; }
+.ubuntu-brand-mark { display: inline-grid; width: 17px; height: 17px; place-items: center; color: var(--ubuntu-orange); font-size: 20px; line-height: 1; }
+.ubuntu-topbar-center { justify-content: center; font-size: 12px; opacity: .9; }
+.ubuntu-topbar-actions { justify-content: flex-end; color: #ddd; font-size: 11px; }
+.ubuntu-status-dot { width: 7px; height: 7px; border-radius: 50%; background: #8ae234; }
+.ubuntu-workspace { display: flex; min-height: calc(100vh - 42px); }
+.workflow-sidebar { flex: 0 0 292px; overflow: auto; padding: 18px 16px 24px; background: var(--ubuntu-surface); border-right: 1px solid var(--ubuntu-border); transition: flex-basis .18s ease, padding .18s ease; }
+.workflow-sidebar.is-closed { flex-basis: 0; width: 0; padding: 0; overflow: hidden; border: 0; }
+.workflow-sidebar-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.workflow-sidebar h1 { display: flex; align-items: center; gap: 8px; margin: 5px 0 0; font-size: 18px; font-weight: 500; }
+.eyebrow { color: var(--ubuntu-orange); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.workflow-intro { margin: 14px 0 18px; color: var(--ubuntu-muted); font-size: 12px; line-height: 1.5; }
+.icon-button { display: inline-grid; place-items: center; width: 28px; height: 28px; color: var(--ubuntu-ink); background: transparent; border: 1px solid transparent; border-radius: 4px; }
+.icon-button:hover { background: #e5e5e5; border-color: var(--ubuntu-border); }
+.workflow-name-label { display: grid; gap: 6px; color: var(--ubuntu-muted); font-size: 11px; }
+.workflow-name-label input { width: 100%; padding: 8px 9px; color: var(--ubuntu-ink); background: var(--ubuntu-panel); border: 1px solid var(--ubuntu-border); border-radius: 4px; font: inherit; }
+.workflow-name-label input:focus { outline: 2px solid rgba(233,84,32,.45); outline-offset: 1px; }
+.workflow-record-row { display: flex; align-items: center; gap: 10px; margin: 15px 0 10px; }
+.ubuntu-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 32px; padding: 6px 10px; color: var(--ubuntu-ink); background: #ededed; border: 1px solid #c7c7c7; border-radius: 4px; font: 500 12px Ubuntu, "Noto Sans SC", sans-serif; transition: background .15s ease, border-color .15s ease, transform .15s ease; }
+.ubuntu-button:hover { background: #e2e2e2; border-color: #ababab; }
+.ubuntu-button:active { transform: scale(.97); }
+.ubuntu-button.is-primary { color: #fff; background: var(--ubuntu-orange); border-color: #c74316; }
+.ubuntu-button.is-primary:hover { background: #d94818; }
+.ubuntu-button.is-recording { color: #fff; background: #a51d2d; border-color: #8b1625; }
+.ubuntu-button.is-quiet { color: #666; background: transparent; border-color: transparent; }
+.record-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.workflow-count { color: var(--ubuntu-muted); font-size: 11px; }
+.workflow-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; padding-bottom: 16px; border-bottom: 1px solid var(--ubuntu-border); }
+.workflow-list-head { display: flex; justify-content: space-between; margin: 17px 0 9px; color: var(--ubuntu-muted); font-size: 11px; }
+.workflow-list { display: grid; gap: 8px; }
+.workflow-empty { display: grid; justify-items: center; gap: 6px; padding: 24px 8px; color: #888; border: 1px dashed #c6c6c6; border-radius: 4px; font-size: 11px; text-align: center; }
+.workflow-item { padding: 10px; background: var(--ubuntu-panel); border: 1px solid var(--ubuntu-border); border-radius: 4px; }
+.workflow-item-title { display: flex; align-items: center; gap: 7px; min-width: 0; font-size: 12px; }
+.workflow-item-title strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+.workflow-item-meta { margin: 6px 0 9px 21px; color: var(--ubuntu-muted); font-size: 10px; }
+.workflow-item-actions { display: flex; gap: 10px; margin-left: 21px; }
+.workflow-item-actions button { display: inline-flex; align-items: center; gap: 4px; padding: 0; color: var(--ubuntu-orange); background: transparent; border: 0; font: 500 11px Ubuntu, "Noto Sans SC", sans-serif; }
+.calculator-pane { position: relative; flex: 1; min-width: 0; background: #deddda; }
+.calculator-pane .standalone-frame { width: 100%; height: calc(100vh - 42px); min-height: 720px; }
+.workflow-reopen { position: absolute; z-index: 3; top: 12px; left: 12px; display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; color: #fff; background: var(--ubuntu-aubergine); border: 0; border-radius: 4px; font: 500 12px Ubuntu, "Noto Sans SC", sans-serif; }
+.standalone-loading { color: var(--ubuntu-ink); background: var(--ubuntu-surface); font-family: Ubuntu, "Noto Sans SC", sans-serif; }
+@media (max-width: 760px) {
+  .ubuntu-topbar { grid-template-columns: 1fr auto; }
+  .ubuntu-topbar-center { display: none; }
+  .workflow-sidebar { position: absolute; z-index: 5; top: 42px; bottom: 0; left: 0; width: min(292px, 88vw); box-shadow: 8px 0 20px rgba(0,0,0,.18); }
+  .workflow-sidebar.is-closed { width: 0; }
+  .calculator-pane .standalone-frame { min-height: 760px; }
+}

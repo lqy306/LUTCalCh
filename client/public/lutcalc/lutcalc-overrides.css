@@ -237,3 +237,24 @@ html body #javascriptwarning { display: none !important; }
 @media only screen and (max-width: 40em) {
   html body #mob-status img { display: none !important; }
 }
+
+/* 独立计算器内页 GNOME/Ubuntu 覆盖：保持原始计算结构，统一其视觉控件。 */
+html, body { background: #deddda !important; color: #242424 !important; font-family: Ubuntu, "Noto Sans SC", sans-serif !important; }
+#titlebar { color: #fff !important; background: #2c001e !important; border: 0 !important; border-left: 4px solid #e95420 !important; border-radius: 4px !important; box-shadow: 0 2px 4px rgba(0,0,0,.18) !important; font-family: Ubuntu, "Noto Sans SC", sans-serif !important; letter-spacing: 0 !important; }
+#version { color: #f3c04b !important; font-family: Ubuntu, "Noto Sans SC", sans-serif !important; }
+#lutcalcform > section, #lutcalcform > div, #lutcalcform > fieldset, #lutcalcform .box, #lutcalcform .fieldset { background: #fff !important; border: 1px solid #c8c8c8 !important; border-radius: 4px !important; box-shadow: 0 1px 2px rgba(0,0,0,.1) !important; }
+#lutcalcform h1, #lutcalcform h2, #lutcalcform h3, #lutcalcform h4, #lutcalcform legend { color: #2c001e !important; border-bottom: 2px solid #e95420 !important; font-family: Ubuntu, "Noto Sans SC", sans-serif !important; letter-spacing: 0 !important; }
+#lutcalcform label, #lutcalcform .label, #lutcalcform .param-label { color: #555 !important; font-family: Ubuntu, "Noto Sans SC", sans-serif !important; letter-spacing: 0 !important; }
+#lutcalcform input, #lutcalcform select, #lutcalcform textarea { color: #242424 !important; background: #fff !important; border: 1px solid #b8b8b8 !important; border-radius: 4px !important; font-family: Ubuntu, "Noto Sans SC", sans-serif !important; }
+#lutcalcform input:focus, #lutcalcform select:focus, #lutcalcform textarea:focus { outline: 2px solid rgba(233,84,32,.45) !important; outline-offset: 1px; }
+#lutcalcform input[type="checkbox"], #lutcalcform input[type="radio"], #lutcalcform input[type="range"] { accent-color: #e95420; }
+#lutcalcform button, #lutcalcform input[type="button"], #lutcalcform input[type="submit"] { color: #fff !important; background: #2c001e !important; border: 1px solid #2c001e !important; border-radius: 4px !important; font-family: Ubuntu, "Noto Sans SC", sans-serif !important; letter-spacing: 0 !important; }
+#lutcalcform button:hover, #lutcalcform input[type="button"]:hover, #lutcalcform input[type="submit"]:hover { color: #fff !important; background: #e95420 !important; border-color: #c74316 !important; }
+#footer { color: #666 !important; background: transparent !important; border-top: 1px solid #c8c8c8 !important; font-family: Ubuntu, "Noto Sans SC", sans-serif !important; }
+@media only screen and (max-width: 40em) {
+  #titlebar { border-left-width: 4px !important; box-shadow: 0 2px 4px rgba(0,0,0,.18) !important; }
+  #lutcalcform > section, #lutcalcform > div, #lutcalcform > fieldset, #lutcalcform .box, #lutcalcform .fieldset { border-radius: 4px !important; }
+  #lutcalcform .tweakbox, #lutcalcform .tweakholder { color: #242424 !important; background: #fff !important; border: 1px solid #c8c8c8 !important; border-radius: 4px !important; }
+  html body #mob-status { background: #2c001e !important; border-left-color: #e95420 !important; box-shadow: 0 2px 4px rgba(0,0,0,.18) !important; }
+  html body #mob-status-text { color: #fff !important; font-family: Ubuntu, "Noto Sans SC", sans-serif !important; }
+}
