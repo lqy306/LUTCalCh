@@ -4,7 +4,7 @@
  * LUT 解析保持原版层级，作为调整项列表中的最后一个可展开条目。
  * 文件遵循 BSD Allman 大括号风格，并使用中文界面文案。
  */
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FileUp, RotateCcw, Sparkles } from "lucide-react";
 
 type NativeAdjustmentsProps = {
@@ -37,12 +37,17 @@ const ADJUSTMENTS: AdjustmentItem[] = [
 export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyzeLut, onResetLut }: NativeAdjustmentsProps)
 {
   const fileRef = useRef<HTMLInputElement>(null);
-  const [enabled, setEnabled] = useState<Record<string, boolean>>({});
-  const [customizationEnabled, setCustomizationEnabled] = useState(false);
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const defaultSyncRef = useRef(false);
+  const [enabled, setEnabled] = useState<Record<string, boolean>>(() => Object.fromEntries(ADJUSTMENTS.map((item) => [item.label, true])));
+  const [customizationEnabled, setCustomizationEnabled] = useState(true);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({ "白平衡": true });
   const [lutEnabled, setLutEnabled] = useState(false);
   const [lutOpen, setLutOpen] = useState(false);
   const [lutFileName, setLutFileName] = useState("");
+  const [referenceWhite, setReferenceWhite] = useState("5500");
+  const [newWhiteBalance, setNewWhiteBalance] = useState("5500");
+  const [ctoValue, setCtoValue] = useState("0");
+  const [greenValue, setGreenValue] = useState("0");
 
   const toggleItem = (item: AdjustmentItem, checked?: boolean) =>
   {
@@ -61,6 +66,13 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
       setLutOpen(false);
     }
   };
+
+  useEffect(() =>
+  {
+    if (!engineReady || defaultSyncRef.current) return;
+    defaultSyncRef.current = true;
+    ADJUSTMENTS.forEach((item) => onToggle(item.engineLabel, true));
+  }, [engineReady, onToggle]);
 
   const chooseLut = (file?: File) =>
   {
@@ -99,10 +111,28 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
               <span className="adjustment-state">{enabled[item.label] ? "已启用" : "未启用"}</span>
             </div>
             {expanded[item.label] && (
-              <div className="adjustment-details adjustment-placeholder-details">
-                <p>该模块已展开，选择框状态会同步到兼容计算引擎。</p>
-                <span>{enabled[item.label] ? "当前已启用" : "当前未启用"}</span>
-              </div>
+              item.label === "白平衡" ? (
+                <div className="adjustment-details white-balance-details">
+                  <div className="white-balance-inputs">
+                    <label className="native-field"><span>参考白</span><input type="number" value={referenceWhite} onChange={(event) => setReferenceWhite(event.target.value)} /><em>K</em></label>
+                    <label className="native-field"><span>新白平衡</span><input type="number" value={newWhiteBalance} onChange={(event) => setNewWhiteBalance(event.target.value)} /><em>K</em></label>
+                  </div>
+                  <button type="button" className="white-balance-unlock" disabled={!engineReady}>从新白平衡解锁光源</button>
+                  <div className="white-balance-slider-group">
+                    <input type="range" min="-100" max="100" value={ctoValue} onChange={(event) => setCtoValue(event.target.value)} aria-label="CTO 与 CTB" />
+                    <div className="white-balance-slider-meta"><span>CTO</span><span>清除 <button type="button" onClick={() => setCtoValue("0")}>重置</button></span><span>CTB</span></div>
+                  </div>
+                  <div className="white-balance-slider-group">
+                    <input type="range" min="-100" max="100" value={greenValue} onChange={(event) => setGreenValue(event.target.value)} aria-label="Minus Green 与 Plus Green" />
+                    <div className="white-balance-slider-meta"><span>Minus Green</span><span>清除 <button type="button" onClick={() => setGreenValue("0")}>重置</button></span><span>Plus Green</span></div>
+                  </div>
+                </div>
+              ) : (
+                <div className="adjustment-details adjustment-placeholder-details">
+                  <p>该模块已展开，选择框状态会同步到兼容计算引擎。</p>
+                  <span>{enabled[item.label] ? "当前已启用" : "当前未启用"}</span>
+                </div>
+              )
             )}
           </div>
         ))}
