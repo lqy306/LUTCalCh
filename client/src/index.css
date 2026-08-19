@@ -2141,9 +2141,13 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
   color: #d5dde2 !important;
 }
 
-html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded .adjustment-item-name,
-html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded .adjustment-chevron {
-  color: #ff9b6b !important;
+/* LUT 解析是工具条而非 Ubuntu 固定橙色提示；展开状态必须随当前主题强调色变化。 */
+.apple-app-shell .adjustment-lut-item.is-expanded .adjustment-item-name,
+.apple-app-shell .adjustment-lut-item.is-expanded .adjustment-chevron {
+  color: var(--theme-accent, var(--accent, #e95420)) !important;
+}
+.apple-app-shell .adjustment-lut-item.is-expanded .adjustment-state {
+  color: color-mix(in srgb, var(--theme-accent, var(--accent, #e95420)) 78%, var(--theme-text, #242424)) !important;
 }
 
 
@@ -2158,6 +2162,6 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.i
 }
 
 .apple-app-shell .adjustment-lut-item > summary:focus-visible {
-  outline: 2px solid var(--accent, #e95420);
+  outline: 2px solid var(--theme-accent, var(--accent, #e95420));
   outline-offset: -2px;
 }
