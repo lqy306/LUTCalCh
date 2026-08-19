@@ -38,6 +38,8 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
 {
   const fileRef = useRef<HTMLInputElement>(null);
   const [enabled, setEnabled] = useState<Record<string, boolean>>({});
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [lutEnabled, setLutEnabled] = useState(false);
   const [lutOpen, setLutOpen] = useState(false);
   const [lutFileName, setLutFileName] = useState("");
 
@@ -68,24 +70,38 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
       <div className="adjustment-list">
         {ADJUSTMENTS.map((item) => (
           <div className={`adjustment-item ${enabled[item.label] ? "is-active" : ""}`} key={item.label}>
-            <label>
-              <input
-                type="checkbox"
-                checked={Boolean(enabled[item.label])}
-                disabled={!engineReady}
-                onChange={() => toggleItem(item)}
-              />
-              <span>{item.label}</span>
-            </label>
-            <span className="adjustment-state">{enabled[item.label] ? "已启用" : "未启用"}</span>
+            <div className="adjustment-item-main">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={Boolean(enabled[item.label])}
+                  disabled={!engineReady}
+                  onChange={() => toggleItem(item)}
+                />
+                <span>{item.label}</span>
+              </label>
+              <button className="adjustment-expand-button" type="button" onClick={() => setExpanded((current) => ({ ...current, [item.label]: !current[item.label] }))} aria-expanded={Boolean(expanded[item.label])}>
+                {expanded[item.label] ? "收起" : "展开"}
+              </button>
+            </div>
+            {expanded[item.label] && (
+              <div className="adjustment-details adjustment-placeholder-details">
+                <p>该模块已展开，选择框状态会同步到兼容计算引擎。</p>
+                <span>{enabled[item.label] ? "当前已启用" : "当前未启用"}</span>
+              </div>
+            )}
           </div>
         ))}
-        <div className={`adjustment-item adjustment-lut-item ${lutOpen ? "is-active" : ""}`}>
-          <button className="adjustment-item-trigger" type="button" onClick={() => setLutOpen((value) => !value)} aria-expanded={lutOpen}>
-            <span className="adjustment-item-marker">＋</span>
-            <span>LUT 解析</span>
-            <span className="adjustment-state">{lutOpen ? "收起" : "展开"}</span>
-          </button>
+        <div className={`adjustment-item adjustment-lut-item ${lutOpen || lutEnabled ? "is-active" : ""}`}>
+          <div className="adjustment-item-main">
+            <label>
+              <input type="checkbox" checked={lutEnabled} disabled={!engineReady} onChange={(event) => { setLutEnabled(event.target.checked); setLutOpen(event.target.checked); }} />
+              <span>LUT 解析</span>
+            </label>
+            <button className="adjustment-expand-button" type="button" onClick={() => setLutOpen((value) => !value)} aria-expanded={lutOpen}>
+              {lutOpen ? "收起" : "展开"}
+            </button>
+          </div>
           {lutOpen && (
             <div className="adjustment-details lut-analysis-panel">
               <div className="lut-analysis-choice">

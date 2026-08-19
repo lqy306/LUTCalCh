@@ -769,3 +769,56 @@ html[data-workbench-mode="dark"] { color-scheme: dark; }
 .apple-app-shell .adjustment-item input[type="checkbox"] {
   accent-color: var(--theme-accent, #e95420);
 }
+
+
+/* 03 LUT 输出：单独占满工作区，并让内部表单保持居中阅读宽度。 */
+.apple-app-shell .export-card {
+  grid-column: 1 / -1;
+  width: 100%;
+  justify-self: stretch;
+}
+.apple-app-shell .export-card .export-fields,
+.apple-app-shell .export-card .native-actions {
+  width: min(100%, 980px);
+  margin-left: auto;
+  margin-right: auto;
+}
+.adjustment-item-main {
+  display: flex;
+  align-items: center;
+  min-height: 42px;
+}
+.adjustment-item-main > label {
+  flex: 1;
+}
+.adjustment-expand-button {
+  min-height: 28px;
+  margin-right: 9px;
+  padding: 5px 8px;
+  border: 1px solid var(--theme-border, #d6d6d6);
+  background: var(--theme-control, #f7f7f7);
+  color: var(--theme-muted, #6b6b6b);
+  border-radius: 3px;
+  font: 600 9px Ubuntu, "Noto Sans SC", sans-serif;
+}
+.adjustment-expand-button:hover,
+.adjustment-item.is-active .adjustment-expand-button {
+  border-color: var(--theme-accent, #e95420);
+  color: var(--theme-accent, #e95420);
+}
+.adjustment-placeholder-details p {
+  margin: 0;
+  color: var(--theme-muted, #6b6b6b);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.adjustment-placeholder-details span {
+  color: var(--theme-text, #242424);
+  font: 600 10px Ubuntu, "Noto Sans SC", sans-serif;
+}
+@media (max-width: 760px) {
+  .apple-app-shell .export-card .export-fields,
+  .apple-app-shell .export-card .native-actions {
+    width: 100%;
+  }
+}
