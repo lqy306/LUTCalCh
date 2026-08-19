@@ -322,13 +322,48 @@ export default function Home() {
     setEvents((current) => [...current, next].slice(-100));
   }, [recording]);
 
-  useEffect(() => {
+  /*
+   * 原版 LUTAnalyst 的文件读取是异步的：change 事件只代表文件已选中，
+   * 真正的解析、Gamma/Gamut 更新和画布重绘会在后续回调中完成。
+   * 因此这里不能只记录流程事件，必须在多个时间点重新同步父工作台预览。
+   */
+  const scheduleEngineRefresh = useCallback(() =>
+  {
+    [180, 520, 1100].forEach((delay) =>
+    {
+      window.setTimeout(() =>
+      {
+        hydrateEngine();
+        refreshPreview();
+      }, delay);
+    });
+  }, [hydrateEngine, refreshPreview]);
+
+  useEffect(() =>
+  {
     const documentRef = engineDocument();
     if (!engineReady || !documentRef) return;
+
+    const handleEngineMutation = () =>
+    {
+      scheduleEngineRefresh();
+    };
+
+    documentRef.addEventListener("input", handleEngineMutation, true);
+    documentRef.addEventListener("change", handleEngineMutation, true);
+    documentRef.addEventListener("click", handleEngineMutation, true);
     documentRef.addEventListener("change", recordEvent, true);
     documentRef.addEventListener("click", recordEvent, true);
-    return () => { documentRef.removeEventListener("change", recordEvent, true); documentRef.removeEventListener("click", recordEvent, true); };
-  }, [engineReady, recordEvent]);
+
+    return () =>
+    {
+      documentRef.removeEventListener("input", handleEngineMutation, true);
+      documentRef.removeEventListener("change", handleEngineMutation, true);
+      documentRef.removeEventListener("click", handleEngineMutation, true);
+      documentRef.removeEventListener("change", recordEvent, true);
+      documentRef.removeEventListener("click", recordEvent, true);
+    };
+  }, [engineReady, recordEvent, scheduleEngineRefresh]);
 
   useEffect(() => {
     if (!iframeRef.current?.contentDocument) return;

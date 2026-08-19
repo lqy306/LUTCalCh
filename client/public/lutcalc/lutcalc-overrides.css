@@ -699,3 +699,82 @@ html.embed-adjustments #box-twk > div:empty,
 html.embed-adjustments #box-twk > fieldset > div:empty {
 	display: none !important;
 }
+
+/*
+ * LUT 分析是调整项列表的最后一个模块。
+ * 原版把它作为一组宽大的灰色实验控件渲染，这里重新收敛成工作台卡片内的
+ * 标题行、文件行、选项网格和操作行，同时保留原版 input 的事件与解析逻辑。
+ */
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child {
+	display: grid !important;
+	grid-template-columns: minmax(0, 1fr) auto !important;
+	align-items: center !important;
+	gap: 8px !important;
+	min-height: 34px !important;
+	padding: 7px 8px !important;
+	background: var(--theme-control, #3a3a41) !important;
+	border: 1px solid var(--theme-border, #4b4b52) !important;
+	border-radius: var(--theme-radius, 4px) !important;
+}
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child > label:first-child {
+	grid-column: 1 !important;
+	grid-row: 1 !important;
+	font-size: 12px !important;
+	font-weight: 650 !important;
+	color: var(--theme-text, #f5f5f5) !important;
+}
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child > input.twk-checkbox,
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child > input.twk-checkbox-hide {
+	grid-column: 2 !important;
+	grid-row: 1 !important;
+}
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child > .tweak {
+	grid-column: 1 / -1 !important;
+	grid-row: 2 !important;
+	margin: 3px 0 0 !important;
+	padding: 10px !important;
+	background: var(--theme-surface, #28282d) !important;
+	border: 1px solid var(--theme-border, #4b4b52) !important;
+	border-radius: var(--theme-radius, 4px) !important;
+}
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child .twk-tab,
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child .twk-narrow-sub-box {
+	box-sizing: border-box !important;
+	margin: 6px 0 !important;
+	padding: 8px !important;
+	background: var(--theme-surface-muted, #333338) !important;
+	border: 1px solid var(--theme-border, #4b4b52) !important;
+	border-radius: var(--theme-radius, 4px) !important;
+}
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child .twk-tab-hide,
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child .twk-advanced-hide {
+	display: none !important;
+}
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child .tweak input[type="file"] {
+	width: 100% !important;
+	min-height: 36px !important;
+	padding: 5px !important;
+	color: var(--theme-text, #f5f5f5) !important;
+	background: var(--theme-input, #242429) !important;
+	border: 1px solid var(--theme-border, #4b4b52) !important;
+	border-radius: var(--theme-radius, 4px) !important;
+}
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child .tweak label {
+	color: var(--theme-muted, #bababa) !important;
+	font-size: 11px !important;
+	font-weight: 600 !important;
+}
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child .tweak input[type="radio"] {
+	display: inline-block !important;
+	width: 16px !important;
+	height: 16px !important;
+	min-width: 16px !important;
+	min-height: 16px !important;
+	margin: 0 5px 0 0 !important;
+}
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child .tweak input[type="button"] {
+	min-height: 30px !important;
+	margin-top: 8px !important;
+	padding: 6px 10px !important;
+	font-size: 11px !important;
+}
