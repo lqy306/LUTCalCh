@@ -29,6 +29,7 @@ import {
   Sun,
 } from "lucide-react";
 import { applyWorkbenchTheme, BUILTIN_THEMES, readStoredThemeId, readStoredThemeMode, resolveTheme, THEME_MODE_STORAGE_KEY, THEME_STORAGE_KEY, type ThemeMode } from "@/themes/themeRegistry";
+import NativeAdjustments from "@/components/NativeAdjustments";
 
 type WorkflowEvent = { action: "change" | "click"; selector: string; value?: string; checked?: boolean; label: string };
 type WorkflowFile = { version: 1; name: string; createdAt: string; events: WorkflowEvent[] };
@@ -434,6 +435,56 @@ export default function Home() {
     window.setTimeout(refreshPreview, 120);
   };
 
+  const findAdjustmentToggle = (label: string) =>
+  {
+    const documentRef = engineDocument();
+    if (!documentRef) return null;
+    return Array.from(documentRef.querySelectorAll("#box-twk .tweakholder")).map((node) => node as HTMLElement).find((node) => normalizeText(node.firstChild?.textContent || "") === label)?.querySelector("input[type=checkbox]") as HTMLInputElement | null;
+  };
+
+  const toggleAdjustment = (label: string, checked: boolean) =>
+  {
+    const toggle = findAdjustmentToggle(label);
+    const windowRef = engineWindow();
+    if (!toggle || !windowRef) return;
+    toggle.checked = checked;
+    toggle.dispatchEvent(new (windowRef as unknown as { Event: typeof Event }).Event("input", { bubbles: true }));
+    toggle.dispatchEvent(new (windowRef as unknown as { Event: typeof Event }).Event("change", { bubbles: true }));
+    window.setTimeout(refreshPreview, 180);
+    window.setTimeout(syncAdjustmentFrameHeight, 220);
+  };
+
+  const importAdjustmentLut = (file: File) =>
+  {
+    const documentRef = engineDocument();
+    const windowRef = engineWindow();
+    const input = documentRef?.querySelector("#box-twk input[type=file]") as HTMLInputElement | null;
+    if (!input || !windowRef) return;
+    const transfer = new DataTransfer();
+    transfer.items.add(file);
+    input.files = transfer.files;
+    input.dispatchEvent(new (windowRef as unknown as { Event: typeof Event }).Event("change", { bubbles: true }));
+    setMessage(`已载入 LUT：${file.name}`);
+  };
+
+  const analyzeAdjustmentLut = () =>
+  {
+    const documentRef = engineDocument();
+    const button = Array.from(documentRef?.querySelectorAll("#box-twk input[type=button], #box-twk button") || []).find((node) => /Analyse|分析|Re-Analyse/.test((node as HTMLInputElement).value || node.textContent || "")) as HTMLElement | undefined;
+    button?.click();
+    setMessage(button ? "正在分析 LUT" : "未找到 LUT 分析操作");
+    window.setTimeout(() => { hydrateEngine(); refreshPreview(); }, 500);
+  };
+
+  const resetAdjustmentLut = () =>
+  {
+    const documentRef = engineDocument();
+    const button = Array.from(documentRef?.querySelectorAll("#box-twk input[type=button], #box-twk button") || []).find((node) => /New LUT|新建 LUT/.test((node as HTMLInputElement).value || node.textContent || "")) as HTMLElement | undefined;
+    button?.click();
+    setMessage("已重置 LUT 解析");
+    window.setTimeout(() => { hydrateEngine(); refreshPreview(); }, 260);
+  };
+
   const engineAction = (labels: string[], success: string) => {
     const documentRef = engineDocument();
     if (!documentRef) return;
@@ -506,7 +557,8 @@ export default function Home() {
             <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
             <section className="native-card pipeline-card"><div className="card-title"><span>02</span><div><h3>色彩管线</h3><p>定义记录伽马、色域与目标输出。</p></div></div><div className="pipeline-groups"><div><h4>记录设置</h4><div className="form-grid">{select("recGammaMaker", "伽马品牌")}{select("recGamma", "记录伽马")}{select("recGamutMaker", "色域品牌")}{select("recGamut", "记录色域")}</div></div><div><h4>输出设置</h4><div className="form-grid">{select("outGammaMaker", "伽马品牌")}{select("outGamma", "输出伽马")}{select("outGamutMaker", "色域品牌")}{select("outGamut", "输出色域")}</div></div></div></section>
             <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>命名、选择编码与生成导出文件。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field>{select("lutFormat", "输出格式")}{select("hardClip", "硬裁切")}</div><div className="native-actions"><button className="apple-button" onClick={() => engineAction(["Preview", "预览"], "预览已更新")}><Eye size={15} />更新预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
-            <section className="native-card adjust-card original-adjust-card" aria-label="调整项"><iframe ref={iframeRef} className="adjustments-engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="原版 LUTCalc 调整项" onLoad={() => {         enforceAdjustmentEmbedLayout(); if (!verifyAdjustmentEmbed()) return; installAdjustmentBridge(); [180, 520, 1100].forEach((delay) => window.setTimeout(installAdjustmentBridge, delay)); const documentRef = engineDocument(); if (documentRef) applyWorkbenchTheme(activeTheme, themeMode, documentRef); hydrateEngine(); window.setTimeout(hydrateEngine, 720); window.setTimeout(observeAdjustmentFrame, 760); }} /></section>
+            <NativeAdjustments engineReady={engineReady} onToggle={toggleAdjustment} onImportLut={importAdjustmentLut} onAnalyzeLut={analyzeAdjustmentLut} onResetLut={resetAdjustmentLut} />
+            <iframe ref={iframeRef} className="engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="LUTCalc 同源计算引擎" onLoad={() => { enforceAdjustmentEmbedLayout(); if (!verifyAdjustmentEmbed()) return; installAdjustmentBridge(); [180, 520, 1100].forEach((delay) => window.setTimeout(installAdjustmentBridge, delay)); const documentRef = engineDocument(); if (documentRef) applyWorkbenchTheme(activeTheme, themeMode, documentRef); hydrateEngine(); window.setTimeout(hydrateEngine, 720); }} />
             <section className="native-card preview-card"><div className="card-title"><span>05</span><div><h3>曲线预览</h3><p>{previewHint}</p></div></div><div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div><div className="preview-footnote"><span>状态</span><strong>{engineReady ? "参数已同步" : "加载中"}</strong><span>工作流程记录会自动捕获原生参数调整。</span></div></section>
           </div>
         </section>

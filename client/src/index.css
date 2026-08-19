@@ -576,3 +576,196 @@ html[data-workbench-mode="dark"] { color-scheme: dark; }
 .curve-preview canvas {
   mix-blend-mode: normal !important;
 }
+
+
+/*
+ * 设计方向：统一 Ubuntu 工作台。
+ * 原生调整项复用主卡片的表面、边框、间距和强调色；LUT 解析作为列表末尾同级条目。
+ */
+.adjustments-card {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+.adjustments-card .card-title {
+  margin-bottom: 14px;
+}
+.adjustment-list {
+  display: grid;
+  gap: 6px;
+}
+.adjustment-item {
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  background: color-mix(in srgb, var(--paper) 74%, white);
+  color: var(--ink);
+  transition: background .16s var(--ease-out), border-color .16s var(--ease-out), transform .16s var(--ease-out);
+}
+.adjustment-item:hover {
+  border-color: var(--ink);
+  transform: translateX(2px);
+}
+.adjustment-item.is-active {
+  background: var(--sulfur);
+  border-color: var(--ink);
+}
+.adjustment-item > label,
+.adjustment-item-trigger {
+  width: 100%;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 11px;
+  color: inherit;
+  font: 600 11px/1.2 "IBM Plex Mono", monospace;
+  text-align: left;
+}
+.adjustment-item > label {
+  cursor: pointer;
+}
+.adjustment-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--ink);
+}
+.adjustment-state {
+  margin-left: auto;
+  color: color-mix(in srgb, var(--ink) 52%, transparent);
+  font: 600 9px "IBM Plex Mono", monospace;
+  white-space: nowrap;
+}
+.adjustment-item-trigger {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.adjustment-item-marker {
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border: 1px solid currentColor;
+  font-size: 14px;
+  line-height: 1;
+}
+.adjustment-details {
+  display: grid;
+  gap: 10px;
+  padding: 0 11px 12px 38px;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+}
+.adjustment-detail-label,
+.lut-file-field > span {
+  display: block;
+  margin-bottom: 6px;
+  color: color-mix(in srgb, var(--ink) 58%, transparent);
+  font: 600 9px "IBM Plex Mono", monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.segmented-control.compact {
+  margin: 0;
+  display: flex;
+  gap: 4px;
+}
+.segmented-control.compact button {
+  min-height: 31px;
+  padding: 6px 8px;
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  background: color-mix(in srgb, var(--paper) 62%, white);
+  color: color-mix(in srgb, var(--ink) 66%, transparent);
+  font: 600 9px "IBM Plex Mono", monospace;
+}
+.segmented-control.compact button.selected {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+.lut-file-field {
+  display: block;
+}
+.lut-file-field input[type="file"] {
+  width: 100%;
+  min-height: 36px;
+  padding: 6px;
+  border: 1px solid color-mix(in srgb, var(--ink) 20%, transparent);
+  background: color-mix(in srgb, var(--paper) 58%, white);
+  color: var(--ink);
+  font: 500 10px "IBM Plex Mono", monospace;
+}
+.lut-file-status {
+  overflow: hidden;
+  color: color-mix(in srgb, var(--ink) 58%, transparent);
+  font: 500 10px "IBM Plex Mono", monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.adjustment-detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.adjustment-detail-actions .apple-button {
+  min-height: 32px;
+  padding: 7px 9px;
+  font-size: 9px;
+}
+@media (max-width: 760px) {
+  .adjustment-details {
+    padding-left: 11px;
+  }
+  .segmented-control.compact {
+    flex-direction: column;
+  }
+  .segmented-control.compact button {
+    width: 100%;
+  }
+}
+
+
+/* 最终主题覆盖：原生调整项必须与主工作台使用同一组运行时主题令牌。 */
+.apple-app-shell .adjustments-card {
+  background: var(--theme-card, #fff) !important;
+  color: var(--theme-text, #242424) !important;
+  border-color: var(--theme-border, #d6d6d6) !important;
+}
+.apple-app-shell .adjustment-item {
+  background: var(--theme-surface-muted, #f7f7f7) !important;
+  color: var(--theme-text, #242424) !important;
+  border-color: var(--theme-border, #d6d6d6) !important;
+}
+.apple-app-shell .adjustment-item:hover {
+  border-color: var(--theme-accent, #e95420) !important;
+}
+.apple-app-shell .adjustment-item.is-active {
+  background: var(--theme-accent-soft, #fff3ed) !important;
+  border-color: var(--theme-accent, #e95420) !important;
+}
+.apple-app-shell .adjustment-state,
+.apple-app-shell .adjustment-detail-label,
+.apple-app-shell .lut-file-field > span,
+.apple-app-shell .lut-file-status {
+  color: var(--theme-muted, #6b6b6b) !important;
+}
+.apple-app-shell .adjustment-details {
+  border-top-color: var(--theme-border, #d6d6d6) !important;
+}
+.apple-app-shell .segmented-control.compact button {
+  background: var(--theme-control, #f7f7f7) !important;
+  color: var(--theme-muted, #6b6b6b) !important;
+  border-color: var(--theme-border, #d6d6d6) !important;
+}
+.apple-app-shell .segmented-control.compact button.selected {
+  background: var(--theme-accent, #e95420) !important;
+  color: var(--theme-topbar-text, #fff) !important;
+  border-color: var(--theme-accent, #e95420) !important;
+}
+.apple-app-shell .lut-file-field input[type="file"] {
+  background: var(--theme-input, #fff) !important;
+  color: var(--theme-text, #242424) !important;
+  border-color: var(--theme-border, #d6d6d6) !important;
+}
+.apple-app-shell .adjustment-item input[type="checkbox"] {
+  accent-color: var(--theme-accent, #e95420);
+}
