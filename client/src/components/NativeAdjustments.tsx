@@ -70,7 +70,6 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
   const defaultSyncRef = useRef(false);
   const [enabled, setEnabled] = useState<Record<string, boolean>>(() => Object.fromEntries(ADJUSTMENTS.map((item) => [item.label, false])));
   const [customizationEnabled, setCustomizationEnabled] = useState(true);
-  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [values, setValues] = useState<Record<string, string>>(() => Object.fromEntries(ADJUSTMENTS.flatMap((item) => item.controls.map((control) => [`${item.label}.${control.key}`, control.value]))));
   const [selectValues, setSelectValues] = useState<Record<string, string>>(() => Object.fromEntries(ADJUSTMENTS.flatMap((item) => (item.selects || []).map((select) => [`${item.label}.${select.key}`, select.value]))));
     const [lutOpen, setLutOpen] = useState(false);
@@ -80,7 +79,6 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
   {
     const nextValue = checked ?? !enabled[item.label];
     setEnabled((current) => ({ ...current, [item.label]: nextValue }));
-    setExpanded((current) => ({ ...current, [item.label]: nextValue }));
     onToggle(item.engineLabel, nextValue);
   };
 
@@ -123,17 +121,17 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
     <section className="native-card adjustments-card" aria-label="调整项">
       <div className="card-title adjustments-title">
         <span>04</span>
-        <div><h3>调整项</h3><p>按原版模块顺序排列；每一项都可展开并直接调整。</p></div>
-        <label className="adjustments-master-toggle"><input type="checkbox" checked={customizationEnabled} disabled={!engineReady} onChange={(event) => { const nextValue = event.target.checked; setCustomizationEnabled(nextValue); setExpanded({}); ADJUSTMENTS.forEach((item) => onToggle(item.engineLabel, nextValue ? Boolean(enabled[item.label]) : false)); }} /><span>启用调整项</span></label>
+        <div><h3>调整项</h3><p>勾选模块后直接显示参数；LUT 解析保留独立工具展开。</p></div>
+        <label className="adjustments-master-toggle"><input type="checkbox" checked={customizationEnabled} disabled={!engineReady} onChange={(event) => { const nextValue = event.target.checked; setCustomizationEnabled(nextValue); ADJUSTMENTS.forEach((item) => onToggle(item.engineLabel, nextValue ? Boolean(enabled[item.label]) : false)); }} /><span>启用调整项</span></label>
       </div>
       <div className="adjustment-list">
         {ADJUSTMENTS.map((item) => (
-          <div className={`adjustment-item ${enabled[item.label] ? "is-active" : ""} ${expanded[item.label] ? "is-expanded" : ""}`} key={item.label}>
-            <button type="button" className="adjustment-item-main" disabled={!customizationEnabled || !engineReady} onClick={() => setExpanded((current) => ({ ...current, [item.label]: !current[item.label] }))}>
-              <span className="adjustment-check" onClick={(event) => event.stopPropagation()}><input type="checkbox" checked={Boolean(enabled[item.label])} disabled={!engineReady || !customizationEnabled} onChange={(event) => toggleItem(item, event.target.checked)} /></span>
-              <span className="adjustment-item-name">{item.label}</span><span className="adjustment-item-summary">{item.summary}</span><span className="adjustment-state">{enabled[item.label] ? "启用" : "关闭"}</span><ChevronDown size={16} className="adjustment-chevron" />
-            </button>
-            {expanded[item.label] && <div className="adjustment-details">
+          <div className={`adjustment-item ${enabled[item.label] ? "is-active" : ""}`} key={item.label}>
+            <div className="adjustment-item-main">
+              <span className="adjustment-check"><input type="checkbox" checked={Boolean(enabled[item.label])} disabled={!engineReady || !customizationEnabled} onChange={(event) => toggleItem(item, event.target.checked)} /></span>
+              <span className="adjustment-item-name">{item.label}</span><span className="adjustment-item-summary">{item.summary}</span><span className="adjustment-state">{enabled[item.label] ? "启用" : "关闭"}</span>
+            </div>
+            {enabled[item.label] && <div className="adjustment-details">
               <div className="adjustment-detail-grid">
                 {item.controls.map((spec) => <SliderControl key={spec.key} module={item.label} spec={spec} value={values[`${item.label}.${spec.key}`] ?? spec.value} disabled={!engineReady || !customizationEnabled || !enabled[item.label]} onChange={updateControl} />)}
                 {(item.selects || []).map((select) => <label className="adjustment-control adjustment-select-control" key={select.key}><span>{select.label}</span><select value={selectValues[`${item.label}.${select.key}`] ?? select.value} disabled={!engineReady || !customizationEnabled || !enabled[item.label]} onChange={(event) => updateControl(item.label, select.key, event.target.value)}>{select.options.map((option) => <option value={option} key={option}>{option}</option>)}</select></label>)}

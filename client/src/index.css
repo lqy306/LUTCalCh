@@ -1672,6 +1672,12 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.i
 }
 
 
+/* 普通调整项由勾选框唯一控制，不保留展开箭头或空的箭头列。 */
+.apple-app-shell .adjustment-item:not(.adjustment-lut-item) .adjustment-item-main {
+  grid-template-columns: 24px minmax(150px, 220px) minmax(0, 1fr) auto;
+  cursor: default;
+}
+
 /* LUT 解析是独立工具条，不参与普通调整项 is-active 显示规则。 */
 .apple-app-shell .adjustment-lut-item .adjustment-details {
   display: grid;

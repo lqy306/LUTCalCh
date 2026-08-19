@@ -48,14 +48,15 @@ try:
     cdp('Runtime.enable')
     cdp('Page.navigate', {'url': URL})
     time.sleep(8)
-    before = evaluate("({url:location.href, count:document.querySelectorAll('.adjustment-lut-item').length, panel:!!document.querySelector('.lut-analysis-panel'), text:document.querySelector('.adjustment-lut-item')?.innerText || ''})")
+    before = evaluate("(() => { const item=document.querySelector('.adjustment-item:not(.adjustment-lut-item)'); return {url:location.href, count:document.querySelectorAll('.adjustment-lut-item').length, panel:!!document.querySelector('.lut-analysis-panel'), text:document.querySelector('.adjustment-lut-item')?.innerText || '', regularSvg:item?.querySelectorAll('.adjustment-chevron').length || 0, regularDetails:!!item?.querySelector('.adjustment-details'), regularCheckbox:!!item?.querySelector('input[type=checkbox]')}; })()")
     clicked = evaluate("(() => { const el=document.querySelector('.adjustment-lut-item .adjustment-item-main'); if (!el) return false; el.click(); return true; })()")
     time.sleep(1)
-    after = evaluate("(() => { const item=document.querySelector('.adjustment-lut-item'); const panel=document.querySelector('.lut-analysis-panel'); const style=panel ? getComputedStyle(panel) : null; return {clicked:true, panel:!!panel, panelDisplay:style?.display || '', panelHeight:panel?.getBoundingClientRect().height || 0, input:!!item?.querySelector('input[type=file]'), buttons:[...item?.querySelectorAll('button') || []].map(x=>x.innerText), expanded:item?.classList.contains('is-expanded') || false}; })()")
+    after = evaluate("(() => { const item=document.querySelector('.adjustment-lut-item'); const panel=document.querySelector('.lut-analysis-panel'); const style=panel ? getComputedStyle(panel) : null; return {clicked:true, panel:!!panel, panelDisplay:style?.display || '', panelHeight:panel?.getBoundingClientRect().height || 0, input:!!item?.querySelector('input[type=file]'), buttons:[...item?.querySelectorAll('button') || []].map(x=>x.innerText), expanded:item?.classList.contains('is-expanded') || false, itemClass:item?.className || '', parentClass:item?.parentElement?.className || '', shellClass:item?.closest('[class*=shell]')?.className || '', matched:!!item?.closest('.apple-app-shell')}; })()")
     cdp('Page.captureScreenshot', {'format': 'png', 'captureBeyondViewport': True, 'fromSurface': True})
     shot = cdp('Page.captureScreenshot', {'format': 'png', 'captureBeyondViewport': True, 'fromSurface': True})
     Path(OUT).write_bytes(__import__('base64').b64decode(shot['result']['data']))
-    print(json.dumps({'before': before, 'clicked': clicked, 'after': after, 'screenshot': OUT}, ensure_ascii=False, indent=2))
+    regular = evaluate("(() => { const item=document.querySelector('.adjustment-item:not(.adjustment-lut-item)'); const checkbox=item?.querySelector('input[type=checkbox]'); checkbox?.click(); return {regularSvg:item?.querySelectorAll('.adjustment-chevron').length || 0, regularDetails:!!item?.querySelector('.adjustment-details'), active:item?.classList.contains('is-active'), checkbox:checkbox?.checked || false}; })()")
+    print(json.dumps({'before': before, 'clicked': clicked, 'after': after, 'regularAfterCheckbox': regular, 'screenshot': OUT}, ensure_ascii=False, indent=2))
 finally:
     try:
         ws.close()
