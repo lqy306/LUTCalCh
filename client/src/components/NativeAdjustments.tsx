@@ -15,6 +15,17 @@ type NativeAdjustmentsProps = {
   onControlChange?: (module: string, control: string, value: string | boolean) => void;
   onLutAnalystConfigChange?: (control: string, value: string) => void;
   lutAnalystChoices?: { gamma: { value: string; label: string }[]; gamut: { value: string; label: string }[] };
+  analysisState?: { status: "idle" | "loading" | "analyzing" | "ready" | "error"; fileName: string; title: string; outputGamma: string; outputGamut: string; completedAt: string; message: string; samples: { label: string; ire: string; code10: string }[] };
+};
+
+type LutFileMetadata = {
+  title: string;
+  model: string;
+  gamma: string;
+  gamut: string;
+  dimension: string;
+  sha256: string;
+  diagnostics: string[];
 };
 
 type ControlSpec = {
@@ -66,7 +77,7 @@ function SliderControl({ module, spec, value, disabled, onChange }: { module: st
   );
 }
 
-export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyzeLut, onResetLut, onControlChange, onLutAnalystConfigChange, lutAnalystChoices }: NativeAdjustmentsProps)
+export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyzeLut, onResetLut, onControlChange, onLutAnalystConfigChange, lutAnalystChoices, analysisState }: NativeAdjustmentsProps)
 {
   const fileRef = useRef<HTMLInputElement>(null);
   const defaultSyncRef = useRef(false);
@@ -79,6 +90,7 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
   const [lutAnalyst, setLutAnalyst] = useState({ title: "自定义 LUT", inputGamma: "S-Log3", inputGamut: "Sony S-Gamut3.cine", dimension: "33³", method: "三线性", range: "109%→100%" });
   const [lutAdvancedOpen, setLutAdvancedOpen] = useState(false);
   const [lutCompatibility, setLutCompatibility] = useState({ compatible: true, message: "导入后将根据 LUT 文件头核对输入 Gamma 与色域。" });
+  const [lutMetadata, setLutMetadata] = useState<LutFileMetadata | null>(null);
   const analystGammaChoices = lutAnalystChoices?.gamma || [];
   const analystGamutChoices = lutAnalystChoices?.gamut || [];
 
@@ -132,6 +144,31 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
     onImportLut(file);
     void file.text().then((content) =>
     {
+      const readComment = (key: string) => content.match(new RegExp(`^\\s*#${key}\\s*:\\s*(.+)$`, "im"))?.[1]?.trim() || "";
+      const dimension = content.match(/^\s*LUT_3D_SIZE\s+(\d+)/im)?.[1] || content.match(/^\s*LUT_1D_SIZE\s+(\d+)/im)?.[1] || "";
+      const diagnostics: string[] = [];
+      if (!dimension) diagnostics.push("未找到 LUT_3D_SIZE 或 LUT_1D_SIZE；原版引擎可能无法确定网格维度。");
+      if (!/^\s*(?:#|TITLE|LUT_|DOMAIN_|-?\d)/im.test(content)) diagnostics.push("文件内容不符合常见 Cube/LUT 文本结构。");
+      const isThreeDimensional = /^\s*LUT_3D_SIZE\s+/im.test(content);
+      const dataRows = content.split(/\r?\n/).map((line) => line.trim()).filter((line) => /^-?(?:\d|\.\d)/.test(line)).map((line) => line.split(/\s+/).slice(0, 3).map(Number));
+      if (dataRows.some((row) => row.length !== 3 || row.some((value) => !Number.isFinite(value)))) diagnostics.push("检测到非数值或非 RGB 三元组数据行；请导出标准 Cube/LUT 文本文件后重试。");
+      if (dimension && isThreeDimensional && dataRows.length < Math.pow(Number(dimension), 3)) diagnostics.push(`3D 网格声明为 ${dimension}³，但只读取到 ${dataRows.length} 行 RGB 数据；文件可能截断。`);
+      void crypto.subtle.digest("SHA-256", new TextEncoder().encode(content)).then((hash) =>
+      {
+        const sha256 = Array.from(new Uint8Array(hash)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
+        setLutMetadata({ title: readComment("title"), model: readComment("model"), gamma: readComment("Gamma"), gamut: readComment("Gamut"), dimension, sha256, diagnostics });
+      }).catch(() => setLutMetadata({ title: readComment("title"), model: readComment("model"), gamma: readComment("Gamma"), gamut: readComment("Gamut"), dimension, sha256: "浏览器未提供 SHA-256", diagnostics }));
+      const sourceTitle = readComment("title") || file.name.replace(/^pasted_file_[^_]+_/, "").replace(/\.(cube|3dl|lut|txt)$/i, "");
+      if (sourceTitle)
+      {
+        setLutAnalyst((current) => ({ ...current, title: sourceTitle }));
+        onLutAnalystConfigChange?.("title", sourceTitle);
+      }
+      if (diagnostics.length)
+      {
+        setLutCompatibility({ compatible: false, message: `分析前诊断：${diagnostics[0]}` });
+        return;
+      }
       const requestedGamma = /F-Log2/i.test(content) || /FLog2/i.test(file.name) ? "Fujifilm F-Log2" : "";
       const requestedGamut = /F-GamutC/i.test(content) || /F-Log\s*Gamut/i.test(content) ? "Fujifilm F-Log Gamut" : "";
       const gammaSupported = !requestedGamma || analystGammaChoices.some((item) => item.label === requestedGamma);
@@ -150,7 +187,7 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
         return;
       }
       setLutCompatibility({ compatible: true, message: "未检测到可自动匹配的输入标记；将按当前选择分析。" });
-    }).catch(() => setLutCompatibility({ compatible: true, message: "无法读取 LUT 文件头；将按当前选择分析。" }));
+    }).catch(() => { setLutMetadata(null); setLutCompatibility({ compatible: true, message: "无法读取 LUT 文件头；将按当前选择分析。" }); });
   };
 
   useEffect(() =>
@@ -196,9 +233,12 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
               <label className="adjustment-control"><span>输入 Gamut</span><select value={lutAnalyst.inputGamut} disabled={!engineReady || !analystGamutChoices.length} onChange={(event) => updateLutAnalyst("inputGamut", event.target.value)}>{analystGamutChoices.length ? analystGamutChoices.map((item) => <option value={item.label} key={item.value}>{item.label}</option>) : <option>正在读取原版色域目录…</option>}</select></label>
             </div>
             <div className="lut-analyst-section"><span className="lut-analyst-section-label">分析设置</span><div className="lut-analyst-choice-row"><span>分析维度</span><label><input type="radio" name="lut-dimension" checked={lutAnalyst.dimension === "33³"} disabled={!engineReady} onChange={() => updateLutAnalyst("dimension", "33³")} />33³</label><label><input type="radio" name="lut-dimension" checked={lutAnalyst.dimension === "65³"} disabled={!engineReady} onChange={() => updateLutAnalyst("dimension", "65³")} />65³</label></div><div className="lut-analyst-choice-row"><span>分析方法</span><label><input type="radio" name="lut-method" checked={lutAnalyst.method === "三线性"} disabled={!engineReady} onChange={() => updateLutAnalyst("method", "三线性")} />三线性</label><label><input type="radio" name="lut-method" checked={lutAnalyst.method === "四面体"} disabled={!engineReady} onChange={() => updateLutAnalyst("method", "四面体")} />四面体</label><label><input type="radio" name="lut-method" checked={lutAnalyst.method === "三次插值（Tricubic）"} disabled={!engineReady} onChange={() => updateLutAnalyst("method", "三次插值（Tricubic）")} />三次插值（Tricubic）</label></div></div>
-            <div className="lut-analyst-section"><span className="lut-analyst-section-label">LUT 范围</span><div className="lut-analyst-range-grid">{["109%→100%", "109%→109%", "100%→100%", "100%→109%"].map((range) => <label key={range}><input type="radio" name="lut-range" checked={lutAnalyst.range === range} disabled={!engineReady} onChange={() => updateLutAnalyst("range", range)} />{range}</label>)}</div></div>
+            <div className="lut-analyst-section"><span className="lut-analyst-section-label">LUT 范围</span><div className="lut-analyst-range-grid">{["109%→100%", "109%→109%", "100%→100%", "100%→109%"].map((range) => <label key={range}><input type="radio" name="lut-range" checked={lutAnalyst.range === range} disabled={!engineReady} onChange={() => updateLutAnalyst("range", range)} />{range}</label>)}</div><p className="lut-analyst-range-help">箭头左侧为文件输入编码范围，右侧为分析后的显示输出范围。100% 表示视频合法范围，109% 保留超白；范围不符时高光裁切与灰阶结果会改变。</p></div>
             <label className="adjustment-control lut-file-field"><span>LUT 文件</span><input ref={fileRef} type="file" accept=".cube,.3dl,.lut,.txt" disabled={!engineReady} onChange={(event) => chooseLut(event.target.files?.[0])} /></label><div className="lut-file-status">{lutFileName || "尚未选择文件"}</div><p className={`lut-analyst-compatibility ${lutCompatibility.compatible ? "is-compatible" : "is-error"}`}>{lutCompatibility.message}</p>
-            <div className="adjustment-detail-actions lut-analyst-actions"><button type="button" className="adjustment-inline-button is-primary" disabled={!engineReady || !lutFileName || !lutCompatibility.compatible} onClick={() => { onAnalyzeLut(); /* 原版完成分析时会以文件名回填标题；完成期间多次回写用户标题，确保 LA 名称与导出名称一致。 */ [700, 1800, 3600, 7200].forEach((delay) => window.setTimeout(() => onLutAnalystConfigChange?.("title", lutAnalyst.title), delay)); }}><Sparkles size={14} />分析 LUT</button><button type="button" className="adjustment-inline-button" disabled={!engineReady} onClick={() => { setLutFileName(""); setLutOpen(true); setLutCompatibility({ compatible: true, message: "导入后将根据 LUT 文件头核对输入 Gamma 与色域。" }); setLutAnalyst({ title: "自定义 LUT", inputGamma: "S-Log3", inputGamut: "Sony S-Gamut3.cine", dimension: "33³", method: "三线性", range: "109%→100%" }); onResetLut(); }}><RotateCcw size={14} />新建 LUT</button><button type="button" className="adjustment-inline-button" disabled={!engineReady} onClick={() => fileRef.current?.click()}><FileUp size={14} />选择文件</button></div>
+            {lutMetadata && <div className="lut-analyst-metadata"><span>原始标题：{lutMetadata.title || "未提供"}</span><span>原始输入：{lutMetadata.gamma || "未提供"}</span><span>原始色域：{lutMetadata.gamut || "未提供"}</span><span>网格：{lutMetadata.dimension ? `${lutMetadata.dimension}³` : "未声明"}</span><span>机型：{lutMetadata.model || "未提供"}</span><span>SHA-256：{lutMetadata.sha256 ? `${lutMetadata.sha256.slice(0, 16)}…` : "计算中"}</span><span className="lut-analyst-mapping">引擎映射：{lutAnalyst.inputGamma} / {lutAnalyst.inputGamut}</span><span className="lut-analyst-mapping">输出解释：{lutMetadata.gamut || "文件未声明"}；分析后以 LA - {lutAnalyst.title} 注册为原版输出。</span></div>}
+            {lutMetadata && <div className="lut-analyst-metadata"><span>原始标题：{lutMetadata.title || "未提供"}</span><span>原始输入：{lutMetadata.gamma || "未提供"}</span><span>原始色域：{lutMetadata.gamut || "未提供"}</span><span>网格：{lutMetadata.dimension ? `${lutMetadata.dimension}³` : "未声明"}</span><span>机型：{lutMetadata.model || "未提供"}</span><span>SHA-256：{lutMetadata.sha256 ? `${lutMetadata.sha256.slice(0, 16)}…` : "计算中"}</span><span className="lut-analyst-mapping">引擎映射：{lutAnalyst.inputGamma} / {lutAnalyst.inputGamut}</span><span className="lut-analyst-mapping">输出解释：{lutMetadata.gamut || "文件未声明"}；分析后以 LA - {lutAnalyst.title} 注册为原版输出。</span>{/(F-Log2C|F-GamutC|ITU-R BT\.709)/i.test(`${lutMetadata.gamma} ${lutMetadata.gamut}`) && <span className="lut-analyst-alias-warning">别名提示：保留文件中的 F-Log2C / F-GamutC / ITU-R BT.709 原始定义；原版引擎采用上方标准选项映射，不宣称二者为严格同名空间。</span>}{lutMetadata.diagnostics.map((diagnostic) => <span className="lut-analyst-diagnostic" key={diagnostic}>分析前诊断：{diagnostic}</span>)}</div>}
+            {analysisState && analysisState.status !== "idle" && <div className={`lut-analysis-result is-${analysisState.status}`}><strong>{analysisState.status === "ready" ? "分析结果已同步" : analysisState.status === "error" ? "分析未完成" : "分析状态"}</strong><span>{analysisState.message}</span>{analysisState.status === "ready" && <small>当前输出：{analysisState.outputGamma} / {analysisState.outputGamut}；分析参数：{lutAnalyst.dimension}、{lutAnalyst.method}、{lutAnalyst.range}；完成时间：{analysisState.completedAt}</small>}{analysisState.status === "ready" && Boolean(analysisState.samples.length) && <div className="lut-analysis-samples">{analysisState.samples.map((sample) => <span key={sample.label}><b>{sample.label}</b>{sample.ire} / 10-bit {sample.code10}</span>)}</div>}</div>}
+            <div className="adjustment-detail-actions lut-analyst-actions"><button type="button" className="adjustment-inline-button is-primary" disabled={!engineReady || !lutFileName || !lutCompatibility.compatible || analysisState?.status === "analyzing"} onClick={() => { onAnalyzeLut(); /* 原版完成分析时会以文件名回填标题；完成期间多次回写用户标题，确保 LA 名称与导出名称一致。 */ [700, 1800, 3600, 7200].forEach((delay) => window.setTimeout(() => onLutAnalystConfigChange?.("title", lutAnalyst.title), delay)); }}><Sparkles size={14} />{analysisState?.status === "analyzing" ? "正在分析…" : "分析 LUT 并应用当前输出"}</button><button type="button" className="adjustment-inline-button" disabled={!engineReady} onClick={() => { setLutFileName(""); setLutMetadata(null); setLutOpen(true); setLutCompatibility({ compatible: true, message: "导入后将根据 LUT 文件头核对输入 Gamma 与色域。" }); setLutAnalyst({ title: "自定义 LUT", inputGamma: "S-Log3", inputGamut: "Sony S-Gamut3.cine", dimension: "33³", method: "三线性", range: "109%→100%" }); onResetLut(); }}><RotateCcw size={14} />新建 LUT</button><button type="button" className="adjustment-inline-button" disabled={!engineReady} onClick={() => fileRef.current?.click()}><FileUp size={14} />选择文件</button></div>
             <button type="button" className="lut-advanced-toggle" aria-expanded={lutAdvancedOpen} onClick={() => setLutAdvancedOpen((current) => !current)}><span>高级设置</span><ChevronDown size={14} /></button>{lutAdvancedOpen && <div className="lut-advanced-panel"><label><input type="checkbox" disabled={!engineReady} />保留原始采样范围</label><label><input type="checkbox" disabled={!engineReady} />写入分析元数据</label><span>高级选项由原版 LUTAnalyst 提供，默认保持关闭。</span></div>}
           </div>}
         </div>
