@@ -1670,3 +1670,20 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.i
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded .adjustment-details {
   background: #181c20 !important;
 }
+
+
+/* LUT 解析不再使用普通调整项复选框，必须移除首列复选框占位。 */
+.apple-app-shell .adjustment-lut-trigger {
+  grid-template-columns: minmax(120px, 220px) minmax(0, 1fr) auto 18px;
+}
+
+.apple-app-shell .adjustment-lut-trigger .adjustment-item-name {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .apple-app-shell .adjustment-lut-trigger {
+    grid-template-columns: minmax(96px, 1fr) auto 18px;
+  }
+}
