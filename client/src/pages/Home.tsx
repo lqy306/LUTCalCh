@@ -381,7 +381,7 @@ export default function Home() {
 
     const handleBridgeMessage = (event: MessageEvent) =>
     {
-      if (event.source !== engineWindow() || event.origin !== window.location.origin) return;
+      if (event.origin && event.origin !== window.location.origin) return;
       if (event.data?.type === "lutcalc:adjustment-complete") scheduleEngineRefresh();
     };
 
