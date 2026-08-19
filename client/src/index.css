@@ -1166,6 +1166,49 @@ html:is(.dark, [data-workbench-mode="dark"]) { color-scheme: dark; }
   min-height: inherit;
   color: #d6d6d6;
 }
+.apple-app-shell .engine-preview-surface {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  margin: 10px auto 0;
+  background: #111;
+  border: 1px solid var(--theme-border, #b8b1a5);
+  border-radius: var(--theme-radius, 4px);
+}
+.apple-app-shell .engine-preview-surface.is-large { min-height: 390px; }
+.apple-app-shell .engine-preview-surface.is-small { min-height: 220px; }
+.apple-app-shell .engine-preview-surface img {
+  display: block;
+  width: 100%;
+  max-height: 560px;
+  object-fit: contain;
+}
+.apple-app-shell .engine-preview-surface .preview-placeholder {
+  min-height: inherit;
+  color: #d6d6d6;
+}
+.apple-app-shell .engine-scope-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+  margin: 8px auto 0;
+}
+.apple-app-shell .engine-scope-grid > div {
+  display: grid;
+  min-height: 130px;
+  place-items: center;
+  overflow: hidden;
+  color: var(--theme-muted, #6d6a63);
+  background: #111;
+  border: 1px solid var(--theme-border, #b8b1a5);
+  border-radius: var(--theme-radius, 4px);
+  font: 600 11px var(--theme-font, Ubuntu, sans-serif);
+}
+.apple-app-shell .engine-scope-grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 .apple-app-shell .preview-scope-overlay {
   position: absolute;
   right: 10px;
@@ -1922,6 +1965,22 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.i
   font: 600 10px var(--theme-font, Ubuntu, sans-serif);
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.apple-app-shell .lut-analyst-compatibility {
+  margin: 0;
+  padding: 7px 9px;
+  border: 1px solid var(--theme-border, #d6d6d6);
+  border-radius: var(--theme-radius, 4px);
+  font: 11px/1.4 var(--theme-font, Ubuntu, sans-serif);
+}
+.apple-app-shell .lut-analyst-compatibility.is-compatible {
+  color: var(--theme-success, #247b44);
+  background: color-mix(in srgb, var(--theme-success, #247b44) 9%, var(--theme-card, #fff));
+}
+.apple-app-shell .lut-analyst-compatibility.is-error {
+  color: var(--theme-danger, #b3261e);
+  background: color-mix(in srgb, var(--theme-danger, #b3261e) 9%, var(--theme-card, #fff));
+  border-color: color-mix(in srgb, var(--theme-danger, #b3261e) 45%, var(--theme-border, #d6d6d6));
 }
 .apple-app-shell .lut-analyst-grid {
   display: grid;
