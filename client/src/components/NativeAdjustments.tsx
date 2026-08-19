@@ -38,16 +38,28 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
 {
   const fileRef = useRef<HTMLInputElement>(null);
   const [enabled, setEnabled] = useState<Record<string, boolean>>({});
+  const [customizationEnabled, setCustomizationEnabled] = useState(false);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [lutEnabled, setLutEnabled] = useState(false);
   const [lutOpen, setLutOpen] = useState(false);
   const [lutFileName, setLutFileName] = useState("");
 
-  const toggleItem = (item: AdjustmentItem) =>
+  const toggleItem = (item: AdjustmentItem, checked?: boolean) =>
   {
-    const nextValue = !enabled[item.label];
+    const nextValue = checked ?? !enabled[item.label];
     setEnabled((current) => ({ ...current, [item.label]: nextValue }));
+    setExpanded((current) => ({ ...current, [item.label]: nextValue }));
     onToggle(item.engineLabel, nextValue);
+  };
+
+  const toggleCustomization = (checked: boolean) =>
+  {
+    setCustomizationEnabled(checked);
+    if (!checked)
+    {
+      setExpanded({});
+      setLutOpen(false);
+    }
   };
 
   const chooseLut = (file?: File) =>
@@ -60,12 +72,16 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
 
   return (
     <section className="native-card adjustments-card" aria-label="调整项">
-      <div className="card-title">
+      <div className="card-title adjustments-title">
         <span>04</span>
         <div>
           <h3>调整项</h3>
           <p>按原版层级组织校正模块；LUT 解析位于列表末尾。</p>
         </div>
+        <label className="adjustments-master-toggle" title="启用全部调整项">
+          <input type="checkbox" checked={customizationEnabled} disabled={!engineReady} onChange={(event) => toggleCustomization(event.target.checked)} />
+          <span>启用调整项</span>
+        </label>
       </div>
       <div className="adjustment-list">
         {ADJUSTMENTS.map((item) => (
@@ -75,14 +91,12 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
                 <input
                   type="checkbox"
                   checked={Boolean(enabled[item.label])}
-                  disabled={!engineReady}
-                  onChange={() => toggleItem(item)}
+                  disabled={!engineReady || !customizationEnabled}
+                  onChange={(event) => toggleItem(item, event.target.checked)}
                 />
                 <span>{item.label}</span>
               </label>
-              <button className="adjustment-expand-button" type="button" onClick={() => setExpanded((current) => ({ ...current, [item.label]: !current[item.label] }))} aria-expanded={Boolean(expanded[item.label])}>
-                {expanded[item.label] ? "收起" : "展开"}
-              </button>
+              <span className="adjustment-state">{enabled[item.label] ? "已启用" : "未启用"}</span>
             </div>
             {expanded[item.label] && (
               <div className="adjustment-details adjustment-placeholder-details">
@@ -95,12 +109,10 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
         <div className={`adjustment-item adjustment-lut-item ${lutOpen || lutEnabled ? "is-active" : ""}`}>
           <div className="adjustment-item-main">
             <label>
-              <input type="checkbox" checked={lutEnabled} disabled={!engineReady} onChange={(event) => { setLutEnabled(event.target.checked); setLutOpen(event.target.checked); }} />
+              <input type="checkbox" checked={lutEnabled} disabled={!engineReady || !customizationEnabled} onChange={(event) => { setLutEnabled(event.target.checked); setLutOpen(event.target.checked); }} />
               <span>LUT 解析</span>
             </label>
-            <button className="adjustment-expand-button" type="button" onClick={() => setLutOpen((value) => !value)} aria-expanded={lutOpen}>
-              {lutOpen ? "收起" : "展开"}
-            </button>
+            <span className="adjustment-state">{lutEnabled ? "已启用" : "未启用"}</span>
           </div>
           {lutOpen && (
             <div className="adjustment-details lut-analysis-panel">

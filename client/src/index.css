@@ -822,3 +822,57 @@ html[data-workbench-mode="dark"] { color-scheme: dark; }
     width: 100%;
   }
 }
+
+
+/* 原版 Customisation 校准：连续条带、总开关、条目内展开，不使用悬浮式独立卡片。 */
+.apple-app-shell .adjustments-title {
+  align-items: center;
+}
+.adjustments-master-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: auto;
+  padding: 5px 8px;
+  color: var(--theme-muted, #6b6b6b);
+  border: 1px solid var(--theme-border, #d6d6d6);
+  background: var(--theme-control, #f7f7f7);
+  border-radius: 3px;
+  font: 600 10px Ubuntu, "Noto Sans SC", sans-serif;
+  cursor: pointer;
+}
+.adjustments-master-toggle input {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  accent-color: var(--theme-accent, #e95420);
+}
+.adjustment-list {
+  gap: 3px;
+}
+.adjustment-item {
+  border-radius: 2px;
+  box-shadow: none;
+}
+.adjustment-item-main {
+  min-height: 34px;
+}
+.adjustment-item-main > label {
+  min-height: 34px;
+  padding: 6px 9px;
+  font-size: 11px;
+}
+.adjustment-item input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+}
+.adjustment-state {
+  margin-right: 9px;
+  font-size: 9px;
+}
+.adjustment-details {
+  padding: 8px 10px 10px 32px;
+}
+.adjustment-item:not(.is-active) .adjustment-details {
+  display: none;
+}
