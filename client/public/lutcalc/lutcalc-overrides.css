@@ -11,6 +11,28 @@
   --lc-shadow: 4px 4px 0 rgba(36, 36, 31, .09);
 }
 
+/* 嵌入调整项的首要布局规则：先移除原版移动状态条，避免其占位造成整体下移。 */
+html.embed-adjustments #mob-box {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk .tweakholder {
+  color: #f5f5f5 !important;
+  background: #3a3a41 !important;
+  border-color: #4b4b52 !important;
+}
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk .tweakholder > .tweak {
+  color: #f5f5f5 !important;
+  background: #28282d !important;
+  border-color: #4b4b52 !important;
+}
+
 * { box-sizing: border-box; }
 html { background: var(--lc-paper) !important; }
 body {
@@ -290,8 +312,9 @@ html, body { background: #f5f5f7 !important; color: #1d1d1f !important; font-fam
 	overflow: hidden !important;
 }
 .embed-adjustments #titlebar,
-.embed-adjustments #mob-status,
-.embed-adjustments #footer,
+	.embed-adjustments #mob-status,
+	.embed-adjustments #mob-box,
+	.embed-adjustments #footer,
 .embed-adjustments #printable,
 .embed-adjustments #shed,
 .embed-adjustments #javascriptwarning,
@@ -777,4 +800,95 @@ html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child .tweak i
 	margin-top: 8px !important;
 	padding: 6px 10px !important;
 	font-size: 11px !important;
+}
+
+
+/* 最终调整项布局收敛：使用 iframe 根节点的明暗数据属性，避免主题变量尚未桥接时回退到旧版白色表面。 */
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk,
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk > fieldset,
+html.embed-adjustments[data-workbench-mode="dark"] #tweaksholder,
+html.embed-adjustments[data-workbench-mode="dark"] #tweaksholder > div {
+  color: #f5f5f5 !important;
+  background: #303036 !important;
+  border-color: #4b4b52 !important;
+}
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk > fieldset > div:first-child {
+  color: #f5f5f5 !important;
+  background: #303036 !important;
+  border-bottom-color: #4b4b52 !important;
+}
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk .tweakholder,
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk #tweaksholder > .tweakholder:last-child {
+  color: #f5f5f5 !important;
+  background: #3a3a41 !important;
+  border: 1px solid #4b4b52 !important;
+  min-height: 38px !important;
+  line-height: 1.35 !important;
+}
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk .tweakholder > label:first-child,
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk .tweakholder > label:first-child * {
+  color: #f5f5f5 !important;
+}
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk .tweakholder > .tweak {
+  color: #f5f5f5 !important;
+  background: #28282d !important;
+  border-color: #4b4b52 !important;
+}
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk .tweak input,
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk .tweak select,
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk .tweak textarea,
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk .tweak input[type="file"] {
+  color: #f5f5f5 !important;
+  background: #242429 !important;
+  border-color: #4b4b52 !important;
+}
+html.embed-adjustments[data-workbench-mode="dark"] #box-twk .tweak label {
+  color: #bababa !important;
+}
+html.embed-adjustments[data-workbench-mode="light"] #box-twk .tweakholder,
+html.embed-adjustments[data-workbench-mode="light"] #box-twk #tweaksholder > .tweakholder:last-child {
+  color: #242424 !important;
+  background: #f0efec !important;
+  border: 1px solid #d6d6d6 !important;
+  min-height: 38px !important;
+}
+html.embed-adjustments[data-workbench-mode="light"] #box-twk .tweakholder > .tweak {
+  color: #242424 !important;
+  background: #f7f7f7 !important;
+  border-color: #d6d6d6 !important;
+}
+html.embed-adjustments #box-twk,
+html.embed-adjustments #box-twk > fieldset,
+html.embed-adjustments #tweaksholder {
+  overflow: visible !important;
+  position: static !important;
+}
+html.embed-adjustments #box-twk > fieldset > div:first-child:empty {
+  display: none !important;
+}
+html.embed-adjustments #box-twk > fieldset > div:first-child {
+  min-height: 42px !important;
+}
+html.embed-adjustments #box-twk #tweaksholder > .tweakholder:last-child > .tweak {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+
+/* 原版移动状态条实际节点为 #mob-box；嵌入工作台必须彻底移除，避免形成顶部白条和 36px 错位。 */
+html.embed-adjustments #mob-box {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+html.embed-adjustments #left,
+html.embed-adjustments #box-twk {
+  top: 0 !important;
+  transform: none !important;
 }
