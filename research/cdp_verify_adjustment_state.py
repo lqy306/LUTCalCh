@@ -24,7 +24,8 @@ try:
         while True:
             result = json.loads(ws.recv())
             if result.get('id') == ident: return result
-    cdp('Page.enable'); cdp('Runtime.enable'); cdp('Page.navigate', {'url': URL}); time.sleep(7)
+    cdp('Page.enable'); cdp('Runtime.enable'); cdp('DOM.enable'); cdp('Page.navigate', {'url': URL}); time.sleep(7)
+    cdp('Runtime.evaluate', {'expression': "document.documentElement.classList.add('dark'); document.documentElement.dataset.workbenchMode='dark'; true", 'returnByValue': True})
     expr = '''(() => {
       const master = document.querySelector('.adjustments-master-toggle input');
       const items = [...document.querySelectorAll('.adjustment-item:not(.adjustment-lut-item)')];
@@ -41,7 +42,8 @@ try:
     lut_result = cdp('Runtime.evaluate', {'expression': "(() => { const lut=document.querySelector('.adjustment-lut-item'); lut?.querySelector('.adjustment-item-main')?.click(); return true; })()", 'returnByValue': True})['result']['result'].get('value')
     time.sleep(.5)
     result['lutExpanded'] = cdp('Runtime.evaluate', {'expression': "(() => { const lut=document.querySelector('.adjustment-lut-item'); return {fileInputs:lut?.querySelectorAll('input[type=file]').length || 0, buttons:[...lut?.querySelectorAll('.adjustment-details button')||[]].map(e=>e.textContent.trim()), checkboxCount:lut?.querySelectorAll('input[type=checkbox]').length || 0}; })()", 'returnByValue': True})['result']['result'].get('value')
-    colors = cdp('Runtime.evaluate', {'expression': '''(() => { const card=document.querySelector('.adjustments-card'); const item=document.querySelector('.adjustment-item'); const details=document.querySelector('.adjustment-details'); const s=e=>e?getComputedStyle(e).backgroundColor:null; return {card:s(card),item:s(item),details:s(details),root:document.documentElement.getAttribute('data-workbench-mode')}; })()''', 'returnByValue': True})['result']['result'].get('value')
+    cdp('Runtime.evaluate', {'expression': "document.documentElement.classList.add('dark'); document.documentElement.dataset.workbenchMode='dark'; true", 'returnByValue': True})
+    colors = cdp('Runtime.evaluate', {'expression': '''(() => { const card=document.querySelector('.adjustments-card'); const item=document.querySelector('.adjustment-item'); const details=document.querySelector('.adjustment-details'); const s=e=>e?getComputedStyle(e).backgroundColor:null; const c=e=>e?getComputedStyle(e).color:null; const first=document.querySelector('.adjustment-item'); return {card:s(card),item:s(item),details:s(details),name:c(first?.querySelector('.adjustment-item-name')),summary:c(first?.querySelector('.adjustment-item-summary')),state:c(first?.querySelector('.adjustment-state')),chevron:c(first?.querySelector('.adjustment-chevron')),root:document.documentElement.getAttribute('data-workbench-mode')}; })()''', 'returnByValue': True})['result']['result'].get('value')
     print(json.dumps({'state':result,'colors':colors}, ensure_ascii=False, indent=2))
 finally:
     try: ws.close()

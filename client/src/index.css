@@ -1687,3 +1687,32 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.i
     grid-template-columns: minmax(96px, 1fr) auto 18px;
   }
 }
+
+
+/* 深色模式文字最终覆盖：子元素显式颜色不能继续使用浅色 #242424/#6f6f6f。 */
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item-main,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item-name,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item-summary,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-chevron,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-control,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-control > span,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-details-foot,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .lut-file-status {
+  color: #f1f3f4 !important;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item-summary,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-details-foot,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .lut-file-status {
+  color: #b8c2c9 !important;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state {
+  color: #d5dde2 !important;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded .adjustment-item-name,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded .adjustment-chevron {
+  color: #ff9b6b !important;
+}
