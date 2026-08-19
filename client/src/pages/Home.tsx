@@ -246,6 +246,36 @@ export default function Home() {
     return true;
   }, []);
 
+  /*
+   * LUTAnalyst 的文件读取和分析发生在 iframe 内部。
+   * 直接监听父窗口的 change/click 无法可靠表达“解析已经完成”，
+   * 因此在同源原型方法完成后主动向父窗口发送桥接消息。
+   */
+  const installAdjustmentBridge = useCallback(() => {
+    const windowRef = engineWindow() as (Window & { TWKLA?: { prototype?: Record<string, unknown> } }) | null;
+    const prototype = windowRef?.TWKLA?.prototype;
+    if (!windowRef || !prototype || prototype.__lutcalcWorkbenchBridge) return;
+
+    const notifyParent = () => {
+      windowRef.setTimeout(() => {
+        windowRef.parent.postMessage({ type: "lutcalc:adjustment-complete" }, windowRef.location.origin);
+      }, 0);
+    };
+
+    ["gotFile", "doStuff", "doneStuff"].forEach((methodName) => {
+      const original = prototype[methodName];
+      if (typeof original !== "function") return;
+      prototype[methodName] = function bridgedAdjustmentMethod(this: unknown, ...args: unknown[])
+      {
+        const result = (original as (...methodArgs: unknown[]) => unknown).apply(this, args);
+        notifyParent();
+        return result;
+      };
+    });
+
+    prototype.__lutcalcWorkbenchBridge = true;
+  }, []);
+
   const refreshPreview = useCallback(() => {
     const documentRef = engineDocument();
     if (!documentRef) return;
@@ -349,6 +379,13 @@ export default function Home() {
       scheduleEngineRefresh();
     };
 
+    const handleBridgeMessage = (event: MessageEvent) =>
+    {
+      if (event.source !== engineWindow() || event.origin !== window.location.origin) return;
+      if (event.data?.type === "lutcalc:adjustment-complete") scheduleEngineRefresh();
+    };
+
+    window.addEventListener("message", handleBridgeMessage);
     documentRef.addEventListener("input", handleEngineMutation, true);
     documentRef.addEventListener("change", handleEngineMutation, true);
     documentRef.addEventListener("click", handleEngineMutation, true);
@@ -357,6 +394,7 @@ export default function Home() {
 
     return () =>
     {
+      window.removeEventListener("message", handleBridgeMessage);
       documentRef.removeEventListener("input", handleEngineMutation, true);
       documentRef.removeEventListener("change", handleEngineMutation, true);
       documentRef.removeEventListener("click", handleEngineMutation, true);
@@ -456,7 +494,7 @@ export default function Home() {
             <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
             <section className="native-card pipeline-card"><div className="card-title"><span>02</span><div><h3>色彩管线</h3><p>定义记录伽马、色域与目标输出。</p></div></div><div className="pipeline-groups"><div><h4>记录设置</h4><div className="form-grid">{select("recGammaMaker", "伽马品牌")}{select("recGamma", "记录伽马")}{select("recGamutMaker", "色域品牌")}{select("recGamut", "记录色域")}</div></div><div><h4>输出设置</h4><div className="form-grid">{select("outGammaMaker", "伽马品牌")}{select("outGamma", "输出伽马")}{select("outGamutMaker", "色域品牌")}{select("outGamut", "输出色域")}</div></div></div></section>
             <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>命名、选择编码与生成导出文件。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field>{select("lutFormat", "输出格式")}{select("hardClip", "硬裁切")}</div><div className="native-actions"><button className="apple-button" onClick={() => engineAction(["Preview", "预览"], "预览已更新")}><Eye size={15} />更新预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
-            <section className="native-card adjust-card original-adjust-card" aria-label="调整项"><iframe ref={iframeRef} className="adjustments-engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="原版 LUTCalc 调整项" onLoad={() => {         enforceAdjustmentEmbedLayout(); if (!verifyAdjustmentEmbed()) return; const documentRef = engineDocument(); if (documentRef) applyWorkbenchTheme(activeTheme, themeMode, documentRef); hydrateEngine(); window.setTimeout(hydrateEngine, 720); window.setTimeout(observeAdjustmentFrame, 760); }} /></section>
+            <section className="native-card adjust-card original-adjust-card" aria-label="调整项"><iframe ref={iframeRef} className="adjustments-engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="原版 LUTCalc 调整项" onLoad={() => {         enforceAdjustmentEmbedLayout(); if (!verifyAdjustmentEmbed()) return; installAdjustmentBridge(); const documentRef = engineDocument(); if (documentRef) applyWorkbenchTheme(activeTheme, themeMode, documentRef); hydrateEngine(); window.setTimeout(hydrateEngine, 720); window.setTimeout(observeAdjustmentFrame, 760); }} /></section>
             <section className="native-card preview-card"><div className="card-title"><span>05</span><div><h3>曲线预览</h3><p>{previewHint}</p></div></div><div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div><div className="preview-footnote"><span>状态</span><strong>{engineReady ? "参数已同步" : "加载中"}</strong><span>工作流程记录会自动捕获原生参数调整。</span></div></section>
           </div>
         </section>
