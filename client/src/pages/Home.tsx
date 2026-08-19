@@ -49,6 +49,7 @@ type LogGammaProfile = {
 };
 
 type Choice = { value: string; label: string };
+type LutAnalystChoiceSet = { gamma: Choice[]; gamut: Choice[] };
 type EngineField = "cameraMaker" | "cameraModel" | "cineEI" | "stopShift" | "recGammaMaker" | "recGamma" | "recGamutMaker" | "recGamut" | "outGammaMaker" | "outGamma" | "outGamutMaker" | "outGamut" | "title" | "lutFormat" | "hardClip";
 
 const WORKFLOW_KEY = "lutcalc-apple-workflows";
@@ -178,7 +179,16 @@ export default function Home() {
   const [message, setMessage] = useState("正在连接计算引擎");
   const [engineState, setEngineState] = useState<Record<EngineField, string>>(EMPTY_STATE);
   const [choices, setChoices] = useState<Partial<Record<EngineField, Choice[]>>>({});
+  const [lutAnalystChoices, setLutAnalystChoices] = useState<LutAnalystChoiceSet>({ gamma: [], gamut: [] });
   const [previewSrc, setPreviewSrc] = useState("");
+  const previewFileRef = useRef<HTMLInputElement>(null);
+  const [previewImageSrc, setPreviewImageSrc] = useState("");
+  const [previewVisible, setPreviewVisible] = useState(true);
+  const [previewLarge, setPreviewLarge] = useState(true);
+  const [previewPreset, setPreviewPreset] = useState("high");
+  const [previewRange, setPreviewRange] = useState("109");
+  const [previewScope, setPreviewScope] = useState({ wfm: false, vector: false, rgb: false });
+  const [outputConfig, setOutputConfig] = useState({ dimensionMode: "3D", dimension: "33", inputRange: "109", outputRange: "109", usage: "grading", clipLegal: true });
   const engineSnapshotRef = useRef("");
   const [themeId, setThemeId] = useState(readStoredThemeId);
   const [themeMode, setThemeMode] = useState<ThemeMode>(readStoredThemeMode);
@@ -329,6 +339,11 @@ export default function Home() {
     const fields = Object.keys(EMPTY_STATE) as EngineField[];
     const nextState = { ...EMPTY_STATE };
     const nextChoices: Partial<Record<EngineField, Choice[]>> = {};
+    const tweakSelects = Array.from(documentRef.querySelectorAll("#box-twk select")) as HTMLSelectElement[];
+    const nextLutAnalystChoices: LutAnalystChoiceSet = {
+      gamma: optionsOf(tweakSelects[20] || null),
+      gamut: optionsOf(tweakSelects[22] || null),
+    };
     fields.forEach((field) => {
       const node = fieldNode(field);
       if (!node) return;
@@ -336,13 +351,26 @@ export default function Home() {
       // iframe 内的 select 属于另一个 Window，不能使用父窗口的 instanceof HTMLSelectElement。
       if (node?.tagName === "SELECT") nextChoices[field] = optionsOf(node as HTMLSelectElement);
     });
-    const snapshot = JSON.stringify({ nextState, nextChoices });
+    const snapshot = JSON.stringify({ nextState, nextChoices, nextLutAnalystChoices });
     if (engineSnapshotRef.current !== snapshot)
     {
       engineSnapshotRef.current = snapshot;
       setEngineState(nextState);
       setChoices(nextChoices);
+      setLutAnalystChoices(nextLutAnalystChoices);
     }
+    const lutBox = documentRef.querySelector("#box-lut");
+    const radioIndex = (name: string) => Array.from(lutBox?.querySelectorAll(`input[type=radio][name="${name}"]`) || []).findIndex((node) => (node as HTMLInputElement).checked);
+    const checkedDimension = Array.from(lutBox?.querySelectorAll('input[type=radio][name="dimension"]') || []).find((node) => (node as HTMLInputElement).checked) as HTMLInputElement | undefined;
+    const clipLegal = Array.from(lutBox?.querySelectorAll('input[type=checkbox]') || []).find((node) => /0%-100%/.test((node.parentElement?.textContent || "").replace(/\s/g, ""))) as HTMLInputElement | undefined;
+    setOutputConfig({
+      dimensionMode: radioIndex("dims") === 0 ? "1D" : "3D",
+      dimension: checkedDimension?.value || "33",
+      inputRange: radioIndex("inrange") === 0 ? "100" : "109",
+      outputRange: radioIndex("outrange") === 0 ? "100" : "109",
+      usage: radioIndex("lutusage") === 0 ? "grading" : "mlut",
+      clipLegal: clipLegal?.checked ?? true,
+    });
     setEngineReady(true);
     setMessage("计算引擎已就绪");
     window.setTimeout(refreshPreview, 260);
@@ -433,6 +461,62 @@ export default function Home() {
     setEngineState((current) => ({ ...current, [field]: value }));
     if (field === "cameraMaker" || field === "cameraModel") window.setTimeout(hydrateEngine, 90);
     window.setTimeout(refreshPreview, 120);
+  };
+
+  /* 原版 03 输出区大部分通过无 id 的 radio/select 实现；按原始 name/value 精确桥接。 */
+  const setOutputOption = (key: keyof typeof outputConfig, value: string | boolean) =>
+  {
+    const documentRef = engineDocument();
+    const windowRef = engineWindow();
+    if (!documentRef || !windowRef) return;
+    const box = documentRef.querySelector("#box-lut");
+    if (!box) return;
+    const next = { ...outputConfig, [key]: value };
+    setOutputConfig(next);
+    const clickRadio = (name: string, index: number) =>
+    {
+      const radios = Array.from(box.querySelectorAll(`input[type=radio][name="${name}"]`)) as HTMLInputElement[];
+      const target = radios[index];
+      if (!target) return;
+      target.checked = true;
+      const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
+      target.dispatchEvent(new IframeEvent("input", { bubbles: true }));
+      target.dispatchEvent(new IframeEvent("change", { bubbles: true }));
+    };
+    if (key === "dimensionMode") clickRadio("dims", value === "1D" ? 0 : 1);
+    if (key === "dimension")
+    {
+      const target = Array.from(box.querySelectorAll(`input[type=radio][name="dimension"]`)).find((node) => (node as HTMLInputElement).value === value) as HTMLInputElement | undefined;
+      if (target)
+      {
+        target.checked = true;
+        const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
+        target.dispatchEvent(new IframeEvent("input", { bubbles: true }));
+        target.dispatchEvent(new IframeEvent("change", { bubbles: true }));
+      }
+    }
+    if (key === "inputRange") clickRadio("inrange", value === "100" ? 0 : 1);
+    if (key === "outputRange") clickRadio("outrange", value === "100" ? 0 : 1);
+    if (key === "usage") clickRadio("lutusage", value === "grading" ? 0 : 1);
+    if (key === "clipLegal")
+    {
+      const input = Array.from(box.querySelectorAll("input[type=checkbox]")).find((node) => /0%-100%/.test((node.parentElement?.textContent || "").replace(/\s/g, ""))) as HTMLInputElement | undefined;
+      if (input)
+      {
+        input.checked = Boolean(value);
+        input.dispatchEvent(new (windowRef as unknown as { Event: typeof Event }).Event("change", { bubbles: true }));
+      }
+    }
+    window.setTimeout(hydrateEngine, 120);
+    window.setTimeout(refreshPreview, 180);
+  };
+
+  const loadPreviewImage = (file?: File) =>
+  {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setPreviewImageSrc(String(reader.result || ""));
+    reader.readAsDataURL(file);
   };
 
   const findAdjustmentToggle = (label: string) =>
@@ -655,10 +739,10 @@ export default function Home() {
           <div className="native-calculator-grid">
             <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
             <section className="native-card pipeline-card"><div className="card-title"><span>02</span><div><h3>色彩管线</h3><p>定义记录伽马、色域与目标输出。</p></div></div><div className="pipeline-groups"><div><h4>记录设置</h4><div className="form-grid">{select("recGammaMaker", "伽马品牌")}{select("recGamma", "记录伽马")}{select("recGamutMaker", "色域品牌")}{select("recGamut", "记录色域")}</div></div><div><h4>输出设置</h4><div className="form-grid">{select("outGammaMaker", "伽马品牌")}{select("outGamma", "输出伽马")}{select("outGamutMaker", "色域品牌")}{select("outGamut", "输出色域")}</div></div></div></section>
-            <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>命名、选择编码与生成导出文件。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field>{select("lutFormat", "输出格式")}{select("hardClip", "硬裁切")}</div><div className="native-actions"><button className="apple-button" onClick={() => engineAction(["Preview", "预览"], "预览已更新")}><Eye size={15} />更新预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
-            <NativeAdjustments engineReady={engineReady} onToggle={toggleAdjustment} onImportLut={importAdjustmentLut} onAnalyzeLut={analyzeAdjustmentLut} onResetLut={resetAdjustmentLut} onControlChange={syncAdjustmentControl} onLutAnalystConfigChange={syncLutAnalystConfig} />
+            <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>保留原版输出维度、范围、用途、格式与硬裁切选项。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field><button type="button" className="apple-button output-auto-title" disabled={!engineReady} onClick={() => engineAction(["Auto Title", "自动标题"], "已更新自动标题")}>自动标题</button></div><div className="output-option-board"><div className="output-option-row"><span>输出维度</span><label><input type="radio" name="output-dimension-mode" checked={outputConfig.dimensionMode === "1D"} disabled={!engineReady} onChange={() => setOutputOption("dimensionMode", "1D")} />1D</label><label><input type="radio" name="output-dimension-mode" checked={outputConfig.dimensionMode === "3D"} disabled={!engineReady} onChange={() => setOutputOption("dimensionMode", "3D")} />3D</label><div className="output-chip-group">{(outputConfig.dimensionMode === "1D" ? ["1024", "4096", "16384"] : ["17", "33", "65"]).map((size) => <label key={size}><input type="radio" name="output-dimension" checked={outputConfig.dimension === size} disabled={!engineReady} onChange={() => setOutputOption("dimension", size)} />{outputConfig.dimensionMode === "3D" ? `${size}³` : size}</label>)}</div></div><div className="output-option-row"><span>输入范围</span><label><input type="radio" name="output-input-range" checked={outputConfig.inputRange === "100"} disabled={!engineReady} onChange={() => setOutputOption("inputRange", "100")} />100%</label><label><input type="radio" name="output-input-range" checked={outputConfig.inputRange === "109"} disabled={!engineReady} onChange={() => setOutputOption("inputRange", "109")} />109%</label><span>输出范围</span><label><input type="radio" name="output-output-range" checked={outputConfig.outputRange === "100"} disabled={!engineReady} onChange={() => setOutputOption("outputRange", "100")} />100%</label><label><input type="radio" name="output-output-range" checked={outputConfig.outputRange === "109"} disabled={!engineReady} onChange={() => setOutputOption("outputRange", "109")} />109%</label></div><div className="output-option-row"><span>LUT 用途</span><label><input type="radio" name="output-usage" checked={outputConfig.usage === "grading"} disabled={!engineReady} onChange={() => setOutputOption("usage", "grading")} />调色 LUT</label><label><input type="radio" name="output-usage" checked={outputConfig.usage === "mlut"} disabled={!engineReady} onChange={() => setOutputOption("usage", "mlut")} />相机 / 监看 LUT（MLUT）</label></div><div className="form-grid output-format-fields">{select("lutFormat", "LUT 类型")}{select("hardClip", "硬裁切")}<label className="native-field output-clip-legal"><span>0%–100%</span><input type="checkbox" checked={outputConfig.clipLegal} disabled={!engineReady} onChange={(event) => setOutputOption("clipLegal", event.target.checked)} /></label></div></div><div className="native-actions"><button className="apple-button" onClick={() => engineAction(["Preview", "预览"], "预览已更新")}><Eye size={15} />更新预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
+            <NativeAdjustments engineReady={engineReady} onToggle={toggleAdjustment} onImportLut={importAdjustmentLut} onAnalyzeLut={analyzeAdjustmentLut} onResetLut={resetAdjustmentLut} onControlChange={syncAdjustmentControl} onLutAnalystConfigChange={syncLutAnalystConfig} lutAnalystChoices={lutAnalystChoices} />
             <iframe ref={iframeRef} className="engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="LUTCalc 同源计算引擎" onLoad={() => { enforceAdjustmentEmbedLayout(); if (!verifyAdjustmentEmbed()) return; installAdjustmentBridge(); [180, 520, 1100].forEach((delay) => window.setTimeout(installAdjustmentBridge, delay)); const documentRef = engineDocument(); if (documentRef) applyWorkbenchTheme(activeTheme, themeMode, documentRef); hydrateEngine(); window.setTimeout(hydrateEngine, 720); }} />
-            <section className="native-card preview-card"><div className="card-title"><span>05</span><div><h3>曲线预览</h3><p>{previewHint}</p></div></div><div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div><div className="preview-footnote"><span>状态</span><strong>{engineReady ? "参数已同步" : "加载中"}</strong><span>工作流程记录会自动捕获原生参数调整。</span></div></section>
+            <section className="native-card preview-card"><div className="card-title"><span>05</span><div><h3>预览与曲线</h3><p>{previewHint}</p></div></div><div className="preview-tool-bar"><button type="button" className="apple-button" onClick={() => setPreviewVisible((current) => !current)}>{previewVisible ? "隐藏预览" : "显示预览"}</button><button type="button" className="apple-button" disabled={!previewVisible} onClick={() => setPreviewLarge((current) => !current)}>{previewLarge ? "大图" : "小图"}</button><select aria-label="预览类型" value={previewPreset} onChange={(event) => setPreviewPreset(event.target.value)}><option value="high">高对比度</option><option value="low">低对比度</option><option value="rec709">Rec.709 色域</option><option value="chromaticity">xy / uv 色度图</option><option value="gray">灰度</option></select><button type="button" className="apple-button" onClick={() => previewFileRef.current?.click()}>载入预览…</button><input ref={previewFileRef} hidden type="file" accept="image/*" onChange={(event) => { loadPreviewImage(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div><div className="preview-tool-options"><span>预览范围</span><label><input type="radio" name="preview-range" checked={previewRange === "100"} onChange={() => setPreviewRange("100")} />100%</label><label><input type="radio" name="preview-range" checked={previewRange === "109"} onChange={() => setPreviewRange("109")} />109%</label><label><input type="checkbox" checked={previewScope.wfm} onChange={(event) => setPreviewScope((current) => ({ ...current, wfm: event.target.checked }))} />WFM</label><label><input type="checkbox" checked={previewScope.vector} onChange={(event) => setPreviewScope((current) => ({ ...current, vector: event.target.checked }))} />Vector</label><label><input type="checkbox" checked={previewScope.rgb} onChange={(event) => setPreviewScope((current) => ({ ...current, rgb: event.target.checked }))} />RGB</label></div>{previewVisible && <div className={`image-preview-surface ${previewLarge ? "is-large" : "is-small"}`}>{previewImageSrc ? <img src={previewImageSrc} alt="载入的 LUT 图像预览" /> : <div className="preview-placeholder"><Eye size={22} />载入一张参考图像，作为 LUT 预览画面</div>}<div className="preview-scope-overlay">{previewScope.wfm && <span>WFM</span>}{previewScope.vector && <span>VEC</span>}{previewScope.rgb && <span>RGB</span>}</div></div>}<div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div><div className="preview-footnote"><span>状态</span><strong>{engineReady ? "参数已同步" : "加载中"}</strong><span>工作流程记录会自动捕获原生参数调整。</span></div></section>
           </div>
         </section>
 

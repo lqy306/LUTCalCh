@@ -1,0 +1,7132 @@
+{
+  "url": "http://127.0.0.1:3000/lutcalc/index.html",
+  "ready": "complete",
+  "selects": [
+    {
+      "i": 0,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "通用立方体 LUT（.cube）",
+      "options": [
+        {
+          "value": "0",
+          "text": "通用立方体 LUT（.cube）"
+        },
+        {
+          "value": "1",
+          "text": "DaVinci Resolve 12+ (.cube)"
+        },
+        {
+          "value": "2",
+          "text": "DaVinci Resolve Old (.cube)"
+        },
+        {
+          "value": "3",
+          "text": "Lumetri / Speedgrade (.cube)"
+        },
+        {
+          "value": "4",
+          "text": "FCPX - Color Finale / LUT Utility (.cube)"
+        },
+        {
+          "value": "5",
+          "text": "AVID (.cube)"
+        },
+        {
+          "value": "6",
+          "text": "Display gamma correction (.cube)"
+        },
+        {
+          "value": "7",
+          "text": "DaVinci Resolve 1D (.ilut)"
+        },
+        {
+          "value": "8",
+          "text": "DaVinci Resolve 1D (.olut)"
+        },
+        {
+          "value": "9",
+          "text": "Assimilate 1D (.lut)"
+        },
+        {
+          "value": "10",
+          "text": "Assimilate 3D (.3dl)"
+        },
+        {
+          "value": "11",
+          "text": "SPI 3D (.spi3d)"
+        },
+        {
+          "value": "12",
+          "text": "SPI 1D (.spi1d)"
+        },
+        {
+          "value": "13",
+          "text": "Flame 3D (.3dl)"
+        },
+        {
+          "value": "14",
+          "text": "Lustre 3D (.3dl)"
+        },
+        {
+          "value": "15",
+          "text": "Kodak 3D (.3dl)"
+        }
+      ],
+      "parent": "LUT 类型通用立方体 LUT（.cube）DaVinci Resolve 12+ (.cube)DaVinci Resolve Old (.cube)Lumetri / Speedgrade (.cube)FCPX - Color Finale / LUT Utility (.cube)AVID (.cube)Display gamma correctio"
+    },
+    {
+      "i": 1,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "Sony User 3D MLUT (.cube)",
+      "options": [
+        {
+          "value": "0",
+          "text": "Sony User 3D MLUT (.cube)"
+        },
+        {
+          "value": "1",
+          "text": "SmallHD 3D MLUT (.cube)"
+        },
+        {
+          "value": "2",
+          "text": "Zacuto Gratical 1D MLUT (.cube)"
+        },
+        {
+          "value": "3",
+          "text": "AJA LUT-box SMPTE (.cube)"
+        },
+        {
+          "value": "4",
+          "text": "Scopebox Clipped MLUT (.cube)"
+        },
+        {
+          "value": "5",
+          "text": "Scopebox Unclipped MLUT (.cube)"
+        },
+        {
+          "value": "6",
+          "text": "Varicam 3D MLUT (.vlt)"
+        },
+        {
+          "value": "7",
+          "text": "Nikon Custom Picture (.ncp)"
+        }
+      ],
+      "parent": "LUT 类型通用立方体 LUT（.cube）DaVinci Resolve 12+ (.cube)DaVinci Resolve Old (.cube)Lumetri / Speedgrade (.cube)FCPX - Color Finale / LUT Utility (.cube)AVID (.cube)Display gamma correctio"
+    },
+    {
+      "i": 2,
+      "name": "",
+      "id": "",
+      "value": "10",
+      "selected": "10 (0-1023)",
+      "options": [
+        {
+          "value": "10",
+          "text": "10 (0-1023)"
+        },
+        {
+          "value": "12",
+          "text": "12 (0-4095)"
+        },
+        {
+          "value": "14",
+          "text": "14 (0-16383)"
+        },
+        {
+          "value": "16",
+          "text": "16 (0-65535)"
+        }
+      ],
+      "parent": "Input Bits10 (0-1023)12 (0-4095)14 (0-16383)16 (0-65535)输出 Bits10 (0-1023)12 (0-4095)14 (0-16383)16 (0-65535)"
+    },
+    {
+      "i": 3,
+      "name": "",
+      "id": "",
+      "value": "12",
+      "selected": "12 (0-4095)",
+      "options": [
+        {
+          "value": "10",
+          "text": "10 (0-1023)"
+        },
+        {
+          "value": "12",
+          "text": "12 (0-4095)"
+        },
+        {
+          "value": "14",
+          "text": "14 (0-16383)"
+        },
+        {
+          "value": "16",
+          "text": "16 (0-65535)"
+        }
+      ],
+      "parent": "Input Bits10 (0-1023)12 (0-4095)14 (0-16383)16 (0-65535)输出 Bits10 (0-1023)12 (0-4095)14 (0-16383)16 (0-65535)"
+    },
+    {
+      "i": 4,
+      "name": "",
+      "id": "",
+      "value": "1",
+      "selected": "1",
+      "options": [
+        {
+          "value": "1",
+          "text": "1"
+        },
+        {
+          "value": "2",
+          "text": "2"
+        },
+        {
+          "value": "3",
+          "text": "3"
+        },
+        {
+          "value": "4",
+          "text": "4"
+        },
+        {
+          "value": "5",
+          "text": "5"
+        },
+        {
+          "value": "6",
+          "text": "6"
+        },
+        {
+          "value": "7",
+          "text": "7"
+        },
+        {
+          "value": "8",
+          "text": "8"
+        },
+        {
+          "value": "9",
+          "text": "9"
+        },
+        {
+          "value": "10",
+          "text": "10"
+        },
+        {
+          "value": "11",
+          "text": "11"
+        },
+        {
+          "value": "12",
+          "text": "12"
+        },
+        {
+          "value": "13",
+          "text": "13"
+        },
+        {
+          "value": "14",
+          "text": "14"
+        },
+        {
+          "value": "15",
+          "text": "15"
+        },
+        {
+          "value": "16",
+          "text": "16"
+        },
+        {
+          "value": "17",
+          "text": "17"
+        },
+        {
+          "value": "18",
+          "text": "18"
+        },
+        {
+          "value": "19",
+          "text": "19"
+        },
+        {
+          "value": "20",
+          "text": "20"
+        },
+        {
+          "value": "21",
+          "text": "21"
+        },
+        {
+          "value": "22",
+          "text": "22"
+        },
+        {
+          "value": "23",
+          "text": "23"
+        },
+        {
+          "value": "24",
+          "text": "24"
+        },
+        {
+          "value": "25",
+          "text": "25"
+        },
+        {
+          "value": "26",
+          "text": "26"
+        },
+        {
+          "value": "27",
+          "text": "27"
+        },
+        {
+          "value": "28",
+          "text": "28"
+        },
+        {
+          "value": "29",
+          "text": "29"
+        },
+        {
+          "value": "30",
+          "text": "30"
+        },
+        {
+          "value": "31",
+          "text": "31"
+        },
+        {
+          "value": "32",
+          "text": "32"
+        },
+        {
+          "value": "33",
+          "text": "33"
+        },
+        {
+          "value": "34",
+          "text": "34"
+        },
+        {
+          "value": "35",
+          "text": "35"
+        },
+        {
+          "value": "36",
+          "text": "36"
+        },
+        {
+          "value": "37",
+          "text": "37"
+        },
+        {
+          "value": "38",
+          "text": "38"
+        },
+        {
+          "value": "39",
+          "text": "39"
+        },
+        {
+          "value": "40",
+          "text": "40"
+        },
+        {
+          "value": "41",
+          "text": "41"
+        },
+        {
+          "value": "42",
+          "text": "42"
+        },
+        {
+          "value": "43",
+          "text": "43"
+        },
+        {
+          "value": "44",
+          "text": "44"
+        },
+        {
+          "value": "45",
+          "text": "45"
+        },
+        {
+          "value": "46",
+          "text": "46"
+        },
+        {
+          "value": "47",
+          "text": "47"
+        },
+        {
+          "value": "48",
+          "text": "48"
+        },
+        {
+          "value": "49",
+          "text": "49"
+        },
+        {
+          "value": "50",
+          "text": "50"
+        },
+        {
+          "value": "51",
+          "text": "51"
+        },
+        {
+          "value": "52",
+          "text": "52"
+        },
+        {
+          "value": "53",
+          "text": "53"
+        },
+        {
+          "value": "54",
+          "text": "54"
+        },
+        {
+          "value": "55",
+          "text": "55"
+        },
+        {
+          "value": "56",
+          "text": "56"
+        },
+        {
+          "value": "57",
+          "text": "57"
+        },
+        {
+          "value": "58",
+          "text": "58"
+        },
+        {
+          "value": "59",
+          "text": "59"
+        },
+        {
+          "value": "60",
+          "text": "60"
+        },
+        {
+          "value": "61",
+          "text": "61"
+        },
+        {
+          "value": "62",
+          "text": "62"
+        },
+        {
+          "value": "63",
+          "text": "63"
+        },
+        {
+          "value": "64",
+          "text": "64"
+        },
+        {
+          "value": "65",
+          "text": "65"
+        },
+        {
+          "value": "66",
+          "text": "66"
+        },
+        {
+          "value": "67",
+          "text": "67"
+        },
+        {
+          "value": "68",
+          "text": "68"
+        },
+        {
+          "value": "69",
+          "text": "69"
+        },
+        {
+          "value": "70",
+          "text": "70"
+        },
+        {
+          "value": "71",
+          "text": "71"
+        },
+        {
+          "value": "72",
+          "text": "72"
+        },
+        {
+          "value": "73",
+          "text": "73"
+        },
+        {
+          "value": "74",
+          "text": "74"
+        },
+        {
+          "value": "75",
+          "text": "75"
+        },
+        {
+          "value": "76",
+          "text": "76"
+        },
+        {
+          "value": "77",
+          "text": "77"
+        },
+        {
+          "value": "78",
+          "text": "78"
+        },
+        {
+          "value": "79",
+          "text": "79"
+        },
+        {
+          "value": "80",
+          "text": "80"
+        },
+        {
+          "value": "81",
+          "text": "81"
+        },
+        {
+          "value": "82",
+          "text": "82"
+        },
+        {
+          "value": "83",
+          "text": "83"
+        },
+        {
+          "value": "84",
+          "text": "84"
+        },
+        {
+          "value": "85",
+          "text": "85"
+        },
+        {
+          "value": "86",
+          "text": "86"
+        },
+        {
+          "value": "87",
+          "text": "87"
+        },
+        {
+          "value": "88",
+          "text": "88"
+        },
+        {
+          "value": "89",
+          "text": "89"
+        },
+        {
+          "value": "90",
+          "text": "90"
+        },
+        {
+          "value": "91",
+          "text": "91"
+        },
+        {
+          "value": "92",
+          "text": "92"
+        },
+        {
+          "value": "93",
+          "text": "93"
+        },
+        {
+          "value": "94",
+          "text": "94"
+        },
+        {
+          "value": "95",
+          "text": "95"
+        },
+        {
+          "value": "96",
+          "text": "96"
+        },
+        {
+          "value": "97",
+          "text": "97"
+        },
+        {
+          "value": "98",
+          "text": "98"
+        },
+        {
+          "value": "99",
+          "text": "99"
+        }
+      ],
+      "parent": "Bank Number:123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888"
+    },
+    {
+      "i": 5,
+      "name": "",
+      "id": "",
+      "value": "2",
+      "selected": "仅黑场",
+      "options": [
+        {
+          "value": "0",
+          "text": "Unclipped"
+        },
+        {
+          "value": "1",
+          "text": "Both B&W"
+        },
+        {
+          "value": "2",
+          "text": "仅黑场"
+        },
+        {
+          "value": "3",
+          "text": "White Only"
+        }
+      ],
+      "parent": "硬裁切UnclippedBoth B&W仅黑场White Only0%-100%"
+    },
+    {
+      "i": 6,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "High Contrast",
+      "options": [
+        {
+          "value": "0",
+          "text": "High Contrast"
+        },
+        {
+          "value": "1",
+          "text": "Low Contrast"
+        },
+        {
+          "value": "2",
+          "text": "Rec709 Gamut"
+        },
+        {
+          "value": "3",
+          "text": "xy / uv Chromacity"
+        },
+        {
+          "value": "4",
+          "text": "Grayscale"
+        }
+      ],
+      "parent": "High ContrastLow ContrastRec709 Gamutxy / uv ChromacityGrayscale"
+    },
+    {
+      "i": 7,
+      "name": "",
+      "id": "",
+      "value": "Sony",
+      "selected": "Sony",
+      "options": [
+        {
+          "value": "Sony",
+          "text": "Sony"
+        },
+        {
+          "value": "ARRI",
+          "text": "ARRI"
+        },
+        {
+          "value": "RED",
+          "text": "RED"
+        },
+        {
+          "value": "Canon",
+          "text": "Canon"
+        },
+        {
+          "value": "Apple",
+          "text": "Apple"
+        },
+        {
+          "value": "Panasonic",
+          "text": "Panasonic"
+        },
+        {
+          "value": "Blackmagic",
+          "text": "Blackmagic"
+        },
+        {
+          "value": "Fujifilm",
+          "text": "Fujifilm"
+        },
+        {
+          "value": "GoPro",
+          "text": "GoPro"
+        },
+        {
+          "value": "DJI",
+          "text": "DJI"
+        },
+        {
+          "value": "Nikon",
+          "text": "Nikon"
+        },
+        {
+          "value": "All",
+          "text": "全部"
+        }
+      ],
+      "parent": "相机SonyARRIREDCanonApplePanasonicBlackmagicFujifilmGoProDJINikon全部VeniceVenice (High Base)PXW-FX9PXW-FX9 (High Base)PXW-FX6 CineEIPXW-FX6 CineEI (High)PXW-FX6 Flexible ISOPXW-FX3 Ci"
+    },
+    {
+      "i": 8,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "Venice",
+      "options": [
+        {
+          "value": "0",
+          "text": "Venice"
+        },
+        {
+          "value": "1",
+          "text": "Venice (High Base)"
+        },
+        {
+          "value": "2",
+          "text": "PXW-FX9"
+        },
+        {
+          "value": "3",
+          "text": "PXW-FX9 (High Base)"
+        },
+        {
+          "value": "4",
+          "text": "PXW-FX6 CineEI"
+        },
+        {
+          "value": "5",
+          "text": "PXW-FX6 CineEI (High)"
+        },
+        {
+          "value": "6",
+          "text": "PXW-FX6 Flexible ISO"
+        },
+        {
+          "value": "7",
+          "text": "PXW-FX3 CineEI"
+        },
+        {
+          "value": "8",
+          "text": "PXW-FX3 CineEI (High)"
+        },
+        {
+          "value": "9",
+          "text": "PXW-FX3 Flexible ISO"
+        },
+        {
+          "value": "10",
+          "text": "PXW-FX30 CineEI"
+        },
+        {
+          "value": "11",
+          "text": "PXW-FX30 CineEI (High)"
+        },
+        {
+          "value": "12",
+          "text": "PXW-FX30 Flexible ISO"
+        },
+        {
+          "value": "13",
+          "text": "PMW-F55"
+        },
+        {
+          "value": "14",
+          "text": "PMW-F5"
+        },
+        {
+          "value": "15",
+          "text": "PXW-FS7"
+        },
+        {
+          "value": "16",
+          "text": "PXW-FS5"
+        },
+        {
+          "value": "17",
+          "text": "NEX-FS700"
+        },
+        {
+          "value": "18",
+          "text": "a7s mkII"
+        },
+        {
+          "value": "19",
+          "text": "a7s"
+        },
+        {
+          "value": "20",
+          "text": "F65"
+        },
+        {
+          "value": "21",
+          "text": "PMW-F3"
+        },
+        {
+          "value": "22",
+          "text": "F35"
+        },
+        {
+          "value": "65",
+          "text": "Generic"
+        }
+      ],
+      "parent": "相机SonyARRIREDCanonApplePanasonicBlackmagicFujifilmGoProDJINikon全部VeniceVenice (High Base)PXW-FX9PXW-FX9 (High Base)PXW-FX6 CineEIPXW-FX6 CineEI (High)PXW-FX6 Flexible ISOPXW-FX3 Ci"
+    },
+    {
+      "i": 9,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "Sony",
+      "options": [
+        {
+          "value": "0",
+          "text": "Sony"
+        },
+        {
+          "value": "1",
+          "text": "ARRI"
+        },
+        {
+          "value": "2",
+          "text": "Canon"
+        },
+        {
+          "value": "3",
+          "text": "Apple"
+        },
+        {
+          "value": "4",
+          "text": "Panasonic"
+        },
+        {
+          "value": "5",
+          "text": "RED"
+        },
+        {
+          "value": "6",
+          "text": "GoPro"
+        },
+        {
+          "value": "7",
+          "text": "Panavision"
+        },
+        {
+          "value": "8",
+          "text": "Blackmagic"
+        },
+        {
+          "value": "9",
+          "text": "Bolex"
+        },
+        {
+          "value": "10",
+          "text": "Fujifilm"
+        },
+        {
+          "value": "11",
+          "text": "Nikon"
+        },
+        {
+          "value": "12",
+          "text": "DJI"
+        },
+        {
+          "value": "13",
+          "text": "Log"
+        },
+        {
+          "value": "14",
+          "text": "Display"
+        },
+        {
+          "value": "15",
+          "text": "HDR Display"
+        },
+        {
+          "value": "16",
+          "text": "Linear / γ"
+        },
+        {
+          "value": "17",
+          "text": "全部"
+        }
+      ],
+      "parent": "SonyARRICanonApplePanasonicREDGoProPanavisionBlackmagicBolexFujifilmNikonDJILogDisplayHDR DisplayLinear / γ全部S-Log3S-Log2S-Logs709Rec709 (800%)Linear / γ"
+    },
+    {
+      "i": 10,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "S-Log3",
+      "options": [
+        {
+          "value": "0",
+          "text": "S-Log3"
+        },
+        {
+          "value": "1",
+          "text": "S-Log2"
+        },
+        {
+          "value": "2",
+          "text": "S-Log"
+        },
+        {
+          "value": "34",
+          "text": "s709"
+        },
+        {
+          "value": "43",
+          "text": "Rec709 (800%)"
+        },
+        {
+          "value": "9999",
+          "text": "Linear / γ"
+        }
+      ],
+      "parent": "SonyARRICanonApplePanasonicREDGoProPanavisionBlackmagicBolexFujifilmNikonDJILogDisplayHDR DisplayLinear / γ全部S-Log3S-Log2S-Logs709Rec709 (800%)Linear / γ"
+    },
+    {
+      "i": 11,
+      "name": "",
+      "id": "",
+      "value": "80",
+      "selected": "Rec709 - γ1.90 (exp2.22)",
+      "options": [
+        {
+          "value": "80",
+          "text": "Rec709 - γ1.90 (exp2.22)"
+        },
+        {
+          "value": "81",
+          "text": "Rec2020 12-bit - γ1.90 (exp2.22)"
+        },
+        {
+          "value": "82",
+          "text": "sRGB - γ2.20 (exp2.40)"
+        },
+        {
+          "value": "83",
+          "text": "DCI - γ2.60"
+        },
+        {
+          "value": "84",
+          "text": "Scene Linear IRE - γ1.0 (18% Gray = 0.2)"
+        },
+        {
+          "value": "85",
+          "text": "Scene Reflectance - γ1.0 (18% Gray = 0.18)"
+        },
+        {
+          "value": "86",
+          "text": "CIE L* - γ2.45 (exp3.00)"
+        },
+        {
+          "value": "87",
+          "text": "BBC 0.4"
+        },
+        {
+          "value": "88",
+          "text": "BBC 0.5"
+        },
+        {
+          "value": "89",
+          "text": "BBC 0.6"
+        },
+        {
+          "value": "90",
+          "text": "ProPhoto / ROMM - γ1.80"
+        },
+        {
+          "value": "91",
+          "text": "γ1.5"
+        },
+        {
+          "value": "92",
+          "text": "γ1.6"
+        },
+        {
+          "value": "93",
+          "text": "γ1.7"
+        },
+        {
+          "value": "94",
+          "text": "γ1.8"
+        },
+        {
+          "value": "95",
+          "text": "γ1.9"
+        },
+        {
+          "value": "96",
+          "text": "γ2.0"
+        },
+        {
+          "value": "97",
+          "text": "γ2.1"
+        },
+        {
+          "value": "98",
+          "text": "γ2.2"
+        },
+        {
+          "value": "99",
+          "text": "γ2.3"
+        },
+        {
+          "value": "100",
+          "text": "γ2.4"
+        },
+        {
+          "value": "101",
+          "text": "γ2.5"
+        },
+        {
+          "value": "102",
+          "text": "γ2.6"
+        },
+        {
+          "value": "103",
+          "text": "Display PQ OOTF (nits)"
+        },
+        {
+          "value": "104",
+          "text": "Display PQ OOTF (Normalised)"
+        },
+        {
+          "value": "105",
+          "text": "Display HLG OOTF (nits)"
+        },
+        {
+          "value": "106",
+          "text": "Display HLG OOTF (Normalised)"
+        }
+      ],
+      "parent": "γ CorrectionRec709 - γ1.90 (exp2.22)Rec2020 12-bit - γ1.90 (exp2.22)sRGB - γ2.20 (exp2.40)DCI - γ2.60Scene Linear IRE - γ1.0 (18% Gray = 0.2)Scene Reflectance - γ1.0 (18% Gray = 0."
+    },
+    {
+      "i": 12,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "0",
+      "options": [
+        {
+          "value": "-3",
+          "text": "-3"
+        },
+        {
+          "value": "-2",
+          "text": "-2"
+        },
+        {
+          "value": "-1",
+          "text": "-1"
+        },
+        {
+          "value": "0",
+          "text": "0"
+        },
+        {
+          "value": "1",
+          "text": "+1"
+        },
+        {
+          "value": "2",
+          "text": "+2"
+        },
+        {
+          "value": "3",
+          "text": "+3"
+        }
+      ],
+      "parent": "Contrast-3-2-10+1+2+3"
+    },
+    {
+      "i": 13,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "Sony",
+      "options": [
+        {
+          "value": "0",
+          "text": "Sony"
+        },
+        {
+          "value": "1",
+          "text": "ARRI"
+        },
+        {
+          "value": "2",
+          "text": "Canon"
+        },
+        {
+          "value": "3",
+          "text": "Apple"
+        },
+        {
+          "value": "4",
+          "text": "Panasonic"
+        },
+        {
+          "value": "5",
+          "text": "Fujifilm"
+        },
+        {
+          "value": "6",
+          "text": "RED"
+        },
+        {
+          "value": "7",
+          "text": "DJI"
+        },
+        {
+          "value": "8",
+          "text": "GoPro"
+        },
+        {
+          "value": "9",
+          "text": "Blackmagic"
+        },
+        {
+          "value": "10",
+          "text": "Nikon"
+        },
+        {
+          "value": "11",
+          "text": "Bolex"
+        },
+        {
+          "value": "12",
+          "text": "Adobe"
+        },
+        {
+          "value": "13",
+          "text": "Rec709"
+        },
+        {
+          "value": "14",
+          "text": "Rec2020"
+        },
+        {
+          "value": "15",
+          "text": "Rec2100"
+        },
+        {
+          "value": "16",
+          "text": "P3"
+        },
+        {
+          "value": "17",
+          "text": "Wide Gamut"
+        },
+        {
+          "value": "18",
+          "text": "ACES"
+        },
+        {
+          "value": "19",
+          "text": "全部"
+        }
+      ],
+      "parent": "SonyARRICanonApplePanasonicFujifilmREDDJIGoProBlackmagicNikonBolexAdobeRec709Rec2020Rec2100P3Wide GamutACES全部Sony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gamut3Sony S-Gamut3"
+    },
+    {
+      "i": 14,
+      "name": "",
+      "id": "",
+      "value": "1",
+      "selected": "Sony S-Gamut3.cine (Venice)",
+      "options": [
+        {
+          "value": "0",
+          "text": "Sony S-Gamut3.cine"
+        },
+        {
+          "value": "1",
+          "text": "Sony S-Gamut3.cine (Venice)"
+        },
+        {
+          "value": "2",
+          "text": "Sony S-Gamut3"
+        },
+        {
+          "value": "3",
+          "text": "Sony S-Gamut3 (Venice)"
+        },
+        {
+          "value": "4",
+          "text": "Sony S-Gamut"
+        },
+        {
+          "value": "44",
+          "text": "Custom"
+        },
+        {
+          "value": "45",
+          "text": "直通"
+        }
+      ],
+      "parent": "SonyARRICanonApplePanasonicFujifilmREDDJIGoProBlackmagicNikonBolexAdobeRec709Rec2020Rec2100P3Wide GamutACES全部Sony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gamut3Sony S-Gamut3"
+    },
+    {
+      "i": 15,
+      "name": "",
+      "id": "",
+      "value": "17",
+      "selected": "全部",
+      "options": [
+        {
+          "value": "0",
+          "text": "Sony"
+        },
+        {
+          "value": "1",
+          "text": "ARRI"
+        },
+        {
+          "value": "2",
+          "text": "Canon"
+        },
+        {
+          "value": "3",
+          "text": "Apple"
+        },
+        {
+          "value": "4",
+          "text": "Panasonic"
+        },
+        {
+          "value": "5",
+          "text": "RED"
+        },
+        {
+          "value": "6",
+          "text": "GoPro"
+        },
+        {
+          "value": "7",
+          "text": "Panavision"
+        },
+        {
+          "value": "8",
+          "text": "Blackmagic"
+        },
+        {
+          "value": "9",
+          "text": "Bolex"
+        },
+        {
+          "value": "10",
+          "text": "Fujifilm"
+        },
+        {
+          "value": "11",
+          "text": "Nikon"
+        },
+        {
+          "value": "12",
+          "text": "DJI"
+        },
+        {
+          "value": "13",
+          "text": "Log"
+        },
+        {
+          "value": "14",
+          "text": "Display"
+        },
+        {
+          "value": "15",
+          "text": "HDR Display"
+        },
+        {
+          "value": "16",
+          "text": "Linear / γ"
+        },
+        {
+          "value": "17",
+          "text": "全部"
+        }
+      ],
+      "parent": "SonyARRICanonApplePanasonicREDGoProPanavisionBlackmagicBolexFujifilmNikonDJILogDisplayHDR DisplayLinear / γ全部S-Log3S-Log2S-LogLogC4LogC (Sup 3.x & 4.x)LogC (Sup 2.x)Canon C-Log2Can"
+    },
+    {
+      "i": 16,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "S-Log3",
+      "options": [
+        {
+          "value": "0",
+          "text": "S-Log3"
+        },
+        {
+          "value": "1",
+          "text": "S-Log2"
+        },
+        {
+          "value": "2",
+          "text": "S-Log"
+        },
+        {
+          "value": "3",
+          "text": "LogC4"
+        },
+        {
+          "value": "4",
+          "text": "LogC (Sup 3.x & 4.x)"
+        },
+        {
+          "value": "5",
+          "text": "LogC (Sup 2.x)"
+        },
+        {
+          "value": "6",
+          "text": "Canon C-Log2"
+        },
+        {
+          "value": "7",
+          "text": "Canon C-Log3"
+        },
+        {
+          "value": "8",
+          "text": "C-Log"
+        },
+        {
+          "value": "9",
+          "text": "Apple Log"
+        },
+        {
+          "value": "10",
+          "text": "Cineon"
+        },
+        {
+          "value": "11",
+          "text": "Panasonic V-Log"
+        },
+        {
+          "value": "12",
+          "text": "Fujifilm F-Log2"
+        },
+        {
+          "value": "13",
+          "text": "Fujifilm F-Log"
+        },
+        {
+          "value": "14",
+          "text": "REDLogFilm"
+        },
+        {
+          "value": "15",
+          "text": "RED Log3G10"
+        },
+        {
+          "value": "16",
+          "text": "BMDFilm Gen5"
+        },
+        {
+          "value": "17",
+          "text": "DaVinci Intermediate"
+        },
+        {
+          "value": "18",
+          "text": "BMD Pocket Film"
+        },
+        {
+          "value": "19",
+          "text": "BMD Film"
+        },
+        {
+          "value": "20",
+          "text": "BMD Film4k"
+        },
+        {
+          "value": "21",
+          "text": "BMD Film4.6k"
+        },
+        {
+          "value": "22",
+          "text": "Bolex Log"
+        },
+        {
+          "value": "23",
+          "text": "Panalog"
+        },
+        {
+          "value": "24",
+          "text": "Protune"
+        },
+        {
+          "value": "25",
+          "text": "DJI X5/X7/X9 DLog"
+        },
+        {
+          "value": "26",
+          "text": "DJI DLog-M"
+        },
+        {
+          "value": "27",
+          "text": "DJI X3 DLog"
+        },
+        {
+          "value": "28",
+          "text": "DJI Mini 2"
+        },
+        {
+          "value": "29",
+          "text": "ACEScc"
+        },
+        {
+          "value": "30",
+          "text": "ACESproxy10"
+        },
+        {
+          "value": "31",
+          "text": "ACESproxy12"
+        },
+        {
+          "value": "32",
+          "text": "Amira709"
+        },
+        {
+          "value": "33",
+          "text": "Alexa-X-2"
+        },
+        {
+          "value": "34",
+          "text": "s709"
+        },
+        {
+          "value": "35",
+          "text": "LC709A"
+        },
+        {
+          "value": "36",
+          "text": "LC709"
+        },
+        {
+          "value": "37",
+          "text": "Sony Cine+709"
+        },
+        {
+          "value": "38",
+          "text": "Varicam V709"
+        },
+        {
+          "value": "39",
+          "text": "REDGamma"
+        },
+        {
+          "value": "40",
+          "text": "REDGamma2"
+        },
+        {
+          "value": "41",
+          "text": "REDGamma3"
+        },
+        {
+          "value": "42",
+          "text": "REDGamma4"
+        },
+        {
+          "value": "43",
+          "text": "Rec709 (800%)"
+        },
+        {
+          "value": "44",
+          "text": "EOS Standard"
+        },
+        {
+          "value": "45",
+          "text": "EOS Standard (Legal)"
+        },
+        {
+          "value": "46",
+          "text": "Canon Normal 1"
+        },
+        {
+          "value": "47",
+          "text": "Canon Normal 2"
+        },
+        {
+          "value": "48",
+          "text": "Canon Normal 3"
+        },
+        {
+          "value": "49",
+          "text": "Canon Normal 4"
+        },
+        {
+          "value": "50",
+          "text": "Nikon N-Log"
+        },
+        {
+          "value": "51",
+          "text": "Nikon Standard"
+        },
+        {
+          "value": "52",
+          "text": "Nikon Neutral"
+        },
+        {
+          "value": "53",
+          "text": "Nikon Vivid"
+        },
+        {
+          "value": "54",
+          "text": "Nikon Monochrome"
+        },
+        {
+          "value": "55",
+          "text": "Nikon Portrait"
+        },
+        {
+          "value": "56",
+          "text": "Nikon Landscape"
+        },
+        {
+          "value": "57",
+          "text": "Rec2100 PQ (PQ OOTF)"
+        },
+        {
+          "value": "58",
+          "text": "Rec2100 PQ (HLG OOTF)"
+        },
+        {
+          "value": "59",
+          "text": "Rec2100 HLG"
+        },
+        {
+          "value": "60",
+          "text": "PQ (EOTF Only)"
+        },
+        {
+          "value": "61",
+          "text": "HG3250G36 (HG1)"
+        },
+        {
+          "value": "62",
+          "text": "HG4600G30 (HG2)"
+        },
+        {
+          "value": "63",
+          "text": "HG3259G40 (HG3)"
+        },
+        {
+          "value": "64",
+          "text": "HG4609G33 (HG4)"
+        },
+        {
+          "value": "65",
+          "text": "HG8000G36 (HG5)"
+        },
+        {
+          "value": "66",
+          "text": "HG8000G30 (HG6)"
+        },
+        {
+          "value": "67",
+          "text": "HG8009G40 (HG7)"
+        },
+        {
+          "value": "68",
+          "text": "HG8009G33 (HG8)"
+        },
+        {
+          "value": "69",
+          "text": "Cinegamma1"
+        },
+        {
+          "value": "70",
+          "text": "Cinegamma2"
+        },
+        {
+          "value": "71",
+          "text": "Cinegamma3"
+        },
+        {
+          "value": "72",
+          "text": "Cinegamma4"
+        },
+        {
+          "value": "73",
+          "text": "Sony STD1"
+        },
+        {
+          "value": "74",
+          "text": "Sony STD2 - x4.5"
+        },
+        {
+          "value": "75",
+          "text": "Sony STD3 - x3.5"
+        },
+        {
+          "value": "76",
+          "text": "Sony STD4 - SMPTE240M"
+        },
+        {
+          "value": "77",
+          "text": "Sony STD5 - Rec709"
+        },
+        {
+          "value": "78",
+          "text": "Sony STD6 - x5"
+        },
+        {
+          "value": "79",
+          "text": "Canon WideDR"
+        },
+        {
+          "value": "107",
+          "text": "ITU Proposal (400%)"
+        },
+        {
+          "value": "108",
+          "text": "ITU Proposal (800%)"
+        },
+        {
+          "value": "109",
+          "text": "BBC WHP283 (400%)"
+        },
+        {
+          "value": "110",
+          "text": "BBC WHP283 (800%)"
+        },
+        {
+          "value": "9999",
+          "text": "Linear / γ"
+        },
+        {
+          "value": "112",
+          "text": "Null"
+        }
+      ],
+      "parent": "SonyARRICanonApplePanasonicREDGoProPanavisionBlackmagicBolexFujifilmNikonDJILogDisplayHDR DisplayLinear / γ全部S-Log3S-Log2S-LogLogC4LogC (Sup 3.x & 4.x)LogC (Sup 2.x)Canon C-Log2Can"
+    },
+    {
+      "i": 17,
+      "name": "",
+      "id": "",
+      "value": "80",
+      "selected": "Rec709 - γ1.90 (exp2.22)",
+      "options": [
+        {
+          "value": "80",
+          "text": "Rec709 - γ1.90 (exp2.22)"
+        },
+        {
+          "value": "81",
+          "text": "Rec2020 12-bit - γ1.90 (exp2.22)"
+        },
+        {
+          "value": "82",
+          "text": "sRGB - γ2.20 (exp2.40)"
+        },
+        {
+          "value": "83",
+          "text": "DCI - γ2.60"
+        },
+        {
+          "value": "84",
+          "text": "Scene Linear IRE - γ1.0 (18% Gray = 0.2)"
+        },
+        {
+          "value": "85",
+          "text": "Scene Reflectance - γ1.0 (18% Gray = 0.18)"
+        },
+        {
+          "value": "86",
+          "text": "CIE L* - γ2.45 (exp3.00)"
+        },
+        {
+          "value": "87",
+          "text": "BBC 0.4"
+        },
+        {
+          "value": "88",
+          "text": "BBC 0.5"
+        },
+        {
+          "value": "89",
+          "text": "BBC 0.6"
+        },
+        {
+          "value": "90",
+          "text": "ProPhoto / ROMM - γ1.80"
+        },
+        {
+          "value": "91",
+          "text": "γ1.5"
+        },
+        {
+          "value": "92",
+          "text": "γ1.6"
+        },
+        {
+          "value": "93",
+          "text": "γ1.7"
+        },
+        {
+          "value": "94",
+          "text": "γ1.8"
+        },
+        {
+          "value": "95",
+          "text": "γ1.9"
+        },
+        {
+          "value": "96",
+          "text": "γ2.0"
+        },
+        {
+          "value": "97",
+          "text": "γ2.1"
+        },
+        {
+          "value": "98",
+          "text": "γ2.2"
+        },
+        {
+          "value": "99",
+          "text": "γ2.3"
+        },
+        {
+          "value": "100",
+          "text": "γ2.4"
+        },
+        {
+          "value": "101",
+          "text": "γ2.5"
+        },
+        {
+          "value": "102",
+          "text": "γ2.6"
+        },
+        {
+          "value": "103",
+          "text": "Display PQ OOTF (nits)"
+        },
+        {
+          "value": "104",
+          "text": "Display PQ OOTF (Normalised)"
+        },
+        {
+          "value": "105",
+          "text": "Display HLG OOTF (nits)"
+        },
+        {
+          "value": "106",
+          "text": "Display HLG OOTF (Normalised)"
+        }
+      ],
+      "parent": "γ CorrectionRec709 - γ1.90 (exp2.22)Rec2020 12-bit - γ1.90 (exp2.22)sRGB - γ2.20 (exp2.40)DCI - γ2.60Scene Linear IRE - γ1.0 (18% Gray = 0.2)Scene Reflectance - γ1.0 (18% Gray = 0."
+    },
+    {
+      "i": 18,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "0",
+      "options": [
+        {
+          "value": "-3",
+          "text": "-3"
+        },
+        {
+          "value": "-2",
+          "text": "-2"
+        },
+        {
+          "value": "-1",
+          "text": "-1"
+        },
+        {
+          "value": "0",
+          "text": "0"
+        },
+        {
+          "value": "1",
+          "text": "+1"
+        },
+        {
+          "value": "2",
+          "text": "+2"
+        },
+        {
+          "value": "3",
+          "text": "+3"
+        }
+      ],
+      "parent": "Contrast-3-2-10+1+2+3"
+    },
+    {
+      "i": 19,
+      "name": "",
+      "id": "",
+      "value": "19",
+      "selected": "全部",
+      "options": [
+        {
+          "value": "0",
+          "text": "Sony"
+        },
+        {
+          "value": "1",
+          "text": "ARRI"
+        },
+        {
+          "value": "2",
+          "text": "Canon"
+        },
+        {
+          "value": "3",
+          "text": "Apple"
+        },
+        {
+          "value": "4",
+          "text": "Panasonic"
+        },
+        {
+          "value": "5",
+          "text": "Fujifilm"
+        },
+        {
+          "value": "6",
+          "text": "RED"
+        },
+        {
+          "value": "7",
+          "text": "DJI"
+        },
+        {
+          "value": "8",
+          "text": "GoPro"
+        },
+        {
+          "value": "9",
+          "text": "Blackmagic"
+        },
+        {
+          "value": "10",
+          "text": "Nikon"
+        },
+        {
+          "value": "11",
+          "text": "Bolex"
+        },
+        {
+          "value": "12",
+          "text": "Adobe"
+        },
+        {
+          "value": "13",
+          "text": "Rec709"
+        },
+        {
+          "value": "14",
+          "text": "Rec2020"
+        },
+        {
+          "value": "15",
+          "text": "Rec2100"
+        },
+        {
+          "value": "16",
+          "text": "P3"
+        },
+        {
+          "value": "17",
+          "text": "Wide Gamut"
+        },
+        {
+          "value": "18",
+          "text": "ACES"
+        },
+        {
+          "value": "19",
+          "text": "全部"
+        }
+      ],
+      "parent": "SonyARRICanonApplePanasonicFujifilmREDDJIGoProBlackmagicNikonBolexAdobeRec709Rec2020Rec2100P3Wide GamutACES全部Sony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gamut3Sony S-Gamut3"
+    },
+    {
+      "i": 20,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "Sony S-Gamut3.cine",
+      "options": [
+        {
+          "value": "0",
+          "text": "Sony S-Gamut3.cine"
+        },
+        {
+          "value": "1",
+          "text": "Sony S-Gamut3.cine (Venice)"
+        },
+        {
+          "value": "2",
+          "text": "Sony S-Gamut3"
+        },
+        {
+          "value": "3",
+          "text": "Sony S-Gamut3 (Venice)"
+        },
+        {
+          "value": "4",
+          "text": "Sony S-Gamut"
+        },
+        {
+          "value": "5",
+          "text": "ARRI Wide Gamut 4"
+        },
+        {
+          "value": "6",
+          "text": "Alexa Wide Gamut"
+        },
+        {
+          "value": "7",
+          "text": "Canon Cinema Gamut"
+        },
+        {
+          "value": "8",
+          "text": "Panasonic V-Gamut"
+        },
+        {
+          "value": "9",
+          "text": "Fujifilm F-Log Gamut"
+        },
+        {
+          "value": "10",
+          "text": "Blackmagic Wide Gamut"
+        },
+        {
+          "value": "11",
+          "text": "DaVinci Wide Gamut"
+        },
+        {
+          "value": "12",
+          "text": "Blackmagic 4.6k Film"
+        },
+        {
+          "value": "13",
+          "text": "Blackmagic 4k Film"
+        },
+        {
+          "value": "14",
+          "text": "Blackmagic Pocket 6k Film"
+        },
+        {
+          "value": "15",
+          "text": "DRAGONColor"
+        },
+        {
+          "value": "16",
+          "text": "DRAGONColor2"
+        },
+        {
+          "value": "17",
+          "text": "REDColor"
+        },
+        {
+          "value": "18",
+          "text": "REDColor2"
+        },
+        {
+          "value": "19",
+          "text": "REDColor3"
+        },
+        {
+          "value": "20",
+          "text": "REDColor4"
+        },
+        {
+          "value": "21",
+          "text": "REDWideGamutRGB"
+        },
+        {
+          "value": "22",
+          "text": "DJI D-Gamut"
+        },
+        {
+          "value": "23",
+          "text": "DJI D-GamutM"
+        },
+        {
+          "value": "24",
+          "text": "Protune Native"
+        },
+        {
+          "value": "25",
+          "text": "Bolex Wide Gamut"
+        },
+        {
+          "value": "26",
+          "text": "Rec709"
+        },
+        {
+          "value": "27",
+          "text": "Amira709"
+        },
+        {
+          "value": "28",
+          "text": "Alexa-X-2"
+        },
+        {
+          "value": "29",
+          "text": "s709"
+        },
+        {
+          "value": "30",
+          "text": "LC709"
+        },
+        {
+          "value": "31",
+          "text": "LC709A"
+        },
+        {
+          "value": "32",
+          "text": "Sony Cine+709"
+        },
+        {
+          "value": "33",
+          "text": "Canon CP IDT (Daylight)"
+        },
+        {
+          "value": "34",
+          "text": "Canon CP IDT (Tungsten)"
+        },
+        {
+          "value": "35",
+          "text": "Varicam V709"
+        },
+        {
+          "value": "36",
+          "text": "Rec2020"
+        },
+        {
+          "value": "37",
+          "text": "Rec2100"
+        },
+        {
+          "value": "38",
+          "text": "sRGB"
+        },
+        {
+          "value": "39",
+          "text": "Luma B&W"
+        },
+        {
+          "value": "40",
+          "text": "ACES AP0"
+        },
+        {
+          "value": "41",
+          "text": "ACEScg AP1"
+        },
+        {
+          "value": "42",
+          "text": "XYZ"
+        },
+        {
+          "value": "43",
+          "text": "P3 - DCI"
+        },
+        {
+          "value": "44",
+          "text": "P3 - D60"
+        },
+        {
+          "value": "45",
+          "text": "P3 - D65"
+        },
+        {
+          "value": "46",
+          "text": "Canon DCI-P3+"
+        },
+        {
+          "value": "47",
+          "text": "Adobe RGB"
+        },
+        {
+          "value": "48",
+          "text": "Adobe Wide Gamut RGB"
+        },
+        {
+          "value": "49",
+          "text": "ProPhoto RGB"
+        },
+        {
+          "value": "50",
+          "text": "CIELAB D65"
+        },
+        {
+          "value": "51",
+          "text": "CIELAB D50"
+        },
+        {
+          "value": "52",
+          "text": "Custom"
+        },
+        {
+          "value": "53",
+          "text": "直通"
+        }
+      ],
+      "parent": "SonyARRICanonApplePanasonicFujifilmREDDJIGoProBlackmagicNikonBolexAdobeRec709Rec2020Rec2100P3Wide GamutACES全部Sony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gamut3Sony S-Gamut3"
+    },
+    {
+      "i": 21,
+      "name": "",
+      "id": "",
+      "value": "Rec709",
+      "selected": "Rec709",
+      "options": [
+        {
+          "value": "Rec709",
+          "text": "Rec709"
+        }
+      ],
+      "parent": "Rec709White Point & PrimariesMatrix标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary: xyBlue Primary:  xyTo Wo"
+    },
+    {
+      "i": 22,
+      "name": "",
+      "id": "",
+      "value": "8",
+      "selected": "D65",
+      "options": [
+        {
+          "value": "0",
+          "text": "A"
+        },
+        {
+          "value": "1",
+          "text": "B"
+        },
+        {
+          "value": "2",
+          "text": "C"
+        },
+        {
+          "value": "3",
+          "text": "D40"
+        },
+        {
+          "value": "4",
+          "text": "D45"
+        },
+        {
+          "value": "5",
+          "text": "D50"
+        },
+        {
+          "value": "6",
+          "text": "D55"
+        },
+        {
+          "value": "7",
+          "text": "D60"
+        },
+        {
+          "value": "8",
+          "text": "D65"
+        },
+        {
+          "value": "9",
+          "text": "D70"
+        },
+        {
+          "value": "10",
+          "text": "D75"
+        },
+        {
+          "value": "11",
+          "text": "E"
+        },
+        {
+          "value": "12",
+          "text": "F1"
+        },
+        {
+          "value": "13",
+          "text": "F2"
+        },
+        {
+          "value": "14",
+          "text": "F3"
+        },
+        {
+          "value": "15",
+          "text": "F4"
+        },
+        {
+          "value": "16",
+          "text": "F5"
+        },
+        {
+          "value": "17",
+          "text": "F6"
+        },
+        {
+          "value": "18",
+          "text": "F7"
+        },
+        {
+          "value": "19",
+          "text": "F8"
+        },
+        {
+          "value": "20",
+          "text": "F9"
+        },
+        {
+          "value": "21",
+          "text": "F10"
+        },
+        {
+          "value": "22",
+          "text": "F11"
+        },
+        {
+          "value": "23",
+          "text": "F12"
+        }
+      ],
+      "parent": "标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary: xyBlue Primary:  xyTo Working ColourspaceFrom Working Colou"
+    },
+    {
+      "i": 23,
+      "name": "",
+      "id": "",
+      "value": "26",
+      "selected": "Rec709",
+      "options": [
+        {
+          "value": "0",
+          "text": "Sony S-Gamut3.cine"
+        },
+        {
+          "value": "1",
+          "text": "Sony S-Gamut3.cine (Venice)"
+        },
+        {
+          "value": "2",
+          "text": "Sony S-Gamut3"
+        },
+        {
+          "value": "3",
+          "text": "Sony S-Gamut3 (Venice)"
+        },
+        {
+          "value": "4",
+          "text": "Sony S-Gamut"
+        },
+        {
+          "value": "5",
+          "text": "ARRI Wide Gamut 4"
+        },
+        {
+          "value": "6",
+          "text": "Alexa Wide Gamut"
+        },
+        {
+          "value": "7",
+          "text": "Canon Cinema Gamut"
+        },
+        {
+          "value": "8",
+          "text": "Blackmagic Wide Gamut"
+        },
+        {
+          "value": "9",
+          "text": "DaVinci Wide Gamut"
+        },
+        {
+          "value": "10",
+          "text": "Panasonic V-Gamut"
+        },
+        {
+          "value": "11",
+          "text": "Blackmagic 4k Film"
+        },
+        {
+          "value": "12",
+          "text": "Blackmagic 4.6k Film"
+        },
+        {
+          "value": "13",
+          "text": "Blackmagic Pocket 6k Film"
+        },
+        {
+          "value": "14",
+          "text": "Fujifilm F-Log Gamut"
+        },
+        {
+          "value": "15",
+          "text": "REDWideGamutRGB"
+        },
+        {
+          "value": "16",
+          "text": "DRAGONColor"
+        },
+        {
+          "value": "17",
+          "text": "DRAGONColor2"
+        },
+        {
+          "value": "18",
+          "text": "REDColor"
+        },
+        {
+          "value": "19",
+          "text": "REDColor2"
+        },
+        {
+          "value": "20",
+          "text": "REDColor3"
+        },
+        {
+          "value": "21",
+          "text": "REDColor4"
+        },
+        {
+          "value": "22",
+          "text": "Bolex Wide Gamut"
+        },
+        {
+          "value": "23",
+          "text": "DJI D-Gamut"
+        },
+        {
+          "value": "24",
+          "text": "DJI D-GamutM"
+        },
+        {
+          "value": "25",
+          "text": "Protune Native"
+        },
+        {
+          "value": "26",
+          "text": "Rec709"
+        },
+        {
+          "value": "27",
+          "text": "Rec2020"
+        },
+        {
+          "value": "28",
+          "text": "Rec2100"
+        },
+        {
+          "value": "29",
+          "text": "sRGB"
+        },
+        {
+          "value": "30",
+          "text": "ACES AP0"
+        },
+        {
+          "value": "31",
+          "text": "ACEScg AP1"
+        },
+        {
+          "value": "32",
+          "text": "XYZ"
+        },
+        {
+          "value": "33",
+          "text": "P3 - DCI"
+        },
+        {
+          "value": "34",
+          "text": "P3 - D60"
+        },
+        {
+          "value": "35",
+          "text": "P3 - D65"
+        },
+        {
+          "value": "36",
+          "text": "Canon DCI-P3+"
+        },
+        {
+          "value": "37",
+          "text": "Adobe RGB"
+        },
+        {
+          "value": "38",
+          "text": "Adobe Wide Gamut RGB"
+        },
+        {
+          "value": "39",
+          "text": "ProPhoto RGB"
+        }
+      ],
+      "parent": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gamut3Sony S-Gamut3 (Venice)Sony S-GamutARRI Wide Gamut 4Alexa "
+    },
+    {
+      "i": 24,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "CIECAT02",
+      "options": [
+        {
+          "value": "0",
+          "text": "CIECAT02"
+        },
+        {
+          "value": "1",
+          "text": "CIECAT97s"
+        },
+        {
+          "value": "2",
+          "text": "Bradford Chromatic Adaptation"
+        },
+        {
+          "value": "3",
+          "text": "Von Kries"
+        },
+        {
+          "value": "4",
+          "text": "Sharp"
+        },
+        {
+          "value": "5",
+          "text": "CMCCAT2000"
+        },
+        {
+          "value": "6",
+          "text": "Bianco BS"
+        },
+        {
+          "value": "7",
+          "text": "Bianco BS-PC"
+        },
+        {
+          "value": "8",
+          "text": "XYZ Scaling"
+        }
+      ],
+      "parent": "标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary: xyBlue Primary:  xyTo Working ColourspaceFrom Working Colou"
+    },
+    {
+      "i": 25,
+      "name": "",
+      "id": "",
+      "value": "Rec709",
+      "selected": "Rec709",
+      "options": [
+        {
+          "value": "Rec709",
+          "text": "Rec709"
+        }
+      ],
+      "parent": "Rec709White Point & PrimariesMatrix标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary: xyBlue Primary:  xyTo Wo"
+    },
+    {
+      "i": 26,
+      "name": "",
+      "id": "",
+      "value": "Rec709",
+      "selected": "Rec709",
+      "options": [
+        {
+          "value": "Rec709",
+          "text": "Rec709"
+        }
+      ],
+      "parent": "Rec709White Point & PrimariesMatrix标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary: xyBlue Primary:  xyTo Wo"
+    },
+    {
+      "i": 27,
+      "name": "",
+      "id": "",
+      "value": "5500",
+      "selected": "Daylight",
+      "options": [
+        {
+          "value": "2500",
+          "text": "Warm Comfort Light"
+        },
+        {
+          "value": "2800",
+          "text": "Warm White"
+        },
+        {
+          "value": "3200",
+          "text": "Tungsten"
+        },
+        {
+          "value": "3500",
+          "text": "White"
+        },
+        {
+          "value": "4300",
+          "text": "Cool White"
+        },
+        {
+          "value": "5500",
+          "text": "Daylight"
+        },
+        {
+          "value": "6500",
+          "text": "Cool Daylight"
+        }
+      ],
+      "parent": "Lamp Nominal ColourWarm Comfort LightWarm WhiteTungstenWhiteCool WhiteDaylightCool DaylightChromatic Adaptation ModelCIECAT02CIECAT97sBradford Chromatic AdaptationVon KriesSharpCMC"
+    },
+    {
+      "i": 28,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "CIECAT02",
+      "options": [
+        {
+          "value": "0",
+          "text": "CIECAT02"
+        },
+        {
+          "value": "1",
+          "text": "CIECAT97s"
+        },
+        {
+          "value": "2",
+          "text": "Bradford Chromatic Adaptation"
+        },
+        {
+          "value": "3",
+          "text": "Von Kries"
+        },
+        {
+          "value": "4",
+          "text": "Sharp"
+        },
+        {
+          "value": "5",
+          "text": "CMCCAT2000"
+        },
+        {
+          "value": "6",
+          "text": "Bianco BS"
+        },
+        {
+          "value": "7",
+          "text": "Bianco BS-PC"
+        },
+        {
+          "value": "8",
+          "text": "XYZ Scaling"
+        }
+      ],
+      "parent": "Lamp Nominal ColourWarm Comfort LightWarm WhiteTungstenWhiteCool WhiteDaylightCool DaylightChromatic Adaptation ModelCIECAT02CIECAT97sBradford Chromatic AdaptationVon KriesSharpCMC"
+    },
+    {
+      "i": 29,
+      "name": "",
+      "id": "",
+      "value": "3",
+      "selected": "Skin",
+      "options": [
+        {
+          "value": "0",
+          "text": "Blue"
+        },
+        {
+          "value": "1",
+          "text": "Magenta"
+        },
+        {
+          "value": "2",
+          "text": "Red"
+        },
+        {
+          "value": "3",
+          "text": "Skin"
+        },
+        {
+          "value": "4",
+          "text": "Yellow"
+        },
+        {
+          "value": "5",
+          "text": "Green"
+        },
+        {
+          "value": "6",
+          "text": "Cyan"
+        }
+      ],
+      "parent": "BlueMagentaRedSkinYellowGreenCyanColourSaturationSlopeOffsetPowerColourSaturationSlopeOffsetPowerColourSaturationSlopeOffsetPowerColourSaturationSlopeOffsetPowerColourSaturationSlo"
+    },
+    {
+      "i": 30,
+      "name": "",
+      "id": "",
+      "value": "1",
+      "selected": "Saturation",
+      "options": [
+        {
+          "value": "0",
+          "text": "Colour Shift"
+        },
+        {
+          "value": "1",
+          "text": "Saturation"
+        },
+        {
+          "value": "2",
+          "text": "Slope"
+        },
+        {
+          "value": "3",
+          "text": "Offset"
+        },
+        {
+          "value": "4",
+          "text": "Power"
+        }
+      ],
+      "parent": "Colour ShiftSaturationSlopeOffsetPower"
+    },
+    {
+      "i": 31,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "Gray",
+      "options": [
+        {
+          "value": "0",
+          "text": "Gray"
+        },
+        {
+          "value": "1",
+          "text": "Red"
+        },
+        {
+          "value": "2",
+          "text": "Green"
+        },
+        {
+          "value": "3",
+          "text": "Blue"
+        }
+      ],
+      "parent": "SaturationGrayRedGreenBlueSlopeOffsetPowerSlopeOffsetPowerSlopeOffsetPowerSlopeOffsetPower"
+    },
+    {
+      "i": 32,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "Sony S-Gamut3.cine",
+      "options": [
+        {
+          "value": "0",
+          "text": "Sony S-Gamut3.cine"
+        },
+        {
+          "value": "1",
+          "text": "Sony S-Gamut3.cine (Venice)"
+        },
+        {
+          "value": "2",
+          "text": "Sony S-Gamut3"
+        },
+        {
+          "value": "3",
+          "text": "Sony S-Gamut3 (Venice)"
+        },
+        {
+          "value": "4",
+          "text": "Sony S-Gamut"
+        },
+        {
+          "value": "5",
+          "text": "ARRI Wide Gamut 4"
+        },
+        {
+          "value": "6",
+          "text": "Alexa Wide Gamut"
+        },
+        {
+          "value": "7",
+          "text": "Canon Cinema Gamut"
+        },
+        {
+          "value": "8",
+          "text": "Panasonic V-Gamut"
+        },
+        {
+          "value": "9",
+          "text": "Fujifilm F-Log Gamut"
+        },
+        {
+          "value": "10",
+          "text": "Blackmagic Wide Gamut"
+        },
+        {
+          "value": "11",
+          "text": "DaVinci Wide Gamut"
+        },
+        {
+          "value": "12",
+          "text": "Blackmagic 4.6k Film"
+        },
+        {
+          "value": "13",
+          "text": "Blackmagic 4k Film"
+        },
+        {
+          "value": "14",
+          "text": "Blackmagic Pocket 6k Film"
+        },
+        {
+          "value": "15",
+          "text": "DRAGONColor"
+        },
+        {
+          "value": "16",
+          "text": "DRAGONColor2"
+        },
+        {
+          "value": "17",
+          "text": "REDColor"
+        },
+        {
+          "value": "18",
+          "text": "REDColor2"
+        },
+        {
+          "value": "19",
+          "text": "REDColor3"
+        },
+        {
+          "value": "20",
+          "text": "REDColor4"
+        },
+        {
+          "value": "21",
+          "text": "REDWideGamutRGB"
+        },
+        {
+          "value": "22",
+          "text": "DJI D-Gamut"
+        },
+        {
+          "value": "23",
+          "text": "DJI D-GamutM"
+        },
+        {
+          "value": "24",
+          "text": "Protune Native"
+        },
+        {
+          "value": "25",
+          "text": "Bolex Wide Gamut"
+        },
+        {
+          "value": "26",
+          "text": "Rec709"
+        },
+        {
+          "value": "27",
+          "text": "Amira709"
+        },
+        {
+          "value": "28",
+          "text": "Alexa-X-2"
+        },
+        {
+          "value": "29",
+          "text": "s709"
+        },
+        {
+          "value": "30",
+          "text": "LC709"
+        },
+        {
+          "value": "31",
+          "text": "LC709A"
+        },
+        {
+          "value": "32",
+          "text": "Sony Cine+709"
+        },
+        {
+          "value": "33",
+          "text": "Canon CP IDT (Daylight)"
+        },
+        {
+          "value": "34",
+          "text": "Canon CP IDT (Tungsten)"
+        },
+        {
+          "value": "35",
+          "text": "Varicam V709"
+        },
+        {
+          "value": "36",
+          "text": "Rec2020"
+        },
+        {
+          "value": "37",
+          "text": "Rec2100"
+        },
+        {
+          "value": "38",
+          "text": "sRGB"
+        },
+        {
+          "value": "39",
+          "text": "Luma B&W"
+        },
+        {
+          "value": "40",
+          "text": "ACES AP0"
+        },
+        {
+          "value": "41",
+          "text": "ACEScg AP1"
+        },
+        {
+          "value": "42",
+          "text": "XYZ"
+        },
+        {
+          "value": "43",
+          "text": "P3 - DCI"
+        },
+        {
+          "value": "44",
+          "text": "P3 - D60"
+        },
+        {
+          "value": "45",
+          "text": "P3 - D65"
+        },
+        {
+          "value": "46",
+          "text": "Canon DCI-P3+"
+        },
+        {
+          "value": "47",
+          "text": "Adobe RGB"
+        },
+        {
+          "value": "48",
+          "text": "Adobe Wide Gamut RGB"
+        },
+        {
+          "value": "49",
+          "text": "ProPhoto RGB"
+        },
+        {
+          "value": "50",
+          "text": "CIELAB D65"
+        },
+        {
+          "value": "51",
+          "text": "CIELAB D50"
+        },
+        {
+          "value": "52",
+          "text": "Custom"
+        },
+        {
+          "value": "53",
+          "text": "直通"
+        }
+      ],
+      "parent": "GamutSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gamut3Sony S-Gamut3 (Venice)Sony S-GamutARRI Wide Gamut 4Alexa Wide GamutCanon Cinema GamutPanasonic V-GamutFujifilm F-Log "
+    },
+    {
+      "i": 33,
+      "name": "",
+      "id": "",
+      "value": "80",
+      "selected": "Rec709",
+      "options": [
+        {
+          "value": "80",
+          "text": "Rec709"
+        },
+        {
+          "value": "81",
+          "text": "Rec2020 12-bit"
+        },
+        {
+          "value": "82",
+          "text": "sRGB"
+        },
+        {
+          "value": "83",
+          "text": "DCI-P3"
+        },
+        {
+          "value": "83",
+          "text": "DCI-D60"
+        },
+        {
+          "value": "83",
+          "text": "DCI-D65"
+        },
+        {
+          "value": "84",
+          "text": "Scene Linear IRE"
+        },
+        {
+          "value": "85",
+          "text": "Scene Reflectance"
+        },
+        {
+          "value": "86",
+          "text": "CIE L*"
+        },
+        {
+          "value": "87",
+          "text": "BBC 0.4"
+        },
+        {
+          "value": "88",
+          "text": "BBC 0.5"
+        },
+        {
+          "value": "89",
+          "text": "BBC 0.6"
+        },
+        {
+          "value": "90",
+          "text": "ProPhoto / ROMM"
+        },
+        {
+          "value": "91",
+          "text": "γ1.5"
+        },
+        {
+          "value": "92",
+          "text": "γ1.6"
+        },
+        {
+          "value": "93",
+          "text": "γ1.7"
+        },
+        {
+          "value": "94",
+          "text": "γ1.8"
+        },
+        {
+          "value": "95",
+          "text": "γ1.9"
+        },
+        {
+          "value": "96",
+          "text": "γ2.0"
+        },
+        {
+          "value": "97",
+          "text": "γ2.1"
+        },
+        {
+          "value": "98",
+          "text": "γ2.2"
+        },
+        {
+          "value": "99",
+          "text": "γ2.3"
+        },
+        {
+          "value": "100",
+          "text": "γ2.4"
+        },
+        {
+          "value": "101",
+          "text": "γ2.5"
+        },
+        {
+          "value": "102",
+          "text": "γ2.6"
+        },
+        {
+          "value": "57",
+          "text": "Rec2100 PQ (PQ OOTF)"
+        },
+        {
+          "value": "58",
+          "text": "Rec2100 PQ (HLG OOTF)"
+        },
+        {
+          "value": "59",
+          "text": "Rec2100 HLG"
+        },
+        {
+          "value": "60",
+          "text": "PQ (EOTF Only)"
+        }
+      ],
+      "parent": "输出 Base ColourspaceRec709Rec2020 12-bitsRGBDCI-P3DCI-D60DCI-D65Scene Linear IREScene ReflectanceCIE L*BBC 0.4BBC 0.5BBC 0.6ProPhoto / ROMMγ1.5γ1.6γ1.7γ1.8γ1.9γ2.0γ2.1γ2.2γ2.3γ2.4γ2"
+    },
+    {
+      "i": 34,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "Rec709",
+      "options": [
+        {
+          "value": "0",
+          "text": "Rec709"
+        },
+        {
+          "value": "1",
+          "text": "Rec2020"
+        },
+        {
+          "value": "2",
+          "text": "sRGB"
+        },
+        {
+          "value": "3",
+          "text": "DCI-P3"
+        },
+        {
+          "value": "4",
+          "text": "DCI-D60"
+        },
+        {
+          "value": "5",
+          "text": "DCI-D65"
+        },
+        {
+          "value": "6",
+          "text": "ProPhoto RGB"
+        }
+      ],
+      "parent": "Using GamutRec709Rec2020sRGBDCI-P3DCI-D60DCI-D65ProPhoto RGB"
+    },
+    {
+      "i": 35,
+      "name": "",
+      "id": "",
+      "value": "80",
+      "selected": "Rec709",
+      "options": [
+        {
+          "value": "80",
+          "text": "Rec709"
+        },
+        {
+          "value": "81",
+          "text": "Rec2020 12-bit"
+        },
+        {
+          "value": "82",
+          "text": "sRGB"
+        },
+        {
+          "value": "83",
+          "text": "DCI-P3"
+        },
+        {
+          "value": "83",
+          "text": "DCI-D60"
+        },
+        {
+          "value": "83",
+          "text": "DCI-D65"
+        },
+        {
+          "value": "84",
+          "text": "Scene Linear IRE"
+        },
+        {
+          "value": "85",
+          "text": "Scene Reflectance"
+        },
+        {
+          "value": "86",
+          "text": "CIE L*"
+        },
+        {
+          "value": "87",
+          "text": "BBC 0.4"
+        },
+        {
+          "value": "88",
+          "text": "BBC 0.5"
+        },
+        {
+          "value": "89",
+          "text": "BBC 0.6"
+        },
+        {
+          "value": "90",
+          "text": "ProPhoto / ROMM"
+        },
+        {
+          "value": "91",
+          "text": "γ1.5"
+        },
+        {
+          "value": "92",
+          "text": "γ1.6"
+        },
+        {
+          "value": "93",
+          "text": "γ1.7"
+        },
+        {
+          "value": "94",
+          "text": "γ1.8"
+        },
+        {
+          "value": "95",
+          "text": "γ1.9"
+        },
+        {
+          "value": "96",
+          "text": "γ2.0"
+        },
+        {
+          "value": "97",
+          "text": "γ2.1"
+        },
+        {
+          "value": "98",
+          "text": "γ2.2"
+        },
+        {
+          "value": "99",
+          "text": "γ2.3"
+        },
+        {
+          "value": "100",
+          "text": "γ2.4"
+        },
+        {
+          "value": "101",
+          "text": "γ2.5"
+        },
+        {
+          "value": "102",
+          "text": "γ2.6"
+        },
+        {
+          "value": "57",
+          "text": "Rec2100 PQ (PQ OOTF)"
+        },
+        {
+          "value": "58",
+          "text": "Rec2100 PQ (HLG OOTF)"
+        },
+        {
+          "value": "59",
+          "text": "Rec2100 HLG"
+        },
+        {
+          "value": "60",
+          "text": "PQ (EOTF Only)"
+        }
+      ],
+      "parent": "输出 Base ColourspaceRec709Rec2020 12-bitsRGBDCI-P3DCI-D60DCI-D65Scene Linear IREScene ReflectanceCIE L*BBC 0.4BBC 0.5BBC 0.6ProPhoto / ROMMγ1.5γ1.6γ1.7γ1.8γ1.9γ2.0γ2.1γ2.2γ2.3γ2.4γ2"
+    },
+    {
+      "i": 36,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "Rec709",
+      "options": [
+        {
+          "value": "0",
+          "text": "Rec709"
+        },
+        {
+          "value": "1",
+          "text": "Rec2020"
+        },
+        {
+          "value": "2",
+          "text": "sRGB"
+        },
+        {
+          "value": "3",
+          "text": "DCI-P3"
+        },
+        {
+          "value": "4",
+          "text": "DCI-D60"
+        },
+        {
+          "value": "5",
+          "text": "DCI-D65"
+        },
+        {
+          "value": "6",
+          "text": "ProPhoto RGB"
+        }
+      ],
+      "parent": "Using GamutRec709Rec2020sRGBDCI-P3DCI-D60DCI-D65ProPhoto RGB"
+    },
+    {
+      "i": 37,
+      "name": "",
+      "id": "",
+      "value": "9999",
+      "selected": "Match Output Gamut",
+      "options": [
+        {
+          "value": "9999",
+          "text": "Match Output Gamut"
+        },
+        {
+          "value": "0",
+          "text": "Sony S-Gamut3.cine"
+        },
+        {
+          "value": "1",
+          "text": "Sony S-Gamut3.cine (Venice)"
+        },
+        {
+          "value": "2",
+          "text": "Sony S-Gamut3"
+        },
+        {
+          "value": "3",
+          "text": "Sony S-Gamut3 (Venice)"
+        },
+        {
+          "value": "4",
+          "text": "Sony S-Gamut"
+        },
+        {
+          "value": "5",
+          "text": "ARRI Wide Gamut 4"
+        },
+        {
+          "value": "6",
+          "text": "Alexa Wide Gamut"
+        },
+        {
+          "value": "7",
+          "text": "Canon Cinema Gamut"
+        },
+        {
+          "value": "8",
+          "text": "Blackmagic Wide Gamut"
+        },
+        {
+          "value": "9",
+          "text": "DaVinci Wide Gamut"
+        },
+        {
+          "value": "10",
+          "text": "Panasonic V-Gamut"
+        },
+        {
+          "value": "11",
+          "text": "Blackmagic 4k Film"
+        },
+        {
+          "value": "12",
+          "text": "Blackmagic 4.6k Film"
+        },
+        {
+          "value": "13",
+          "text": "Blackmagic Pocket 6k Film"
+        },
+        {
+          "value": "14",
+          "text": "Fujifilm F-Log Gamut"
+        },
+        {
+          "value": "15",
+          "text": "REDWideGamutRGB"
+        },
+        {
+          "value": "16",
+          "text": "DRAGONColor"
+        },
+        {
+          "value": "17",
+          "text": "DRAGONColor2"
+        },
+        {
+          "value": "18",
+          "text": "REDColor"
+        },
+        {
+          "value": "19",
+          "text": "REDColor2"
+        },
+        {
+          "value": "20",
+          "text": "REDColor3"
+        },
+        {
+          "value": "21",
+          "text": "REDColor4"
+        },
+        {
+          "value": "22",
+          "text": "Bolex Wide Gamut"
+        },
+        {
+          "value": "23",
+          "text": "DJI D-Gamut"
+        },
+        {
+          "value": "24",
+          "text": "DJI D-GamutM"
+        },
+        {
+          "value": "25",
+          "text": "Protune Native"
+        },
+        {
+          "value": "26",
+          "text": "Rec709"
+        },
+        {
+          "value": "27",
+          "text": "Rec2020"
+        },
+        {
+          "value": "28",
+          "text": "Rec2100"
+        },
+        {
+          "value": "29",
+          "text": "sRGB"
+        },
+        {
+          "value": "30",
+          "text": "ACES AP0"
+        },
+        {
+          "value": "31",
+          "text": "ACEScg AP1"
+        },
+        {
+          "value": "32",
+          "text": "XYZ"
+        },
+        {
+          "value": "33",
+          "text": "P3 - DCI"
+        },
+        {
+          "value": "34",
+          "text": "P3 - D60"
+        },
+        {
+          "value": "35",
+          "text": "P3 - D65"
+        },
+        {
+          "value": "36",
+          "text": "Canon DCI-P3+"
+        },
+        {
+          "value": "37",
+          "text": "Adobe RGB"
+        },
+        {
+          "value": "38",
+          "text": "Adobe Wide Gamut RGB"
+        },
+        {
+          "value": "39",
+          "text": "ProPhoto RGB"
+        }
+      ],
+      "parent": "Gamut To Limit ToMatch Output GamutSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gamut3Sony S-Gamut3 (Venice)Sony S-GamutARRI Wide Gamut 4Alexa Wide GamutCanon Cinema GamutBl"
+    },
+    {
+      "i": 38,
+      "name": "",
+      "id": "",
+      "value": "\t",
+      "selected": "Tab",
+      "options": [
+        {
+          "value": ",",
+          "text": "Comma"
+        },
+        {
+          "value": " ",
+          "text": "Space"
+        },
+        {
+          "value": "\t",
+          "text": "Tab"
+        },
+        {
+          "value": "\n",
+          "text": "New Line"
+        }
+      ],
+      "parent": "文件名Component SeparatorCommaSpaceTabNew LineSample SeparatorCommaSpaceTabNew LineSample Precision8-bit10-bit12-bitFloating PointInclude Grid Coordinates"
+    },
+    {
+      "i": 39,
+      "name": "",
+      "id": "",
+      "value": "\n",
+      "selected": "New Line",
+      "options": [
+        {
+          "value": ",",
+          "text": "Comma"
+        },
+        {
+          "value": " ",
+          "text": "Space"
+        },
+        {
+          "value": "\t",
+          "text": "Tab"
+        },
+        {
+          "value": "\n",
+          "text": "New Line"
+        }
+      ],
+      "parent": "文件名Component SeparatorCommaSpaceTabNew LineSample SeparatorCommaSpaceTabNew LineSample Precision8-bit10-bit12-bitFloating PointInclude Grid Coordinates"
+    },
+    {
+      "i": 40,
+      "name": "",
+      "id": "",
+      "value": "8",
+      "selected": "8-bit",
+      "options": [
+        {
+          "value": "8",
+          "text": "8-bit"
+        },
+        {
+          "value": "10",
+          "text": "10-bit"
+        },
+        {
+          "value": "12",
+          "text": "12-bit"
+        },
+        {
+          "value": "0",
+          "text": "Floating Point"
+        }
+      ],
+      "parent": "文件名Component SeparatorCommaSpaceTabNew LineSample SeparatorCommaSpaceTabNew LineSample Precision8-bit10-bit12-bitFloating PointInclude Grid Coordinates"
+    },
+    {
+      "i": 41,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "S-Log3",
+      "options": [
+        {
+          "value": "0",
+          "text": "S-Log3"
+        },
+        {
+          "value": "1",
+          "text": "S-Log2"
+        },
+        {
+          "value": "2",
+          "text": "S-Log"
+        },
+        {
+          "value": "3",
+          "text": "LogC4"
+        },
+        {
+          "value": "4",
+          "text": "LogC (Sup 3.x & 4.x)"
+        },
+        {
+          "value": "5",
+          "text": "LogC (Sup 2.x)"
+        },
+        {
+          "value": "6",
+          "text": "Canon C-Log2"
+        },
+        {
+          "value": "7",
+          "text": "Canon C-Log3"
+        },
+        {
+          "value": "8",
+          "text": "C-Log"
+        },
+        {
+          "value": "9",
+          "text": "Apple Log"
+        },
+        {
+          "value": "10",
+          "text": "Cineon"
+        },
+        {
+          "value": "11",
+          "text": "Panasonic V-Log"
+        },
+        {
+          "value": "12",
+          "text": "Fujifilm F-Log2"
+        },
+        {
+          "value": "13",
+          "text": "Fujifilm F-Log"
+        },
+        {
+          "value": "14",
+          "text": "REDLogFilm"
+        },
+        {
+          "value": "15",
+          "text": "RED Log3G10"
+        },
+        {
+          "value": "16",
+          "text": "BMDFilm Gen5"
+        },
+        {
+          "value": "17",
+          "text": "DaVinci Intermediate"
+        },
+        {
+          "value": "18",
+          "text": "BMD Pocket Film"
+        },
+        {
+          "value": "19",
+          "text": "BMD Film"
+        },
+        {
+          "value": "20",
+          "text": "BMD Film4k"
+        },
+        {
+          "value": "21",
+          "text": "BMD Film4.6k"
+        },
+        {
+          "value": "22",
+          "text": "Bolex Log"
+        },
+        {
+          "value": "23",
+          "text": "Panalog"
+        },
+        {
+          "value": "24",
+          "text": "Protune"
+        },
+        {
+          "value": "25",
+          "text": "DJI X5/X7/X9 DLog"
+        },
+        {
+          "value": "26",
+          "text": "DJI DLog-M"
+        },
+        {
+          "value": "27",
+          "text": "DJI X3 DLog"
+        },
+        {
+          "value": "28",
+          "text": "DJI Mini 2"
+        },
+        {
+          "value": "29",
+          "text": "ACEScc"
+        },
+        {
+          "value": "30",
+          "text": "ACESproxy10"
+        },
+        {
+          "value": "31",
+          "text": "ACESproxy12"
+        },
+        {
+          "value": "34",
+          "text": "s709"
+        },
+        {
+          "value": "43",
+          "text": "Rec709 (800%)"
+        },
+        {
+          "value": "50",
+          "text": "Nikon N-Log"
+        },
+        {
+          "value": "51",
+          "text": "Nikon Standard"
+        },
+        {
+          "value": "52",
+          "text": "Nikon Neutral"
+        },
+        {
+          "value": "53",
+          "text": "Nikon Vivid"
+        },
+        {
+          "value": "54",
+          "text": "Nikon Monochrome"
+        },
+        {
+          "value": "55",
+          "text": "Nikon Portrait"
+        },
+        {
+          "value": "56",
+          "text": "Nikon Landscape"
+        },
+        {
+          "value": "57",
+          "text": "Rec2100 PQ (PQ OOTF)"
+        },
+        {
+          "value": "58",
+          "text": "Rec2100 PQ (HLG OOTF)"
+        },
+        {
+          "value": "59",
+          "text": "Rec2100 HLG"
+        },
+        {
+          "value": "60",
+          "text": "PQ (EOTF Only)"
+        },
+        {
+          "value": "107",
+          "text": "ITU Proposal (400%)"
+        },
+        {
+          "value": "108",
+          "text": "ITU Proposal (800%)"
+        },
+        {
+          "value": "109",
+          "text": "BBC WHP283 (400%)"
+        },
+        {
+          "value": "110",
+          "text": "BBC WHP283 (800%)"
+        },
+        {
+          "value": "9999",
+          "text": "Linear / γ"
+        }
+      ],
+      "parent": "LUT 标题输入伽马S-Log3S-Log2S-LogLogC4LogC (Sup 3.x & 4.x)LogC (Sup 2.x)Canon C-Log2Canon C-Log3C-LogApple LogCineonPanasonic V-LogFujifilm F-Log2Fujifilm F-LogREDLogFilmRED Log3G10BMDFi"
+    },
+    {
+      "i": 42,
+      "name": "",
+      "id": "",
+      "value": "80",
+      "selected": "Rec709 - γ1.90 (exp2.22)",
+      "options": [
+        {
+          "value": "80",
+          "text": "Rec709 - γ1.90 (exp2.22)"
+        },
+        {
+          "value": "81",
+          "text": "Rec2020 12-bit - γ1.90 (exp2.22)"
+        },
+        {
+          "value": "82",
+          "text": "sRGB - γ2.20 (exp2.40)"
+        },
+        {
+          "value": "83",
+          "text": "DCI - γ2.60"
+        },
+        {
+          "value": "84",
+          "text": "Scene Linear IRE - γ1.0 (18% Gray = 0.2)"
+        },
+        {
+          "value": "85",
+          "text": "Scene Reflectance - γ1.0 (18% Gray = 0.18)"
+        },
+        {
+          "value": "86",
+          "text": "CIE L* - γ2.45 (exp3.00)"
+        },
+        {
+          "value": "87",
+          "text": "BBC 0.4"
+        },
+        {
+          "value": "88",
+          "text": "BBC 0.5"
+        },
+        {
+          "value": "89",
+          "text": "BBC 0.6"
+        },
+        {
+          "value": "90",
+          "text": "ProPhoto / ROMM - γ1.80"
+        },
+        {
+          "value": "91",
+          "text": "γ1.5"
+        },
+        {
+          "value": "92",
+          "text": "γ1.6"
+        },
+        {
+          "value": "93",
+          "text": "γ1.7"
+        },
+        {
+          "value": "94",
+          "text": "γ1.8"
+        },
+        {
+          "value": "95",
+          "text": "γ1.9"
+        },
+        {
+          "value": "96",
+          "text": "γ2.0"
+        },
+        {
+          "value": "97",
+          "text": "γ2.1"
+        },
+        {
+          "value": "98",
+          "text": "γ2.2"
+        },
+        {
+          "value": "99",
+          "text": "γ2.3"
+        },
+        {
+          "value": "100",
+          "text": "γ2.4"
+        },
+        {
+          "value": "101",
+          "text": "γ2.5"
+        },
+        {
+          "value": "102",
+          "text": "γ2.6"
+        },
+        {
+          "value": "103",
+          "text": "Display PQ OOTF (nits)"
+        },
+        {
+          "value": "104",
+          "text": "Display PQ OOTF (Normalised)"
+        },
+        {
+          "value": "105",
+          "text": "Display HLG OOTF (nits)"
+        },
+        {
+          "value": "106",
+          "text": "Display HLG OOTF (Normalised)"
+        }
+      ],
+      "parent": "γ CorrectionRec709 - γ1.90 (exp2.22)Rec2020 12-bit - γ1.90 (exp2.22)sRGB - γ2.20 (exp2.40)DCI - γ2.60Scene Linear IRE - γ1.0 (18% Gray = 0.2)Scene Reflectance - γ1.0 (18% Gray = 0."
+    },
+    {
+      "i": 43,
+      "name": "",
+      "id": "",
+      "value": "0",
+      "selected": "Sony S-Gamut3.cine",
+      "options": [
+        {
+          "value": "0",
+          "text": "Sony S-Gamut3.cine"
+        },
+        {
+          "value": "1",
+          "text": "Sony S-Gamut3.cine (Venice)"
+        },
+        {
+          "value": "2",
+          "text": "Sony S-Gamut3"
+        },
+        {
+          "value": "3",
+          "text": "Sony S-Gamut3 (Venice)"
+        },
+        {
+          "value": "4",
+          "text": "Sony S-Gamut"
+        },
+        {
+          "value": "5",
+          "text": "ARRI Wide Gamut 4"
+        },
+        {
+          "value": "6",
+          "text": "Alexa Wide Gamut"
+        },
+        {
+          "value": "7",
+          "text": "Canon Cinema Gamut"
+        },
+        {
+          "value": "8",
+          "text": "Panasonic V-Gamut"
+        },
+        {
+          "value": "9",
+          "text": "Fujifilm F-Log Gamut"
+        },
+        {
+          "value": "10",
+          "text": "Blackmagic Wide Gamut"
+        },
+        {
+          "value": "11",
+          "text": "DaVinci Wide Gamut"
+        },
+        {
+          "value": "12",
+          "text": "Blackmagic 4.6k Film"
+        },
+        {
+          "value": "13",
+          "text": "Blackmagic 4k Film"
+        },
+        {
+          "value": "14",
+          "text": "Blackmagic Pocket 6k Film"
+        },
+        {
+          "value": "15",
+          "text": "DRAGONColor"
+        },
+        {
+          "value": "16",
+          "text": "DRAGONColor2"
+        },
+        {
+          "value": "17",
+          "text": "REDColor"
+        },
+        {
+          "value": "18",
+          "text": "REDColor2"
+        },
+        {
+          "value": "19",
+          "text": "REDColor3"
+        },
+        {
+          "value": "20",
+          "text": "REDColor4"
+        },
+        {
+          "value": "21",
+          "text": "REDWideGamutRGB"
+        },
+        {
+          "value": "22",
+          "text": "DJI D-Gamut"
+        },
+        {
+          "value": "23",
+          "text": "DJI D-GamutM"
+        },
+        {
+          "value": "24",
+          "text": "Protune Native"
+        },
+        {
+          "value": "25",
+          "text": "Bolex Wide Gamut"
+        },
+        {
+          "value": "26",
+          "text": "Rec709"
+        },
+        {
+          "value": "36",
+          "text": "Rec2020"
+        },
+        {
+          "value": "37",
+          "text": "Rec2100"
+        },
+        {
+          "value": "38",
+          "text": "sRGB"
+        },
+        {
+          "value": "40",
+          "text": "ACES AP0"
+        },
+        {
+          "value": "41",
+          "text": "ACEScg AP1"
+        },
+        {
+          "value": "42",
+          "text": "XYZ"
+        },
+        {
+          "value": "43",
+          "text": "P3 - DCI"
+        },
+        {
+          "value": "44",
+          "text": "P3 - D60"
+        },
+        {
+          "value": "45",
+          "text": "P3 - D65"
+        },
+        {
+          "value": "46",
+          "text": "Canon DCI-P3+"
+        },
+        {
+          "value": "47",
+          "text": "Adobe RGB"
+        },
+        {
+          "value": "48",
+          "text": "Adobe Wide Gamut RGB"
+        },
+        {
+          "value": "49",
+          "text": "ProPhoto RGB"
+        },
+        {
+          "value": "52",
+          "text": "Custom In"
+        }
+      ],
+      "parent": "输入色域Sony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gamut3Sony S-Gamut3 (Venice)Sony S-GamutARRI Wide Gamut 4Alexa Wide GamutCanon Cinema GamutPanasonic V-GamutFujifilm F-Log G"
+    },
+    {
+      "i": 44,
+      "name": "",
+      "id": "",
+      "value": "-2",
+      "selected": "-2",
+      "options": [
+        {
+          "value": "-4",
+          "text": "-4"
+        },
+        {
+          "value": "-3",
+          "text": "-3"
+        },
+        {
+          "value": "-2",
+          "text": "-2"
+        },
+        {
+          "value": "-1",
+          "text": "-1"
+        }
+      ],
+      "parent": "Stop Shift Minimum-4-3-2-1Stop Shift Maximum1234Step Size11/21/31/4Stop"
+    },
+    {
+      "i": 45,
+      "name": "",
+      "id": "",
+      "value": "2",
+      "selected": "2",
+      "options": [
+        {
+          "value": "1",
+          "text": "1"
+        },
+        {
+          "value": "2",
+          "text": "2"
+        },
+        {
+          "value": "3",
+          "text": "3"
+        },
+        {
+          "value": "4",
+          "text": "4"
+        }
+      ],
+      "parent": "Stop Shift Minimum-4-3-2-1Stop Shift Maximum1234Step Size11/21/31/4Stop"
+    },
+    {
+      "i": 46,
+      "name": "",
+      "id": "",
+      "value": "3",
+      "selected": "1/3",
+      "options": [
+        {
+          "value": "1",
+          "text": "1"
+        },
+        {
+          "value": "2",
+          "text": "1/2"
+        },
+        {
+          "value": "3",
+          "text": "1/3"
+        },
+        {
+          "value": "4",
+          "text": "1/4"
+        }
+      ],
+      "parent": "Stop Shift Minimum-4-3-2-1Stop Shift Maximum1234Step Size11/21/31/4Stop"
+    },
+    {
+      "i": 47,
+      "name": "",
+      "id": "",
+      "value": "",
+      "options": [],
+      "parent": "加载中 预览 ImageImage GammaImage Colour Space合法范围 RangeData Range"
+    },
+    {
+      "i": 48,
+      "name": "",
+      "id": "",
+      "value": "",
+      "options": [],
+      "parent": "加载中 预览 ImageImage GammaImage Colour Space合法范围 RangeData Range"
+    }
+  ],
+  "files": [
+    {
+      "i": 0,
+      "id": "",
+      "name": "",
+      "accept": "",
+      "parent": "",
+      "html": "<input type=\"file\" style=\"display: none;\">"
+    },
+    {
+      "i": 1,
+      "id": "",
+      "name": "",
+      "accept": "",
+      "parent": "High ContrastLow ContrastRec709 Gamutxy / uv ChromacityGrayscale100%109%WFMVectorRGB10-Bit Values - R:0G:0B:0",
+      "html": "<input type=\"file\" style=\"display: none;\">"
+    },
+    {
+      "i": 2,
+      "id": "",
+      "name": "",
+      "accept": "",
+      "parent": "导入新的 LUT加载已分析的 LA LUTLUT 标题输入伽马S-Log3S-Log2S-LogLogC4LogC (Sup 3.x & 4.x)LogC (Sup 2.x)Canon C-Log2Canon C-Log3C-LogApple LogCineonPanasonic V-LogFujifilm F-Log2Fujifilm F-LogREDLogFilmRED Log3G10BMDFilm Gen5DaVinci IntermediateBMD Pocket FilmBMD FilmBMD Film4kBMD Film4.6kBolex LogPanalogProtuneDJI ",
+      "html": "<input type=\"file\">"
+    }
+  ],
+  "buttons": [
+    {
+      "i": 102,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 103,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 104,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 105,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 106,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 107,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 108,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 109,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 110,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 111,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 112,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 113,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 114,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 115,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "small-button-hide"
+    },
+    {
+      "i": 116,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "small-button"
+    },
+    {
+      "i": 117,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "small-button-hide"
+    },
+    {
+      "i": 118,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "small-button-hide"
+    },
+    {
+      "i": 119,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "small-button-hide"
+    },
+    {
+      "i": 120,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 121,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 122,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 123,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 124,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 125,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 126,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 127,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 128,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 129,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 130,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 131,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 132,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 133,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 134,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 135,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 136,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 137,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 138,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 139,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 140,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 141,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 142,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 143,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 144,
+      "id": "",
+      "value": "Reset All",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 145,
+      "id": "",
+      "value": "Monochrome",
+      "text": "",
+      "cls": "small-button"
+    },
+    {
+      "i": 146,
+      "id": "",
+      "value": "Reset Saturation",
+      "text": "",
+      "cls": "small-button"
+    },
+    {
+      "i": 147,
+      "id": "",
+      "value": "+",
+      "text": "",
+      "cls": "twk-multi-plus"
+    },
+    {
+      "i": 148,
+      "id": "",
+      "value": "-",
+      "text": "",
+      "cls": "twk-multi-minus"
+    },
+    {
+      "i": 149,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 150,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 151,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 152,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 153,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 154,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 155,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 156,
+      "id": "",
+      "value": "重置",
+      "text": "",
+      "cls": "_reset"
+    },
+    {
+      "i": 157,
+      "id": "",
+      "value": "Set Sample Grid",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 158,
+      "id": "",
+      "value": "Start Click To Add Sample Point",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 159,
+      "id": "",
+      "value": "Reset Grid",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 160,
+      "id": "twk-sampler-button",
+      "value": "Take Sample Set",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 161,
+      "id": "",
+      "value": "Save Samples",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 162,
+      "id": "",
+      "value": "Clear Sample Data",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 163,
+      "id": "",
+      "value": "分析",
+      "text": "",
+      "cls": "twk-button-hide"
+    },
+    {
+      "i": 164,
+      "id": "",
+      "value": "保存 Cube",
+      "text": "",
+      "cls": "twk-button-hide"
+    },
+    {
+      "i": 165,
+      "id": "",
+      "value": "保存二进制",
+      "text": "",
+      "cls": "twk-button-hide"
+    },
+    {
+      "i": 166,
+      "id": "",
+      "value": "新建 LUT",
+      "text": "",
+      "cls": "twk-button-hide"
+    },
+    {
+      "i": 167,
+      "id": "",
+      "value": "Declip",
+      "text": "",
+      "cls": "twk-button-hide"
+    },
+    {
+      "i": 168,
+      "id": "",
+      "value": "Save Settings",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 169,
+      "id": "",
+      "value": "Load Settings",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 170,
+      "id": "",
+      "value": "Done",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 171,
+      "id": "",
+      "value": "Go",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 172,
+      "id": "",
+      "value": "取消",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 173,
+      "id": "",
+      "value": "取消",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 174,
+      "id": "",
+      "value": "OK",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 175,
+      "id": "",
+      "value": "取消",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 176,
+      "id": "",
+      "value": "OK",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 177,
+      "id": "",
+      "value": "取消",
+      "text": "",
+      "cls": ""
+    },
+    {
+      "i": 178,
+      "id": "",
+      "value": "生成 LUT",
+      "text": "",
+      "cls": "mob-button"
+    },
+    {
+      "i": 179,
+      "id": "",
+      "value": "Base Settings",
+      "text": "",
+      "cls": "mob-button"
+    },
+    {
+      "i": 180,
+      "id": "",
+      "value": "Adjustments",
+      "text": "",
+      "cls": "mob-button"
+    },
+    {
+      "i": 181,
+      "id": "",
+      "value": "使用说明",
+      "text": "",
+      "cls": "mob-button"
+    }
+  ],
+  "tweakInputs": [
+    {
+      "i": 0,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": true,
+      "text": "调整项"
+    },
+    {
+      "i": 1,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": "Custom Colour SpaceRec709White Point & PrimariesMatrix标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F"
+    },
+    {
+      "i": 2,
+      "tag": "SELECT",
+      "type": "select-one",
+      "name": "",
+      "id": "",
+      "value": "Rec709",
+      "text": "Rec709White Point & PrimariesMatrix标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White Poi"
+    },
+    {
+      "i": 3,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "New",
+      "checked": false,
+      "text": "Rec709White Point & PrimariesMatrix标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White Poi"
+    },
+    {
+      "i": 4,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Remove",
+      "checked": false,
+      "text": "Rec709White Point & PrimariesMatrix标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White Poi"
+    },
+    {
+      "i": 5,
+      "tag": "INPUT",
+      "type": "radio",
+      "name": "mcOpt",
+      "id": "",
+      "value": "on",
+      "checked": true,
+      "text": "Rec709White Point & PrimariesMatrix标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White Poi"
+    },
+    {
+      "i": 6,
+      "tag": "INPUT",
+      "type": "radio",
+      "name": "mcOpt",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": "Rec709White Point & PrimariesMatrix标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White Poi"
+    },
+    {
+      "i": 7,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "Rec709",
+      "checked": false,
+      "text": "标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary:"
+    },
+    {
+      "i": 8,
+      "tag": "INPUT",
+      "type": "radio",
+      "name": "wpOpt",
+      "id": "",
+      "value": "on",
+      "checked": true,
+      "text": "标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary:"
+    },
+    {
+      "i": 9,
+      "tag": "SELECT",
+      "type": "select-one",
+      "name": "",
+      "id": "",
+      "value": "8",
+      "text": "标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary:"
+    },
+    {
+      "i": 10,
+      "tag": "INPUT",
+      "type": "radio",
+      "name": "wpOpt",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": "标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary:"
+    },
+    {
+      "i": 11,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0.3127",
+      "checked": false,
+      "text": "标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary:"
+    },
+    {
+      "i": 12,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0.329",
+      "checked": false,
+      "text": "标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary:"
+    },
+    {
+      "i": 13,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0.64",
+      "checked": false,
+      "text": "Red Primary:   xyGreen Primary: xyBlue Primary:  xy"
+    },
+    {
+      "i": 14,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0.33",
+      "checked": false,
+      "text": "Red Primary:   xyGreen Primary: xyBlue Primary:  xy"
+    },
+    {
+      "i": 15,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0.3",
+      "checked": false,
+      "text": "Red Primary:   xyGreen Primary: xyBlue Primary:  xy"
+    },
+    {
+      "i": 16,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0.6",
+      "checked": false,
+      "text": "Red Primary:   xyGreen Primary: xyBlue Primary:  xy"
+    },
+    {
+      "i": 17,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0.15",
+      "checked": false,
+      "text": "Red Primary:   xyGreen Primary: xyBlue Primary:  xy"
+    },
+    {
+      "i": 18,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0.06",
+      "checked": false,
+      "text": "Red Primary:   xyGreen Primary: xyBlue Primary:  xy"
+    },
+    {
+      "i": 19,
+      "tag": "INPUT",
+      "type": "radio",
+      "name": "matInOutOpt",
+      "id": "",
+      "value": "on",
+      "checked": true,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 20,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 21,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 22,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 23,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 24,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 25,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 26,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 27,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 28,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 29,
+      "tag": "INPUT",
+      "type": "radio",
+      "name": "matInOutOpt",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 30,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 31,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 32,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 33,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 34,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 35,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 36,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 37,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 38,
+      "tag": "INPUT",
+      "type": "text",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 39,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Set Primaries",
+      "checked": false,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 40,
+      "tag": "SELECT",
+      "type": "select-one",
+      "name": "",
+      "id": "",
+      "value": "26",
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 41,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": true,
+      "text": "To Working ColourspaceFrom Working ColourspaceWorking ColourspaceSony S-Gamut3.cineSony S-Gamut3.cine (Venice)Sony S-Gam"
+    },
+    {
+      "i": 42,
+      "tag": "SELECT",
+      "type": "select-one",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "text": "标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White PointxyRed Primary:   xyGreen Primary:"
+    },
+    {
+      "i": 43,
+      "tag": "SELECT",
+      "type": "select-one",
+      "name": "",
+      "id": "",
+      "value": "Rec709",
+      "text": "Rec709White Point & PrimariesMatrix标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White Poi"
+    },
+    {
+      "i": 44,
+      "tag": "SELECT",
+      "type": "select-one",
+      "name": "",
+      "id": "",
+      "value": "Rec709",
+      "text": "Rec709White Point & PrimariesMatrix标题Standard IlluminantABCD40D45D50D55D60D65D70D75EF1F2F3F4F5F6F7F8F9F10F11F12White Poi"
+    },
+    {
+      "i": 45,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": "白平衡Reference WhiteKNew 白平衡KLamp Nominal TemperatureKClearCTOCTBClearMinus GreenPlus GreenAdvanced 套装tingsLamp Nominal Co"
+    },
+    {
+      "i": 46,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "5500",
+      "checked": false,
+      "text": "Reference WhiteKNew 白平衡KLamp Nominal TemperatureKClearCTOCTBClearMinus GreenPlus GreenAdvanced 套装tingsLamp Nominal Colou"
+    },
+    {
+      "i": 47,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "5500",
+      "checked": false,
+      "text": "Reference WhiteKNew 白平衡KLamp Nominal TemperatureKClearCTOCTBClearMinus GreenPlus GreenAdvanced 套装tingsLamp Nominal Colou"
+    },
+    {
+      "i": 48,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "5500",
+      "checked": false,
+      "text": "Lamp Nominal TemperatureK"
+    },
+    {
+      "i": 49,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Unlock Lightsource From New White",
+      "checked": false,
+      "text": "Reference WhiteKNew 白平衡KLamp Nominal TemperatureKClearCTOCTBClearMinus GreenPlus GreenAdvanced 套装tingsLamp Nominal Colou"
+    },
+    {
+      "i": 50,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 51,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Clear"
+    },
+    {
+      "i": 52,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 53,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Clear"
+    },
+    {
+      "i": 54,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Preview Click For White",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 55,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": "Reference WhiteKNew 白平衡KLamp Nominal TemperatureKClearCTOCTBClearMinus GreenPlus GreenAdvanced 套装tingsLamp Nominal Colou"
+    },
+    {
+      "i": 56,
+      "tag": "SELECT",
+      "type": "select-one",
+      "name": "",
+      "id": "",
+      "value": "5500",
+      "text": "Lamp Nominal ColourWarm Comfort LightWarm WhiteTungstenWhiteCool WhiteDaylightCool DaylightChromatic Adaptation ModelCIE"
+    },
+    {
+      "i": 57,
+      "tag": "SELECT",
+      "type": "select-one",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "text": "Lamp Nominal ColourWarm Comfort LightWarm WhiteTungstenWhiteCool WhiteDaylightCool DaylightChromatic Adaptation ModelCIE"
+    },
+    {
+      "i": 58,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": "PSST-CDLBase AdjustmentsRefinementsBlueMagentaRedSkinYellowGreenCyanColourSaturationSlopeOffsetPowerColourSaturationSlop"
+    },
+    {
+      "i": 59,
+      "tag": "INPUT",
+      "type": "radio",
+      "name": "basRefOpt",
+      "id": "",
+      "value": "on",
+      "checked": true,
+      "text": "Base AdjustmentsRefinementsBlueMagentaRedSkinYellowGreenCyanColourSaturationSlopeOffsetPowerColourSaturationSlopeOffsetP"
+    },
+    {
+      "i": 60,
+      "tag": "INPUT",
+      "type": "radio",
+      "name": "basRefOpt",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": "Base AdjustmentsRefinementsBlueMagentaRedSkinYellowGreenCyanColourSaturationSlopeOffsetPowerColourSaturationSlopeOffsetP"
+    },
+    {
+      "i": 61,
+      "tag": "SELECT",
+      "type": "select-one",
+      "name": "",
+      "id": "",
+      "value": "3",
+      "text": "BlueMagentaRedSkinYellowGreenCyanColourSaturationSlopeOffsetPowerColourSaturationSlopeOffsetPowerColourSaturationSlopeOf"
+    },
+    {
+      "i": 62,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 63,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 64,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 65,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 66,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 67,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 68,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 69,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 70,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 71,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 72,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 73,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 74,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 75,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 76,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 77,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 78,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 79,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 80,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 81,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 82,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 83,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 84,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 85,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 86,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 87,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 88,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 89,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 90,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 91,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 92,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 93,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 94,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 95,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 96,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 97,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 98,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 99,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 100,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 101,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 102,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 103,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 104,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 105,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 106,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 107,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 108,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 109,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 110,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 111,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 112,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 113,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 114,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 115,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 116,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 117,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 118,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 119,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 120,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 121,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 122,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 123,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 124,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 125,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 126,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 127,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 128,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 129,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 130,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 131,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 132,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 133,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 134,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 135,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 136,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 137,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 138,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 139,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 140,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 141,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 142,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 143,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 144,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 145,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 146,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 147,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 148,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 149,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 150,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 151,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 152,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 153,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 154,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 155,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 156,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 157,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 158,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 159,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 160,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 161,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 162,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 163,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 164,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 165,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 166,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 167,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 168,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 169,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 170,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 171,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 172,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 173,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 174,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 175,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 176,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 177,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 178,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 179,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 180,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 181,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 182,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 183,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 184,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 185,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Colour"
+    },
+    {
+      "i": 186,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 187,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 188,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 189,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Saturation"
+    },
+    {
+      "i": 190,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 191,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 192,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 193,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Slope"
+    },
+    {
+      "i": 194,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 195,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 196,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 197,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Offset"
+    },
+    {
+      "i": 198,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0.5",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 199,
+      "tag": "INPUT",
+      "type": "number",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 200,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "重置",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 201,
+      "tag": "INPUT",
+      "type": "button",
+      "name": "",
+      "id": "",
+      "value": "Reset All",
+      "checked": false,
+      "text": "Power"
+    },
+    {
+      "i": 202,
+      "tag": "SELECT",
+      "type": "select-one",
+      "name": "",
+      "id": "",
+      "value": "1",
+      "text": "Colour ShiftSaturationSlopeOffsetPower"
+    },
+    {
+      "i": 203,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 204,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 205,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 206,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 207,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 208,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 209,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 210,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 211,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 212,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 213,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 214,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 215,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 216,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 217,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 218,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 219,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 220,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 221,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 222,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 223,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 224,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 225,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 226,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 227,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 228,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 229,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 230,
+      "tag": "INPUT",
+      "type": "range",
+      "name": "",
+      "id": "",
+      "value": "0",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 231,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": true,
+      "text": ""
+    },
+    {
+      "i": 232,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 233,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 234,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 235,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": true,
+      "text": ""
+    },
+    {
+      "i": 236,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 237,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 238,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 239,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": true,
+      "text": ""
+    },
+    {
+      "i": 240,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 241,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 242,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 243,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": true,
+      "text": ""
+    },
+    {
+      "i": 244,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 245,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 246,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 247,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": true,
+      "text": ""
+    },
+    {
+      "i": 248,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    },
+    {
+      "i": 249,
+      "tag": "INPUT",
+      "type": "checkbox",
+      "name": "",
+      "id": "",
+      "value": "on",
+      "checked": false,
+      "text": ""
+    }
+  ]
+}

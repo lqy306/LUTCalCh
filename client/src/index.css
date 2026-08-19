@@ -1043,6 +1043,144 @@ html:is(.dark, [data-workbench-mode="dark"]) { color-scheme: dark; }
 .apple-app-shell .preview-surface img {
   mix-blend-mode: normal;
 }
+.apple-app-shell .export-card .export-fields {
+  grid-template-columns: minmax(260px, 1fr) auto;
+  align-items: end;
+}
+.apple-app-shell .output-auto-title {
+  min-height: 32px;
+  white-space: nowrap;
+}
+.apple-app-shell .output-option-board {
+  display: grid;
+  gap: 8px;
+  width: min(100%, 980px);
+  margin: 12px auto 0;
+  padding: 11px 13px;
+  background: var(--theme-surface, #f7f7f7);
+  border: 1px solid var(--theme-border, #d6d6d6);
+  border-radius: var(--theme-radius, 4px);
+}
+.apple-app-shell .output-option-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px 12px;
+  min-height: 24px;
+  color: var(--theme-text, #242424);
+  font-size: 11px;
+}
+.apple-app-shell .output-option-row > span {
+  min-width: 58px;
+  color: var(--theme-muted, #6b6b6b);
+  font: 600 10px var(--theme-font, Ubuntu, sans-serif);
+}
+.apple-app-shell .output-option-row label,
+.apple-app-shell .output-clip-legal,
+.apple-app-shell .preview-tool-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--theme-text, #242424);
+  font-size: 11px;
+  white-space: nowrap;
+}
+.apple-app-shell .output-option-row input,
+.apple-app-shell .output-clip-legal input,
+.apple-app-shell .preview-tool-options input {
+  accent-color: var(--theme-accent, #e95420);
+}
+.apple-app-shell .output-chip-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding-left: 4px;
+  border-left: 1px solid var(--theme-border, #d6d6d6);
+}
+.apple-app-shell .output-chip-group label {
+  padding: 4px 7px;
+  background: var(--theme-card, #fff);
+  border: 1px solid var(--theme-border, #d6d6d6);
+  border-radius: var(--theme-radius, 4px);
+}
+.apple-app-shell .output-format-fields {
+  grid-template-columns: 1fr 1fr auto;
+  gap: 10px;
+  padding-top: 4px;
+}
+.apple-app-shell .output-clip-legal {
+  align-self: end;
+  min-height: 31px;
+  padding: 0 9px;
+  background: var(--theme-card, #fff);
+  border: 1px solid var(--theme-border, #d6d6d6);
+  border-radius: var(--theme-radius, 4px);
+}
+.apple-app-shell .preview-tool-bar,
+.apple-app-shell .preview-tool-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  width: min(100%, 980px);
+  margin: 10px auto 0;
+}
+.apple-app-shell .preview-tool-bar select {
+  min-height: 31px;
+  padding: 5px 28px 5px 9px;
+  color: var(--theme-text, #242424);
+  background: var(--theme-input, #fff);
+  border: 1px solid var(--theme-border, #d6d6d6);
+  border-radius: var(--theme-radius, 4px);
+  font: 11px var(--theme-font, Ubuntu, sans-serif);
+}
+.apple-app-shell .preview-tool-options {
+  padding: 7px 10px;
+  background: var(--theme-surface-muted, #f0f0f0);
+  border: 1px solid var(--theme-border, #d6d6d6);
+  border-radius: var(--theme-radius, 4px);
+  color: var(--theme-muted, #6b6b6b);
+  font: 600 10px var(--theme-font, Ubuntu, sans-serif);
+}
+.apple-app-shell .image-preview-surface {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  width: min(100%, 980px);
+  margin: 10px auto 0;
+  color: var(--theme-muted, #6b6b6b);
+  background: #111;
+  border: 1px solid var(--theme-border, #d6d6d6);
+  border-radius: var(--theme-radius, 4px);
+}
+.apple-app-shell .image-preview-surface.is-large { min-height: 390px; }
+.apple-app-shell .image-preview-surface.is-small { min-height: 220px; }
+.apple-app-shell .image-preview-surface img {
+  display: block;
+  width: 100%;
+  max-height: 560px;
+  object-fit: contain;
+}
+.apple-app-shell .image-preview-surface .preview-placeholder {
+  min-height: inherit;
+  color: #d6d6d6;
+}
+.apple-app-shell .preview-scope-overlay {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  gap: 5px;
+}
+.apple-app-shell .preview-scope-overlay span {
+  padding: 4px 6px;
+  color: #fff;
+  background: rgba(0,0,0,.66);
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 2px;
+  font: 700 9px Ubuntu, "Noto Sans SC", sans-serif;
+}
 @media (max-width: 760px) {
   .apple-app-shell .native-calculator-pane {
     padding: 10px;

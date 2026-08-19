@@ -14,6 +14,7 @@ type NativeAdjustmentsProps = {
   onResetLut: () => void;
   onControlChange?: (module: string, control: string, value: string | boolean) => void;
   onLutAnalystConfigChange?: (control: string, value: string) => void;
+  lutAnalystChoices?: { gamma: { value: string; label: string }[]; gamut: { value: string; label: string }[] };
 };
 
 type ControlSpec = {
@@ -65,7 +66,7 @@ function SliderControl({ module, spec, value, disabled, onChange }: { module: st
   );
 }
 
-export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyzeLut, onResetLut, onControlChange, onLutAnalystConfigChange }: NativeAdjustmentsProps)
+export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyzeLut, onResetLut, onControlChange, onLutAnalystConfigChange, lutAnalystChoices }: NativeAdjustmentsProps)
 {
   const fileRef = useRef<HTMLInputElement>(null);
   const defaultSyncRef = useRef(false);
@@ -77,6 +78,8 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
   const [lutFileName, setLutFileName] = useState("");
   const [lutAnalyst, setLutAnalyst] = useState({ title: "自定义 LUT", inputGamma: "S-Log3", inputGamut: "Sony S-Gamut3.cine", dimension: "33³", method: "三线性", range: "109%→100%" });
   const [lutAdvancedOpen, setLutAdvancedOpen] = useState(false);
+  const analystGammaChoices = lutAnalystChoices?.gamma || [];
+  const analystGamutChoices = lutAnalystChoices?.gamut || [];
 
   const toggleItem = (item: AdjustmentItem, checked?: boolean) =>
   {
@@ -102,6 +105,17 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
     defaultSyncRef.current = true;
     ADJUSTMENTS.forEach((item) => onToggle(item.engineLabel, false));
   }, [engineReady, onToggle]);
+
+  /* 下拉框的候选项只使用隐藏原版引擎的真实目录，避免 React 外壳缩减支持范围。 */
+  useEffect(() =>
+  {
+    setLutAnalyst((current) =>
+    {
+      const nextGamma = analystGammaChoices.some((item) => item.label === current.inputGamma) ? current.inputGamma : analystGammaChoices[0]?.label || current.inputGamma;
+      const nextGamut = analystGamutChoices.some((item) => item.label === current.inputGamut) ? current.inputGamut : analystGamutChoices[0]?.label || current.inputGamut;
+      return nextGamma === current.inputGamma && nextGamut === current.inputGamut ? current : { ...current, inputGamma: nextGamma, inputGamut: nextGamut };
+    });
+  }, [analystGammaChoices, analystGamutChoices]);
 
   const updateLutAnalyst = (control: string, value: string) =>
   {
@@ -156,8 +170,8 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
             <div className="lut-analyst-head"><div><strong>LUTAnalyst</strong><span>原版 LUT 分析工具</span></div>{lutFileName && <span className="lut-analyst-file">{lutFileName}</span>}</div>
             <div className="lut-analyst-grid">
               <label className="adjustment-control lut-analyst-title"><span>LUT 标题</span><input type="text" value={lutAnalyst.title} disabled={!engineReady} onChange={(event) => updateLutAnalyst("title", event.target.value)} /></label>
-              <label className="adjustment-control"><span>输入 Gamma</span><select value={lutAnalyst.inputGamma} disabled={!engineReady} onChange={(event) => updateLutAnalyst("inputGamma", event.target.value)}><option>S-Log3</option><option>S-Log2</option><option>V-Log</option><option>F-Log</option><option>L-Log</option><option>LogC3</option><option>LogC4</option></select></label>
-              <label className="adjustment-control"><span>输入 Gamut</span><select value={lutAnalyst.inputGamut} disabled={!engineReady} onChange={(event) => updateLutAnalyst("inputGamut", event.target.value)}><option>Sony S-Gamut3.cine</option><option>Sony S-Gamut3</option><option>Panasonic V-Gamut</option><option>Fujifilm F-Log Gamut</option><option>ARRI Wide Gamut 4</option><option>Rec709</option><option>Rec2020</option></select></label>
+              <label className="adjustment-control"><span>输入 Gamma</span><select value={lutAnalyst.inputGamma} disabled={!engineReady || !analystGammaChoices.length} onChange={(event) => updateLutAnalyst("inputGamma", event.target.value)}>{analystGammaChoices.length ? analystGammaChoices.map((item) => <option value={item.label} key={item.value}>{item.label}</option>) : <option>正在读取原版 Gamma 目录…</option>}</select></label>
+              <label className="adjustment-control"><span>输入 Gamut</span><select value={lutAnalyst.inputGamut} disabled={!engineReady || !analystGamutChoices.length} onChange={(event) => updateLutAnalyst("inputGamut", event.target.value)}>{analystGamutChoices.length ? analystGamutChoices.map((item) => <option value={item.label} key={item.value}>{item.label}</option>) : <option>正在读取原版色域目录…</option>}</select></label>
             </div>
             <div className="lut-analyst-section"><span className="lut-analyst-section-label">分析设置</span><div className="lut-analyst-choice-row"><span>分析维度</span><label><input type="radio" name="lut-dimension" checked={lutAnalyst.dimension === "33³"} disabled={!engineReady} onChange={() => updateLutAnalyst("dimension", "33³")} />33³</label><label><input type="radio" name="lut-dimension" checked={lutAnalyst.dimension === "65³"} disabled={!engineReady} onChange={() => updateLutAnalyst("dimension", "65³")} />65³</label></div><div className="lut-analyst-choice-row"><span>分析方法</span><label><input type="radio" name="lut-method" checked={lutAnalyst.method === "三线性"} disabled={!engineReady} onChange={() => updateLutAnalyst("method", "三线性")} />三线性</label><label><input type="radio" name="lut-method" checked={lutAnalyst.method === "四面体"} disabled={!engineReady} onChange={() => updateLutAnalyst("method", "四面体")} />四面体</label><label><input type="radio" name="lut-method" checked={lutAnalyst.method === "三棱柱"} disabled={!engineReady} onChange={() => updateLutAnalyst("method", "三棱柱")} />三棱柱</label></div></div>
             <div className="lut-analyst-section"><span className="lut-analyst-section-label">LUT 范围</span><div className="lut-analyst-range-grid">{["109%→100%", "109%→109%", "100%→100%", "100%→109%"].map((range) => <label key={range}><input type="radio" name="lut-range" checked={lutAnalyst.range === range} disabled={!engineReady} onChange={() => updateLutAnalyst("range", range)} />{range}</label>)}</div></div>
