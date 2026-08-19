@@ -1672,6 +1672,50 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.i
 }
 
 
+/* 启用状态美化：勾选后使用稳定的高对比主题强调，不让文字融入背景。 */
+.apple-app-shell .adjustment-item.is-active:not(.adjustment-lut-item) .adjustment-item-main {
+  background: #fff1e8 !important;
+  border-left-color: #e95420 !important;
+  color: #242424 !important;
+}
+.apple-app-shell .adjustment-item.is-active:not(.adjustment-lut-item) .adjustment-item-name {
+  color: #242424 !important;
+}
+.apple-app-shell .adjustment-item.is-active:not(.adjustment-lut-item) .adjustment-item-summary {
+  color: #6b625b !important;
+}
+.apple-app-shell .adjustment-item.is-active:not(.adjustment-lut-item) .adjustment-state {
+  color: #c74612 !important;
+  font-weight: 700;
+}
+.apple-app-shell .adjustment-check input[type="checkbox"] {
+  accent-color: #e95420;
+}
+.apple-app-shell .adjustment-details {
+  padding: 12px 18px 14px 50px;
+}
+.apple-app-shell .adjustment-select-control {
+  max-width: 420px;
+}
+.apple-app-shell .adjustment-select-control select {
+  min-height: 34px;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-active:not(.adjustment-lut-item) .adjustment-item-main {
+  background: #30383e !important;
+  border-left-color: #ff9b6b !important;
+  color: #f1f3f4 !important;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-active:not(.adjustment-lut-item) .adjustment-item-name {
+  color: #f1f3f4 !important;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-active:not(.adjustment-lut-item) .adjustment-item-summary {
+  color: #c6d0d6 !important;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-active:not(.adjustment-lut-item) .adjustment-state {
+  color: #ffb38f !important;
+}
+
 /* 普通调整项由勾选框唯一控制，不保留展开箭头或空的箭头列。 */
 .apple-app-shell .adjustment-item:not(.adjustment-lut-item) .adjustment-item-main {
   grid-template-columns: 24px minmax(150px, 220px) minmax(0, 1fr) auto;
@@ -1694,6 +1738,9 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.i
 }
 
 @media (max-width: 760px) {
+  .apple-app-shell .adjustment-select-control {
+    max-width: none;
+  }
   .apple-app-shell .adjustment-lut-trigger {
     grid-template-columns: minmax(96px, 1fr) auto 18px;
   }
