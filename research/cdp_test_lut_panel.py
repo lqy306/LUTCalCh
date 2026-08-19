@@ -6,7 +6,7 @@ import websocket
 
 PORT = 9231
 PROFILE = '/tmp/lutcalc-cdp-lut-panel'
-URL = 'https://lutcalcapp-s8bmtac7.manus.space/'
+URL = 'http://127.0.0.1:3000/'
 SAMPLE = '/tmp/lutcalc-fuji-test/smoke.cube'
 chrome = subprocess.Popen(['chromium','--headless=new','--no-sandbox','--disable-gpu','--remote-allow-origins=*',f'--remote-debugging-port={PORT}',f'--user-data-dir={PROFILE}','about:blank'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 try:

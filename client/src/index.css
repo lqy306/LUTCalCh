@@ -1716,3 +1716,19 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.i
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded .adjustment-chevron {
   color: #ff9b6b !important;
 }
+
+
+/* LUT 解析使用原生 details，隐藏浏览器默认三角标记并保持整行可点击。 */
+.apple-app-shell .adjustment-lut-item > summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.apple-app-shell .adjustment-lut-item > summary::-webkit-details-marker {
+  display: none;
+}
+
+.apple-app-shell .adjustment-lut-item > summary:focus-visible {
+  outline: 2px solid var(--accent, #e95420);
+  outline-offset: -2px;
+}
