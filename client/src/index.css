@@ -540,6 +540,34 @@ html:is(.dark, [data-workbench-mode="dark"]) { color-scheme: dark; }
 .preview-surface img { mix-blend-mode: var(--theme-preview-blend); }
 .preview-footnote strong { color: var(--theme-success); }
 .apple-app-shell .workflow-item, .apple-app-shell .profile-item { background: var(--theme-card); border-color: var(--theme-border); border-radius: var(--theme-radius); box-shadow: var(--theme-shadow); }
+/* 流程为空时使用轻量空状态，不再显示大块灰色占位面板。 */
+.apple-app-shell .workflow-empty {
+  min-height: 96px;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  color: var(--theme-muted) !important;
+  background: color-mix(in srgb, var(--theme-accent-soft) 34%, var(--theme-card)) !important;
+  border: 1px dashed color-mix(in srgb, var(--theme-accent) 48%, var(--theme-border)) !important;
+  border-radius: var(--theme-radius);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.apple-app-shell .workflow-empty svg {
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  color: var(--theme-accent);
+  background: var(--theme-card);
+  border: 1px solid var(--theme-border);
+  border-radius: 50%;
+}
+.apple-app-shell .workflow-empty:hover {
+  border-color: var(--theme-accent) !important;
+  background: color-mix(in srgb, var(--theme-accent-soft) 52%, var(--theme-card)) !important;
+}
 .apple-app-shell .workflow-item-actions button, .apple-app-shell .profile-item-actions button { color: var(--theme-link); font-family: var(--theme-font); }
 .apple-app-shell .workflow-reopen, .apple-app-shell .profile-reopen { color: var(--theme-topbar-text); background: var(--theme-topbar); border-radius: var(--theme-radius); box-shadow: var(--theme-shadow); }
 .tool-tabs, .analyst-mode { background: var(--theme-surface-muted); border-color: var(--theme-border); border-radius: var(--theme-radius); }
@@ -1726,6 +1754,152 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.i
 .apple-app-shell .adjustment-lut-item .adjustment-details {
   display: grid;
 }
+.apple-app-shell .lut-analysis-panel {
+  gap: 10px;
+  padding: 14px 18px 16px 50px;
+}
+.apple-app-shell .lut-analyst-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--theme-border, #d6d6d6);
+}
+.apple-app-shell .lut-analyst-head strong {
+  display: block;
+  color: var(--theme-text, #242424);
+  font: 650 15px/1.1 var(--theme-font, Ubuntu, sans-serif);
+}
+.apple-app-shell .lut-analyst-head span:not(.lut-analyst-file) {
+  display: block;
+  margin-top: 3px;
+  color: var(--theme-muted, #737373);
+  font-size: 10px;
+}
+.apple-app-shell .lut-analyst-file {
+  max-width: 260px;
+  overflow: hidden;
+  color: var(--theme-accent, #e95420);
+  font: 600 10px var(--theme-font, Ubuntu, sans-serif);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.apple-app-shell .lut-analyst-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, .7fr) minmax(180px, 1fr);
+  gap: 10px;
+}
+.apple-app-shell .lut-analyst-title {
+  grid-column: span 1;
+}
+.apple-app-shell .lut-analyst-section {
+  display: grid;
+  gap: 8px;
+  padding: 9px 11px;
+  background: color-mix(in srgb, var(--theme-surface-muted, #f0f0f0) 62%, transparent);
+  border: 1px solid var(--theme-border, #d6d6d6);
+  border-radius: var(--theme-radius, 4px);
+}
+.apple-app-shell .lut-analyst-section-label {
+  color: var(--theme-muted, #737373);
+  font: 600 9px var(--theme-font, Ubuntu, sans-serif);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.apple-app-shell .lut-analyst-choice-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  color: var(--theme-text, #242424);
+  font-size: 11px;
+}
+.apple-app-shell .lut-analyst-choice-row > span {
+  min-width: 58px;
+  color: var(--theme-muted, #737373);
+  font-size: 10px;
+}
+.apple-app-shell .lut-analyst-choice-row label,
+.apple-app-shell .lut-analyst-range-grid label,
+.apple-app-shell .lut-advanced-panel label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--theme-text, #242424);
+  font-size: 11px;
+}
+.apple-app-shell .lut-analyst-choice-row input,
+.apple-app-shell .lut-analyst-range-grid input,
+.apple-app-shell .lut-advanced-panel input {
+  accent-color: var(--theme-accent, #e95420);
+}
+.apple-app-shell .lut-analyst-range-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+}
+.apple-app-shell .lut-analyst-range-grid label {
+  padding: 6px 7px;
+  background: var(--theme-card, #fff);
+  border: 1px solid var(--theme-border, #d6d6d6);
+  border-radius: var(--theme-radius, 4px);
+}
+.apple-app-shell .lut-analyst-actions {
+  padding-top: 2px;
+}
+.apple-app-shell .lut-advanced-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 7px 0 0;
+  color: var(--theme-muted, #737373);
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--theme-border, #d6d6d6);
+  font: 600 10px var(--theme-font, Ubuntu, sans-serif);
+  text-align: left;
+}
+.apple-app-shell .lut-advanced-toggle svg {
+  transition: transform 160ms ease-out;
+}
+.apple-app-shell .lut-advanced-toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.apple-app-shell .lut-advanced-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  color: var(--theme-muted, #737373);
+  background: var(--theme-surface-muted, #f0f0f0);
+  border: 1px solid var(--theme-border, #d6d6d6);
+  border-radius: var(--theme-radius, 4px);
+  font-size: 10px;
+}
+@media (max-width: 760px) {
+  .apple-app-shell .lut-analysis-panel {
+    padding: 12px;
+  }
+  .apple-app-shell .lut-analyst-grid,
+  .apple-app-shell .lut-analyst-range-grid {
+    grid-template-columns: 1fr;
+  }
+  .apple-app-shell .lut-analyst-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .lut-analyst-section,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .lut-advanced-panel {
+  background: #20262b;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .lut-analyst-range-grid label {
+  background: #2a3035;
+}
+
 
 /* LUT 解析不再使用普通调整项复选框，必须移除首列复选框占位。 */
 .apple-app-shell .adjustment-lut-trigger {
