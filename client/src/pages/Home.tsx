@@ -454,6 +454,67 @@ export default function Home() {
     window.setTimeout(syncAdjustmentFrameHeight, 220);
   };
 
+  const syncAdjustmentControl = (module: string, control: string, value: string | boolean) =>
+  {
+    const documentRef = engineDocument();
+    const windowRef = engineWindow();
+    if (!documentRef || !windowRef || typeof value === "boolean") return;
+    const moduleIndex: Record<string, number> = {
+      "Custom Colour Space": 0,
+      "自定义色彩空间": 0,
+      "白平衡": 1,
+      "PSST-CDL": 2,
+      "ASC-CDL": 3,
+      "多色调": 4,
+      "高光色域": 5,
+      "膝点": 6,
+      "黑电平 / 高光电平": 7,
+      "黑伽马": 8,
+      "SDR Saturation": 9,
+      "SDR 饱和度": 9,
+      "显示色彩空间转换": 10,
+      "Display Colourspace Converter": 10,
+      "色域限制": 11,
+      "伪色": 12,
+      "RGB 采样器": 13,
+    };
+    const holder = (documentRef.querySelectorAll("#tweaksholder > div")[moduleIndex[module]] || null) as HTMLElement | null;
+    if (!holder) return;
+    const ranges = Array.from(holder.querySelectorAll("input[type=range]")) as HTMLInputElement[];
+    const numbers = Array.from(holder.querySelectorAll("input[type=number]")) as HTMLInputElement[];
+    const selects = Array.from(holder.querySelectorAll("select")) as HTMLSelectElement[];
+    const precise: Record<string, number> = {
+      "白平衡.referenceWhite": 0,
+      "白平衡.newWhiteBalance": 1,
+      "白平衡.cto": 0,
+      "白平衡.green": 1,
+      "黑伽马.power": 0,
+      "黑伽马.stopLimit": 1,
+      "黑伽马.feather": 2,
+      "黑电平 / 高光电平.blackLevel": 0,
+      "黑电平 / 高光电平.highlightReflectance": 1,
+      "黑电平 / 高光电平.highlightMap": 2,
+    };
+    const key = `${module}.${control}`;
+    let target: HTMLInputElement | HTMLSelectElement | undefined;
+    if (precise[key] !== undefined)
+    {
+      target = module === "白平衡" && control.includes("White") ? numbers[precise[key]] : module === "白平衡" && control === "referenceWhite" ? numbers[0] : module === "白平衡" && control === "newWhiteBalance" ? numbers[1] : module === "白平衡" ? ranges[precise[key]] : numbers[precise[key]];
+    }
+    if (!target && ranges.length)
+    {
+      const ordinal = ["exposure", "contrast", "pivot", "saturation", "hue", "slopeR", "slopeG", "slopeB", "offsetR", "offsetG", "offsetB", "powerR", "powerG", "powerB", "shadowHue", "shadowSat", "midtoneHue", "midtoneSat", "highlightHue", "highlightSat", "threshold", "softness", "desaturation", "point", "slope", "blackLevel", "highlightReflectance", "highlightMap", "power", "stopLimit", "feather", "brightness", "low", "high"].indexOf(control);
+      target = ranges[Math.max(0, ordinal)] || ranges[0];
+    }
+    if (!target && numbers.length) target = numbers[0];
+    if (!target && selects.length) target = selects[0];
+    if (!target) return;
+    const setter = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(target), "value")?.set;
+    setter?.call(target, String(value));
+    target.dispatchEvent(new (windowRef as unknown as { Event: typeof Event }).Event("input", { bubbles: true }));
+    target.dispatchEvent(new (windowRef as unknown as { Event: typeof Event }).Event("change", { bubbles: true }));
+    window.setTimeout(refreshPreview, 160);
+  };
   const importAdjustmentLut = (file: File) =>
   {
     const documentRef = engineDocument();
@@ -557,7 +618,7 @@ export default function Home() {
             <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
             <section className="native-card pipeline-card"><div className="card-title"><span>02</span><div><h3>色彩管线</h3><p>定义记录伽马、色域与目标输出。</p></div></div><div className="pipeline-groups"><div><h4>记录设置</h4><div className="form-grid">{select("recGammaMaker", "伽马品牌")}{select("recGamma", "记录伽马")}{select("recGamutMaker", "色域品牌")}{select("recGamut", "记录色域")}</div></div><div><h4>输出设置</h4><div className="form-grid">{select("outGammaMaker", "伽马品牌")}{select("outGamma", "输出伽马")}{select("outGamutMaker", "色域品牌")}{select("outGamut", "输出色域")}</div></div></div></section>
             <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>命名、选择编码与生成导出文件。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field>{select("lutFormat", "输出格式")}{select("hardClip", "硬裁切")}</div><div className="native-actions"><button className="apple-button" onClick={() => engineAction(["Preview", "预览"], "预览已更新")}><Eye size={15} />更新预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
-            <NativeAdjustments engineReady={engineReady} onToggle={toggleAdjustment} onImportLut={importAdjustmentLut} onAnalyzeLut={analyzeAdjustmentLut} onResetLut={resetAdjustmentLut} />
+            <NativeAdjustments engineReady={engineReady} onToggle={toggleAdjustment} onImportLut={importAdjustmentLut} onAnalyzeLut={analyzeAdjustmentLut} onResetLut={resetAdjustmentLut} onControlChange={syncAdjustmentControl} />
             <iframe ref={iframeRef} className="engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="LUTCalc 同源计算引擎" onLoad={() => { enforceAdjustmentEmbedLayout(); if (!verifyAdjustmentEmbed()) return; installAdjustmentBridge(); [180, 520, 1100].forEach((delay) => window.setTimeout(installAdjustmentBridge, delay)); const documentRef = engineDocument(); if (documentRef) applyWorkbenchTheme(activeTheme, themeMode, documentRef); hydrateEngine(); window.setTimeout(hydrateEngine, 720); }} />
             <section className="native-card preview-card"><div className="card-title"><span>05</span><div><h3>曲线预览</h3><p>{previewHint}</p></div></div><div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div><div className="preview-footnote"><span>状态</span><strong>{engineReady ? "参数已同步" : "加载中"}</strong><span>工作流程记录会自动捕获原生参数调整。</span></div></section>
           </div>

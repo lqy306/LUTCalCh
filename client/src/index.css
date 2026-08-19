@@ -1125,3 +1125,455 @@ html[data-workbench-mode="dark"] { color-scheme: dark; }
     grid-template-columns: auto minmax(0, 1fr) auto;
   }
 }
+
+
+/*
+ * 调整项重构视觉：以原版 LUTCalc 的连续工具条为结构基准，但使用统一的工作台表面、细分隔线和清晰的展开面板。
+ * 目标是减少暗红大面积填充，保持专业工具密度，并让每个模块的操作内容一眼可见。
+ */
+.adjustments-card {
+  overflow: hidden;
+  background: var(--surface, #242424);
+  border: 1px solid color-mix(in srgb, var(--line, #555) 82%, transparent);
+}
+
+.adjustments-title {
+  min-height: 66px;
+  padding: 14px 16px;
+  align-items: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--line, #555) 70%, transparent);
+}
+
+.adjustments-title > div {
+  min-width: 0;
+}
+
+.adjustments-title p {
+  margin-top: 4px;
+  color: var(--muted, #a4a4a4);
+  font-size: 11px;
+}
+
+.adjustments-master-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  padding: 7px 10px;
+  color: var(--text, #eee);
+  border: 1px solid color-mix(in srgb, var(--line, #555) 80%, transparent);
+  background: color-mix(in srgb, var(--surface-2, #2d2d2d) 88%, transparent);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.adjustments-master-toggle input,
+.adjustment-check input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--accent, #e95420);
+}
+
+.adjustment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+}
+
+.adjustment-item {
+  border-bottom: 1px solid color-mix(in srgb, var(--line, #555) 66%, transparent);
+  background: var(--surface, #242424);
+}
+
+.adjustment-item:last-child {
+  border-bottom: 0;
+}
+
+.adjustment-item.is-expanded {
+  background: color-mix(in srgb, var(--surface-2, #2d2d2d) 38%, var(--surface, #242424));
+}
+
+.adjustment-item-main {
+  display: grid;
+  grid-template-columns: 24px minmax(150px, 220px) minmax(0, 1fr) auto 18px;
+  width: 100%;
+  min-height: 46px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border: 0;
+  border-left: 3px solid transparent;
+  background: transparent;
+  color: var(--text, #eee);
+  text-align: left;
+  cursor: pointer;
+  transition: background 140ms var(--ease-out), border-color 140ms var(--ease-out);
+}
+
+.adjustment-item-main:hover,
+.adjustment-item.is-expanded .adjustment-item-main {
+  background: color-mix(in srgb, var(--surface-2, #2d2d2d) 78%, transparent);
+  border-left-color: var(--accent, #e95420);
+}
+
+.adjustment-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adjustment-item-name {
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+
+.adjustment-item-summary {
+  overflow: hidden;
+  color: var(--muted, #a4a4a4);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.adjustment-state {
+  color: var(--muted, #a4a4a4);
+  font-size: 11px;
+}
+
+.adjustment-item.is-active .adjustment-state {
+  color: var(--accent, #e95420);
+}
+
+.adjustment-chevron {
+  color: var(--muted, #a4a4a4);
+  transition: transform 160ms var(--ease-out);
+}
+
+.adjustment-item.is-expanded .adjustment-chevron {
+  transform: rotate(180deg);
+  color: var(--accent, #e95420);
+}
+
+.adjustment-details {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px 18px 50px;
+  border-top: 1px solid color-mix(in srgb, var(--line, #555) 52%, transparent);
+  background: color-mix(in srgb, var(--surface-3, #353535) 46%, var(--surface, #242424));
+}
+
+.adjustment-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px 18px;
+}
+
+.adjustment-control {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  color: var(--muted, #a4a4a4);
+  font-size: 11px;
+}
+
+.adjustment-control-input {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 78px auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.adjustment-control input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent, #e95420);
+}
+
+.adjustment-control input[type="number"],
+.adjustment-control select {
+  width: 100%;
+  min-height: 30px;
+  padding: 5px 7px;
+  border: 1px solid color-mix(in srgb, var(--line, #555) 78%, transparent);
+  border-radius: 2px;
+  background: var(--surface-2, #2d2d2d);
+  color: var(--text, #eee);
+  font: inherit;
+}
+
+.adjustment-control em {
+  color: var(--muted, #a4a4a4);
+  font-size: 10px;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.adjustment-select-control {
+  grid-template-columns: minmax(110px, 1fr) minmax(130px, 1.4fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.adjustment-inline-button {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--line, #555) 82%, transparent);
+  border-radius: 2px;
+  background: var(--surface-2, #2d2d2d);
+  color: var(--text, #eee);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.adjustment-inline-button:hover {
+  border-color: var(--accent, #e95420);
+  color: var(--accent, #e95420);
+}
+
+.adjustment-inline-button.is-primary {
+  border-color: var(--accent, #e95420);
+  background: var(--accent, #e95420);
+  color: #fff;
+}
+
+.adjustment-details-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 11px;
+  border-top: 1px solid color-mix(in srgb, var(--line, #555) 52%, transparent);
+  color: var(--muted, #a4a4a4);
+  font-size: 10px;
+}
+
+.adjustment-details-foot button {
+  border: 0;
+  background: transparent;
+  color: var(--accent, #e95420);
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.lut-file-field input[type="file"] {
+  min-height: 34px;
+  padding: 7px;
+  border: 1px dashed color-mix(in srgb, var(--accent, #e95420) 72%, var(--line, #555));
+  background: var(--surface-2, #2d2d2d);
+  color: var(--text, #eee);
+}
+
+.lut-file-status {
+  padding: 8px 10px;
+  border-left: 2px solid var(--accent, #e95420);
+  background: color-mix(in srgb, var(--surface-2, #2d2d2d) 80%, transparent);
+  color: var(--muted, #a4a4a4);
+  font-size: 11px;
+}
+
+@media (max-width: 760px) {
+  .adjustments-title {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .adjustments-master-toggle {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .adjustment-item-main {
+    grid-template-columns: 24px minmax(0, 1fr) auto 18px;
+    gap: 8px;
+  }
+
+  .adjustment-item-summary {
+    display: none;
+  }
+
+  .adjustment-details {
+    padding: 14px;
+  }
+
+  .adjustment-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .adjustment-select-control {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .adjustment-details-foot {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+
+/* 最终覆盖：旧版苹果/Ubuntu 主题选择器不能覆盖重构后的原生调整项结构。 */
+.apple-app-shell .adjustments-card {
+  padding: 0;
+  color: #242424;
+  background: #ffffff;
+  border-color: #c9c9c9;
+}
+
+.apple-app-shell .adjustments-title {
+  min-height: 66px;
+  margin-bottom: 0;
+  padding: 14px 16px;
+  background: #ffffff;
+  color: #242424;
+}
+
+.apple-app-shell .adjustments-title p,
+.apple-app-shell .adjustment-item-summary {
+  color: #6f6f6f;
+}
+
+.apple-app-shell .adjustments-master-toggle {
+  min-height: 32px;
+  padding: 6px 10px;
+  border-color: #c8c8c8;
+  background: #f2f2f2;
+  color: #242424;
+}
+
+.apple-app-shell .adjustment-list {
+  gap: 0;
+  background: #ffffff;
+}
+
+.apple-app-shell .adjustment-item {
+  border-bottom: 1px solid #d2d2d2;
+  border-radius: 0;
+  background: #ffffff;
+  color: #242424;
+}
+
+.apple-app-shell .adjustment-item.is-expanded {
+  background: #f4f4f4;
+}
+
+.apple-app-shell .adjustment-item-main {
+  display: grid;
+  grid-template-columns: 24px minmax(150px, 220px) minmax(0, 1fr) auto 18px;
+  min-height: 46px;
+  padding: 9px 14px;
+  border-left: 3px solid transparent;
+  background: transparent;
+  color: #242424;
+  font: inherit;
+}
+
+.apple-app-shell .adjustment-item-main:hover,
+.apple-app-shell .adjustment-item.is-expanded .adjustment-item-main {
+  background: #eeeeee;
+  border-left-color: #e95420;
+}
+
+.apple-app-shell .adjustment-item-name {
+  color: #242424;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.apple-app-shell .adjustment-state {
+  margin-right: 0;
+  color: #737373;
+  font-size: 11px;
+}
+
+.apple-app-shell .adjustment-item.is-active .adjustment-state {
+  color: #c74612;
+}
+
+.apple-app-shell .adjustment-chevron {
+  color: #737373;
+}
+
+.apple-app-shell .adjustment-item.is-expanded .adjustment-chevron {
+  color: #c74612;
+}
+
+.apple-app-shell .adjustment-details {
+  padding: 16px 18px 18px 50px;
+  border-top: 1px solid #d4d4d4;
+  background: #f0f0f0;
+  color: #242424;
+}
+
+.apple-app-shell .adjustment-control {
+  color: #626262;
+}
+
+.apple-app-shell .adjustment-control input[type="number"],
+.apple-app-shell .adjustment-control select {
+  border-color: #bdbdbd;
+  background: #ffffff;
+  color: #242424;
+}
+
+.apple-app-shell .adjustment-details-foot {
+  border-top-color: #d4d4d4;
+  color: #707070;
+}
+
+.apple-app-shell .adjustment-inline-button {
+  border-color: #bdbdbd;
+  background: #ffffff;
+  color: #242424;
+}
+
+.apple-app-shell .adjustment-inline-button.is-primary {
+  border-color: #e95420;
+  background: #e95420;
+  color: #ffffff;
+}
+
+.apple-app-shell .lut-file-status {
+  background: #ffffff;
+  color: #656565;
+}
+
+@media (max-width: 760px) {
+  .apple-app-shell .adjustment-item-main {
+    grid-template-columns: 24px minmax(0, 1fr) auto 18px;
+    min-height: 44px;
+    padding: 9px 12px;
+  }
+
+  .apple-app-shell .adjustment-details {
+    padding: 14px;
+  }
+}
+
+
+/* 取消旧主题对活动条目的浅红填充，活动状态只通过左侧细强调线和文字表达。 */
+.apple-app-shell .adjustment-item.is-active {
+  background: #ffffff;
+  border-color: #d2d2d2;
+}
+
+.apple-app-shell .adjustment-item.is-active:not(.is-expanded) .adjustment-item-main {
+  background: #ffffff;
+}
+
+.apple-app-shell .adjustment-item.is-active:not(.is-expanded) .adjustment-item-main:hover {
+  background: #f3f3f3;
+}
+
+.apple-app-shell .adjustment-item.is-expanded {
+  background: #f1f1f1;
+}
+
+.apple-app-shell .adjustment-item.is-expanded .adjustment-item-main {
+  background: #eeeeee;
+}
