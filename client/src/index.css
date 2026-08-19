@@ -509,7 +509,7 @@ h1 em { color: #647222; font-style: normal; }
   --theme-preview-blend: multiply;
 }
 
-html[data-workbench-mode="dark"] { color-scheme: dark; }
+html:is(.dark, [data-workbench-mode="dark"]) { color-scheme: dark; }
 .apple-app-shell { color: var(--theme-text); background: var(--theme-canvas); font-family: var(--theme-font); }
 .apple-topbar { color: var(--theme-topbar-text); background: var(--theme-topbar); border-bottom-color: var(--theme-border); box-shadow: var(--theme-shadow); font-family: var(--theme-font); }
 .apple-brand span { background: var(--theme-accent); }
@@ -1576,4 +1576,97 @@ html[data-workbench-mode="dark"] { color-scheme: dark; }
 
 .apple-app-shell .adjustment-item.is-expanded .adjustment-item-main {
   background: #eeeeee;
+}
+
+
+/* 深色模式最终覆盖：调整项不得继承浅色苹果主题表面。 */
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustments-card,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustments-title,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-list,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-active {
+  background: #202428;
+  color: #f1f3f4;
+  border-color: #3b4349;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustments-title p,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item-summary,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-control,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-details-foot {
+  color: #aeb8be;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustments-master-toggle,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item-main,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-inline-button {
+  background: #2a3035;
+  color: #f1f3f4;
+  border-color: #465058;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item-main:hover,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded .adjustment-item-main {
+  background: #30383e;
+  border-left-color: #e95420;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-details {
+  background: #181c20;
+  border-color: #3b4349;
+  color: #f1f3f4;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-control input[type="number"],
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-control select,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .lut-file-status,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .lut-file-field input[type="file"] {
+  background: #252b30;
+  color: #f1f3f4;
+  border-color: #505c64;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-details-foot {
+  border-top-color: #3b4349;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-inline-button:hover {
+  background: #333d44;
+  border-color: #e95420;
+  color: #ff9b6b;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-inline-button.is-primary {
+  background: #e95420;
+  border-color: #e95420;
+  color: #ffffff;
+}
+
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded .adjustment-item-main {
+  background: #2a3035;
+  color: #f1f3f4;
+  border-color: #3b4349;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded .adjustment-details {
+  background: #181c20;
+}
+
+
+/* 兼容运行时主题注入：主题脚本可能直接写入旧表面变量，因此深色调整项使用强制表面色。 */
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-active {
+  background: #202428 !important;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded .adjustment-item-main {
+  background: #2a3035 !important;
+}
+
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-item.is-expanded .adjustment-details {
+  background: #181c20 !important;
 }
