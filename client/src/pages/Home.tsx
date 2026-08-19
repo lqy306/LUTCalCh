@@ -178,6 +178,7 @@ export default function Home() {
   const [engineState, setEngineState] = useState<Record<EngineField, string>>(EMPTY_STATE);
   const [choices, setChoices] = useState<Partial<Record<EngineField, Choice[]>>>({});
   const [previewSrc, setPreviewSrc] = useState("");
+  const engineSnapshotRef = useRef("");
   const [themeId, setThemeId] = useState(readStoredThemeId);
   const [themeMode, setThemeMode] = useState<ThemeMode>(readStoredThemeMode);
   const activeTheme = useMemo(() => resolveTheme(themeId), [themeId]);
@@ -334,8 +335,13 @@ export default function Home() {
       // iframe 内的 select 属于另一个 Window，不能使用父窗口的 instanceof HTMLSelectElement。
       if (node?.tagName === "SELECT") nextChoices[field] = optionsOf(node as HTMLSelectElement);
     });
-    setEngineState(nextState);
-    setChoices(nextChoices);
+    const snapshot = JSON.stringify({ nextState, nextChoices });
+    if (engineSnapshotRef.current !== snapshot)
+    {
+      engineSnapshotRef.current = snapshot;
+      setEngineState(nextState);
+      setChoices(nextChoices);
+    }
     setEngineReady(true);
     setMessage("计算引擎已就绪");
     window.setTimeout(refreshPreview, 260);
@@ -392,8 +398,14 @@ export default function Home() {
     documentRef.addEventListener("change", recordEvent, true);
     documentRef.addEventListener("click", recordEvent, true);
 
+    const poll = window.setInterval(() =>
+    {
+      hydrateEngine();
+      refreshPreview();
+    }, 1200);
     return () =>
     {
+      window.clearInterval(poll);
       window.removeEventListener("message", handleBridgeMessage);
       documentRef.removeEventListener("input", handleEngineMutation, true);
       documentRef.removeEventListener("change", handleEngineMutation, true);
