@@ -6,7 +6,7 @@ import websocket
 
 PORT=9232
 PROFILE='/tmp/lutcalc-cdp-lut-layout'
-URL='http://127.0.0.1:3000/'
+URL='https://lutcalcapp-s8bmtac7.manus.space/'
 chrome=subprocess.Popen(['chromium','--headless=new','--no-sandbox','--disable-gpu','--remote-allow-origins=*',f'--remote-debugging-port={PORT}',f'--user-data-dir={PROFILE}','about:blank'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 try:
     for _ in range(80):

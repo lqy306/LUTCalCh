@@ -110,6 +110,15 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
     onImportLut(file);
   };
 
+  useEffect(() =>
+  {
+    if (!lutOpen) return;
+    window.requestAnimationFrame(() =>
+    {
+      document.querySelector('.adjustment-lut-item')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+  }, [lutOpen]);
+
   return (
     <section className="native-card adjustments-card" aria-label="调整项">
       <div className="card-title adjustments-title">
@@ -135,7 +144,7 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
           </div>
         ))}
         <div className={`adjustment-item adjustment-lut-item ${lutOpen ? "is-expanded" : ""}`}>
-          <button type="button" className="adjustment-item-main adjustment-lut-trigger" disabled={!customizationEnabled || !engineReady} onClick={() => setLutOpen((current) => !current)}><span className="adjustment-item-name">LUT 解析</span><span className="adjustment-item-summary">导入、分析并读取外部 LUT；这是独立工具，不属于普通调整项开关</span><span className="adjustment-state">{lutFileName ? "已载入" : "工具"}</span><ChevronDown size={16} className="adjustment-chevron" /></button>
+          <button type="button" className="adjustment-item-main adjustment-lut-trigger" aria-expanded={lutOpen} onClick={() => setLutOpen((current) => !current)}><span className="adjustment-item-name">LUT 解析</span><span className="adjustment-item-summary">导入、分析并读取外部 LUT；这是独立工具，不属于普通调整项开关</span><span className="adjustment-state">{lutFileName ? "已载入" : "工具"}</span><ChevronDown size={16} className="adjustment-chevron" /></button>
           {lutOpen && <div className="adjustment-details lut-analysis-panel"><label className="adjustment-control lut-file-field"><span>LUT 文件</span><input ref={fileRef} type="file" accept=".cube,.3dl,.lut,.txt" disabled={!engineReady} onChange={(event) => chooseLut(event.target.files?.[0])} /></label><div className="lut-file-status">{lutFileName || "尚未选择文件"}</div><div className="adjustment-detail-actions"><button type="button" className="adjustment-inline-button is-primary" disabled={!engineReady || !lutFileName} onClick={onAnalyzeLut}><Sparkles size={14} />分析 LUT</button><button type="button" className="adjustment-inline-button" disabled={!engineReady} onClick={() => { setLutFileName(""); setLutOpen(false); onResetLut(); }}><RotateCcw size={14} />重置</button><button type="button" className="adjustment-inline-button" disabled={!engineReady} onClick={() => fileRef.current?.click()}><FileUp size={14} />选择文件</button></div></div>}
         </div>
       </div>
