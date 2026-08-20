@@ -1175,8 +1175,6 @@ html:is(.dark, [data-workbench-mode="dark"]) { color-scheme: dark; }
   border: 1px solid var(--theme-border, #b8b1a5);
   border-radius: var(--theme-radius, 4px);
 }
-.apple-app-shell .engine-preview-surface.is-large { min-height: 390px; }
-.apple-app-shell .engine-preview-surface.is-small { min-height: 220px; }
 .apple-app-shell .engine-preview-surface img {
   display: block;
   width: 100%;

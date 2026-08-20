@@ -46,14 +46,28 @@ try:
         previewClass:d?.querySelector('#preview-box')?.className || ''
       };
     })()""") or {}
-    evaluate("[...document.querySelectorAll('.preview-tool-options label')].find(x=>x.textContent?.includes('WFM'))?.querySelector('input')?.click(); true")
+    preset = evaluate("""(() => {
+      const select=document.querySelector('.preview-tool-bar select');
+      if (!select) return {};
+      select.value='gray';
+      select.dispatchEvent(new Event('change',{bubbles:true}));
+      const engineSelect=document.querySelector('iframe')?.contentDocument?.querySelector('#preview-holder select');
+      return {pagePreset:select.value, enginePreset:engineSelect?.value || ''};
+    })()""") or {}
+    range = evaluate("""(() => {
+      [...document.querySelectorAll('.preview-tool-options label')].find(x=>x.textContent?.includes('100%'))?.querySelector('input')?.click();
+      const inputs=[...document.querySelector('iframe')?.contentDocument?.querySelectorAll('#preview-holder input[type=radio][name=prelegdat]') || []];
+      return {engineRange:inputs.findIndex(x=>x.checked)};
+    })()""") or {}
+    evaluate("[...document.querySelectorAll('.preview-tool-options label')].filter(x=>/WFM|Vector|RGB/.test(x.textContent || '')).forEach(x=>x.querySelector('input')?.click()); true")
     time.sleep(3)
     scope = evaluate("""(() => ({
       pageWaveform:document.querySelector('.engine-scope-grid img')?.src.length || 0,
+      pageScopeCount:document.querySelectorAll('.engine-scope-grid img').length,
       waveformVisible:!!document.querySelector('iframe')?.contentDocument?.querySelector('#can-waveform:not(.can-hide)')
     }))()""") or {}
-    report = {'before':before,'shown':shown,'scope':scope}
-    report['ok'] = shown.get('pagePreview',0) > 1000 and shown.get('iframePreview',0) > 1000 and scope.get('pageWaveform',0) > 1000
+    report = {'before':before,'shown':shown,'preset':preset,'range':range,'scope':scope}
+    report['ok'] = shown.get('pagePreview',0) > 1000 and shown.get('iframePreview',0) > 1000 and preset.get('pagePreset') == 'gray' and preset.get('enginePreset') == '4' and range.get('engineRange') == 0 and scope.get('pageWaveform',0) > 1000 and scope.get('pageScopeCount') == 3
     print(json.dumps(report, ensure_ascii=False, indent=2))
 finally:
     try: ws.close()

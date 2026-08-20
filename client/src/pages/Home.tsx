@@ -196,7 +196,6 @@ export default function Home() {
   const [enginePreviewSrc, setEnginePreviewSrc] = useState("");
   const [engineScopeSrc, setEngineScopeSrc] = useState({ wfm: "", vector: "", rgb: "" });
   const [previewVisible, setPreviewVisible] = useState(false);
-  const [previewLarge, setPreviewLarge] = useState(false);
   const [previewPreset, setPreviewPreset] = useState("high");
   const [previewRange, setPreviewRange] = useState("109");
   const [previewScope, setPreviewScope] = useState({ wfm: false, vector: false, rgb: false });
@@ -777,7 +776,7 @@ export default function Home() {
     window.setTimeout(refreshPreview, 250);
   };
 
-  const syncOriginalPreview = (kind: "toggle" | "size" | "preset" | "range" | "scope" | "load", value?: string | boolean) =>
+  const syncOriginalPreview = (kind: "toggle" | "preset" | "range" | "scope" | "load", value?: string | boolean) =>
   {
     const documentRef = engineDocument();
     const windowRef = engineWindow();
@@ -792,12 +791,6 @@ export default function Home() {
     {
       engineAction(["Preview", "预览"], previewVisible ? "正在隐藏原版预览" : "正在显示原版预览");
       setPreviewVisible((current) => !current);
-    }
-    else if (kind === "size")
-    {
-      const button = Array.from(holder?.querySelectorAll("input[type=button], button") || []).find((node) => /Large Image|Small Image|大图|小图/.test((node as HTMLInputElement).value || node.textContent || "")) as HTMLElement | undefined;
-      button?.click();
-      setPreviewLarge((current) => !current);
     }
     else if (kind === "preset")
     {
@@ -900,12 +893,11 @@ export default function Home() {
               <div className="card-title"><span>05</span><div><h3>原版预览与曲线</h3><p>{previewHint}</p></div></div>
               <div className="preview-tool-bar">
                 <button type="button" className="apple-button" onClick={() => syncOriginalPreview("toggle")}>{previewVisible ? "隐藏预览" : "显示预览"}</button>
-                <button type="button" className="apple-button" disabled={!previewVisible} onClick={() => syncOriginalPreview("size")}>{previewLarge ? "大图" : "小图"}</button>
                 <select aria-label="原版预览类型" value={previewPreset} onChange={(event) => syncOriginalPreview("preset", event.target.value)}><option value="high">高对比度</option><option value="low">低对比度</option><option value="rec709">Rec.709 色域</option><option value="chromaticity">xy / uv 色度图</option><option value="gray">灰度</option></select>
                 <button type="button" className="apple-button" onClick={() => syncOriginalPreview("load")}>载入预览…</button>
               </div>
               <div className="preview-tool-options"><span>预览范围</span><label><input type="radio" name="preview-range" checked={previewRange === "100"} onChange={() => syncOriginalPreview("range", "100")} />100%</label><label><input type="radio" name="preview-range" checked={previewRange === "109"} onChange={() => syncOriginalPreview("range", "109")} />109%</label><label><input type="checkbox" checked={previewScope.wfm} onChange={() => syncOriginalPreview("scope", "wfm")} />WFM</label><label><input type="checkbox" checked={previewScope.vector} onChange={() => syncOriginalPreview("scope", "vector")} />Vector</label><label><input type="checkbox" checked={previewScope.rgb} onChange={() => syncOriginalPreview("scope", "rgb")} />RGB</label></div>
-              {previewVisible && <div className={`engine-preview-surface ${previewLarge ? "is-large" : "is-small"}`}>{enginePreviewSrc ? <img src={enginePreviewSrc} alt="原版 LUTCalc Canvas 预览" /> : <div className="preview-placeholder"><Eye size={22} />点击“显示预览”后读取原版 Canvas</div>}</div>}
+              {previewVisible && <div className="engine-preview-surface">{enginePreviewSrc ? <img src={enginePreviewSrc} alt="原版 LUTCalc Canvas 预览" /> : <div className="preview-placeholder"><Eye size={22} />点击“显示预览”后读取原版 Canvas</div>}</div>}
               {(previewScope.wfm || previewScope.vector || previewScope.rgb) && <div className="engine-scope-grid">{previewScope.wfm && <div>{engineScopeSrc.wfm ? <img src={engineScopeSrc.wfm} alt="原版波形监看" /> : <span>正在生成 WFM</span>}</div>}{previewScope.vector && <div>{engineScopeSrc.vector ? <img src={engineScopeSrc.vector} alt="原版矢量示波器" /> : <span>正在生成 Vector</span>}</div>}{previewScope.rgb && <div>{engineScopeSrc.rgb ? <img src={engineScopeSrc.rgb} alt="原版 RGB Parade" /> : <span>正在生成 RGB Parade</span>}</div>}</div>}
               <div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div>
               <div className="preview-footnote"><span>状态</span><strong>{engineReady ? "原版 Canvas 已桥接" : "加载中"}</strong><span>鼠标移动可在原版预览中读取 10-bit RGB；载入图片会要求确认 Gamma、色彩空间与范围。</span></div>
