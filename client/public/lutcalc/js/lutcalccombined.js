@@ -302,15 +302,16 @@ LUTGamma.prototype.subIdx = function(cat) {
 		case 'RED': return 5;
 		case 'GoPro': return 6;
 		case 'Panavision': return 7;
-		case 'Blackmagic': return 8;
-		case 'Bolex': return 9;
-		case 'Fujifilm': return 10;
-		case 'Nikon': return 11;
-		case 'DJI': return 12;
-		case 'Log': return 13;
-		case 'Display': return 14;
-		case 'HDR Display': return 15;
-		case 'Linear / γ': return 16;
+			case 'Blackmagic': return 8;
+			case 'Bolex': return 9;
+			case 'Fujifilm': return 10;
+			case 'Leica': return 11;
+			case 'Nikon': return 12;
+			case 'DJI': return 13;
+			case 'Log': return 14;
+			case 'Display': return 15;
+			case 'HDR Display': return 16;
+			case 'Linear / γ': return 17;
 	}
 	return false;
 };
@@ -323,10 +324,11 @@ LUTGamma.prototype.gammaList = function() {
 						'RED',
 						'GoPro',
 						'Panavision',
-						'Blackmagic',
-						'Bolex',
-						'Fujifilm',
-						'Nikon',
+							'Blackmagic',
+							'Bolex',
+							'Fujifilm',
+							'Leica',
+							'Nikon',
 						'DJI',
 						'Log',
 						'Display',
@@ -429,6 +431,14 @@ LUTGamma.prototype.gammaList = function() {
 		'Fujifilm F-Log', [ 0.1144737, -0.010630486, 0.344676, 0.5000004, 10, 0.790453, 0.009468, 0.100537775, 0.000988889 ]));
 	this.gammaSub.push([this.subIdx('Fujifilm'),this.subIdx('Log')]);
 	this.gts.push('Fujifilm F-Log Gamut');
+	this.gammaDat.push(true);
+	this.gammaExt.push(true);
+	/* Leica L-Log Reference Manual V1.6: linear toe <= 0.006 and base-10 log branch above it.
+	 * LUTGammaLog uses >= for the log branch, therefore a minimal threshold offset preserves Leica's inclusive toe boundary. */
+	this.gammas.push(new LUTGammaLog(
+		'Leica L-Log', [ 0.125, -0.01125, 0.27, 1.3, 10, 0.6, 0.0115, 0.138, 0.006000000000001 ]));
+	this.gammaSub.push([this.subIdx('Leica'),this.subIdx('Log')]);
+	this.gts.push('Rec2020');
 	this.gammaDat.push(true);
 	this.gammaExt.push(true);
 	this.gammas.push(new LUTGammaCineon(
