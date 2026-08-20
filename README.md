@@ -31,6 +31,22 @@ pnpm build
 pnpm start
 ```
 
+## 部署
+
+站点支持部署到根路径（如 `https://lutcalc.example/`）或子目录（如 GitHub Pages 项目页 `https://<user>.github.io/<repo>/`）。
+
+```bash
+# 根路径部署（默认）
+pnpm build
+
+# 子目录部署：BASE_PATH 同时作用于资源路径、同源引擎 iframe 与 wouter 路由
+BASE_PATH=/LUTCalCh/ pnpm build
+```
+
+- 构建产物位于 `dist/public/`；部署到 GitHub Pages 时把该目录内容推送到 `gh-pages` 分支，并保留 `.nojekyll` 以跳过 Jekyll 处理。
+- 本地验证子目录构建：`BASE_PATH=/LUTCalCh/ pnpm preview`，访问 `http://localhost:4173/LUTCalCh/`。
+- 自托管 Express（`pnpm start`）默认在根路径服务；如需在子目录服务构建产物，用相同 `BASE_PATH` 启动：`BASE_PATH=/LUTCalCh/ NODE_ENV=production node dist/index.js`。
+
 ## 项目结构
 
 ```text
@@ -43,6 +59,7 @@ docs/                      # 技术文档、用户手册、配置格式与主题
 server/index.ts            # 极简 Express 静态服务
 shared/                    # 前后端共享的类型与校验
 research/                  # 开发期研究资料与脚本
+LICENSE                    # GPL-2.0 许可文本
 ```
 
 ## 工作原理
@@ -71,4 +88,4 @@ research/                  # 开发期研究资料与脚本
 
 ## 许可证
 
-本工作台（React 外壳与桥接层）采用 MIT 许可；嵌入的原版 LUTCalc 计算核心遵循其原有 GPL-2.0 许可，许可证文本随 `client/public/lutcalc/` 保留。使用或再分发前请分别确认两部分许可范围。
+本仓库采用 GPL-2.0 许可，完整文本见根目录 `LICENSE`。嵌入的原版 LUTCalc 计算核心本就遵循 GPL-2.0，其许可证文本同时保留在 `client/public/lutcalc/LICENSE`。
