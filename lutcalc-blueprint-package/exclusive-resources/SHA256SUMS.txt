@@ -1,1 +1,0 @@
-3fd5d146aa3141350fe449856a45ba4b6b47c52339b072eecfb5dc44a8afb8ce  lutcalc-blueprint-package/exclusive-resources/fonts/lg1056_regular.otf
