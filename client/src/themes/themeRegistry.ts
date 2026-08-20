@@ -1,6 +1,4 @@
 import kde from "./kde.theme.json";
-import leica from "./leica.theme.json";
-import lumix from "./lumix.theme.json";
 import macos from "./macos.theme.json";
 import omarchy from "./omarchy.theme.json";
 import ubuntu from "./ubuntu.theme.json";
@@ -65,8 +63,6 @@ export const BUILTIN_THEMES =
   kde,
   macos,
   omarchy,
-  leica,
-  lumix,
 ] as unknown as WorkbenchTheme[];
 
 export function resolveTheme(id: string | null | undefined)
@@ -77,7 +73,15 @@ export function resolveTheme(id: string | null | undefined)
 export function readStoredThemeId()
 {
   const stored = localStorage.getItem(THEME_STORAGE_KEY);
-  return resolveTheme(stored).id;
+  const resolved = resolveTheme(stored).id;
+
+  /* 已移除主题的旧本地偏好统一回退为默认 Ubuntu，防止刷新后得到无效主题。 */
+  if (stored !== resolved)
+  {
+    localStorage.setItem(THEME_STORAGE_KEY, resolved);
+  }
+
+  return resolved;
 }
 
 export function readStoredThemeMode(): ThemeMode
