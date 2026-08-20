@@ -179,6 +179,11 @@ export default function Home() {
   const profileFileRef = useRef<HTMLInputElement>(null);
   const isReplayingRef = useRef(false);
   const [engineReady, setEngineReady] = useState(false);
+  const [engineFailed, setEngineFailed] = useState(false);
+  const engineFailedRef = useRef(false);
+  const engineFailureCountRef = useRef(0);
+  const analysisTitleRef = useRef<string | null>(null);
+  const titleUserEditedRef = useRef(false);
   const [workflowOpen, setWorkflowOpen] = useState(true);
   const [toolTab, setToolTab] = useState<"workflow" | "profiles">("workflow");
   const [recording, setRecording] = useState(false);
@@ -311,6 +316,9 @@ export default function Home() {
     canvas.height = sources[0].height;
     const context = canvas.getContext("2d");
     if (!context) return;
+    /* 原版 stop 图表画布背景透明，深色主题下呈黑色；统一先铺白底保证曲线/网格/文字可辨识。 */
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, canvas.width, canvas.height);
     sources.forEach((source) => context.drawImage(source, 0, 0));
     setPreviewSrc(canvas.toDataURL("image/png"));
   }, []);
@@ -359,6 +367,26 @@ export default function Home() {
   const hydrateEngine = useCallback(() => {
     const documentRef = engineDocument();
     if (!documentRef) return;
+    /* 引擎 iframe 必须包含原版工作区结构才算加载成功；404/错误页不得误报“已连接”。 */
+    const hasEngineStructure = Boolean(documentRef.querySelector("#box-cam, #box-gam, #box-lut, #box-twk"));
+    if (!hasEngineStructure)
+    {
+      engineFailureCountRef.current += 1;
+      if (engineFailureCountRef.current >= 10 && !engineFailedRef.current)
+      {
+        engineFailedRef.current = true;
+        setEngineFailed(true);
+        setMessage("原版计算引擎加载失败：请检查网络连接或刷新页面重试");
+      }
+      return;
+    }
+    engineFailureCountRef.current = 0;
+    if (engineFailedRef.current)
+    {
+      engineFailedRef.current = false;
+      setEngineFailed(false);
+      setMessage("计算引擎已就绪");
+    }
     documentRef.querySelectorAll("select, input, textarea, button, [role=button]").forEach((control, index) => {
       if (!control.getAttribute("data-lutcalc-workflow-id")) control.setAttribute("data-lutcalc-workflow-id", `lc-${String(index + 1).padStart(4, "0")}`);
     });
@@ -377,6 +405,25 @@ export default function Home() {
       // iframe 内的 select 属于另一个 Window，不能使用父窗口的 instanceof HTMLSelectElement。
       if (node?.tagName === "SELECT") nextChoices[field] = optionsOf(node as HTMLSelectElement);
     });
+    /* 缺陷 A 粘性回填：分析完成后引擎可能把标题重置为「自定义 LUT」；
+       只要用户未手动编辑标题，轮询时就把分析标题写回引擎与 React 两侧。 */
+    if (analysisTitleRef.current && !titleUserEditedRef.current)
+    {
+      const engineTitle = nextState.title;
+      if (!engineTitle || engineTitle === "自定义 LUT" || engineTitle === "Custom LUT")
+      {
+        nextState.title = analysisTitleRef.current;
+        const titleNode = fieldNode("title");
+        const windowRef = engineWindow();
+        if (titleNode && windowRef && titleNode.value !== analysisTitleRef.current)
+        {
+          titleNode.value = analysisTitleRef.current;
+          const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
+          titleNode.dispatchEvent(new IframeEvent("input", { bubbles: true }));
+          titleNode.dispatchEvent(new IframeEvent("change", { bubbles: true }));
+        }
+      }
+    }
     const snapshot = JSON.stringify({ nextState, nextChoices, nextLutAnalystChoices });
     if (engineSnapshotRef.current !== snapshot)
     {
@@ -403,6 +450,36 @@ export default function Home() {
     window.setTimeout(refreshEnginePreview, 520);
     window.setTimeout(syncAdjustmentFrameHeight, 60);
   }, [fieldNode, refreshEnginePreview, refreshPreview, syncAdjustmentFrameHeight]);
+
+  /* 引擎存活检测：iframe 加载失败（404/断网）时，不能依赖 engineReady 驱动的轮询，
+     需独立周期检查并给出可理解的失败提示，避免长期停留在“正在连接”。 */
+  useEffect(() =>
+  {
+    const check = window.setInterval(() =>
+    {
+      const documentRef = engineDocument();
+      if (!documentRef) return;
+      const hasEngine = Boolean(documentRef.querySelector("#box-cam, #box-gam, #box-lut, #box-twk"));
+      if (hasEngine)
+      {
+        engineFailureCountRef.current = 0;
+        if (engineFailedRef.current)
+        {
+          engineFailedRef.current = false;
+          setEngineFailed(false);
+        }
+        return;
+      }
+      engineFailureCountRef.current += 1;
+      if (engineFailureCountRef.current >= 10 && !engineFailedRef.current)
+      {
+        engineFailedRef.current = true;
+        setEngineFailed(true);
+        setMessage("原版计算引擎加载失败：请检查网络连接或刷新页面重试");
+      }
+    }, 1200);
+    return () => window.clearInterval(check);
+  }, []);
 
   const recordEvent = useCallback((event: Event) => {
     if (!recording || isReplayingRef.current) return;
@@ -460,6 +537,23 @@ export default function Home() {
       });
       setLutAnalysis((current) => ({ ...current, status: "ready", title, outputGamma, outputGamut, completedAt: new Date().toLocaleTimeString("zh-CN"), message: "原版 LUTAnalyst 已完成分析，结果已成为当前输出管线。", samples }));
       setMessage(`分析完成：${title} 已同步到输出与曲线预览`);
+      analysisTitleRef.current = title;
+      titleUserEditedRef.current = false;
+      /* 缺陷 A：分析成功后回填「LUT 标题 / 文件名」，使导出文件名与 Cube TITLE 使用分析标题；仅在用户未自定义标题时覆盖。 */
+      const titleNode = fieldNode("title");
+      const currentTitle = (titleNode?.value ?? "").trim();
+      if (!currentTitle || currentTitle === "自定义 LUT")
+      {
+        const windowRef = engineWindow();
+        if (titleNode && windowRef)
+        {
+          titleNode.value = title;
+          const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
+          titleNode.dispatchEvent(new IframeEvent("input", { bubbles: true }));
+          titleNode.dispatchEvent(new IframeEvent("change", { bubbles: true }));
+        }
+        setEngineState((current) => ({ ...current, title }));
+      }
       return true;
     }
 
@@ -540,6 +634,11 @@ export default function Home() {
     const node = fieldNode(field);
     const windowRef = engineWindow();
     if (!node || !windowRef) return;
+    if (field === "title")
+    {
+      titleUserEditedRef.current = true;
+      analysisTitleRef.current = null;
+    }
     node.value = value;
     const IframeEvent = (windowRef as unknown as { Event: typeof Event }).Event;
     node.dispatchEvent(new IframeEvent("input", { bubbles: true }));
@@ -758,6 +857,8 @@ export default function Home() {
     const button = Array.from(documentRef?.querySelectorAll("#box-twk input[type=button], #box-twk button") || []).find((node) => /New LUT|新建 LUT/.test((node as HTMLInputElement).value || node.textContent || "")) as HTMLElement | undefined;
     button?.click();
     analysisInProgressRef.current = false;
+    analysisTitleRef.current = null;
+    titleUserEditedRef.current = false;
     setLutAnalysis({ status: "idle", fileName: "", title: "", outputGamma: "", outputGamut: "", completedAt: "", message: "已清除外部 LUT 分析状态。", samples: [] });
     setMessage("已重置 LUT 解析");
     window.setTimeout(() => { hydrateEngine(); refreshPreview(); refreshEnginePreview(); }, 260);
@@ -865,7 +966,7 @@ export default function Home() {
   const exportProfile = (profile: LogGammaProfile) => { const url = URL.createObjectURL(new Blob([JSON.stringify(profile, null, 2)], { type: "application/json;charset=utf-8" })); const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${profile.id}.lut配置.json`; anchor.click(); URL.revokeObjectURL(url); setMessage(`已导出配置：${profile.name}`); };
   const importProfile = (file?: File) => { if (!file) return; const reader = new FileReader(); reader.onload = () => { try { const profile = JSON.parse(String(reader.result)) as LogGammaProfile; if (!validateProfile(profile)) throw new Error("invalid"); const next = [profile, ...profiles.filter((item) => item.id !== profile.id)]; persistProfiles(next); setMessage(`已导入配置：${profile.name}`); } catch { setMessage("配置文件无效：请检查版本、曲线类型和采样数据"); } }; reader.readAsText(file); };
 
-  const previewHint = useMemo(() => engineReady ? "预览由原始计算引擎实时生成" : "正在读取原始计算引擎…", [engineReady]);
+  const previewHint = useMemo(() => engineReady ? "预览由原始计算引擎实时生成" : engineFailed ? "原版计算引擎加载失败；预览不可用" : "正在读取原始计算引擎…", [engineFailed, engineReady]);
   const select = (field: EngineField, label: string) => <Field label={label}><select value={engineState[field]} disabled={!engineReady} onChange={(event) => setEngineField(field, event.target.value)}>{(choices[field] || [{ value: "", label: "正在读取…" }]).map((item) => <option key={`${field}-${item.value}`} value={item.value}>{item.label}</option>)}</select></Field>;
 
   return (
@@ -881,11 +982,11 @@ export default function Home() {
 
         <section className="native-calculator-pane">
           {!workflowOpen && <button className="workflow-reopen" onClick={() => setWorkflowOpen(true)}><SlidersHorizontal size={15} />工具中心</button>}
-          <div className="native-calculator-head"><div><span className="eyebrow">LUT 转换</span><h2>主计算器</h2><p>所有参数直接驱动兼容计算引擎；旧界面不再显示。</p></div><div className={`engine-indicator ${engineReady ? "is-ready" : ""}`}><i />{engineReady ? "引擎已连接" : "正在连接"}</div></div>
+          <div className="native-calculator-head"><div><span className="eyebrow">LUT 转换</span><h2>主计算器</h2><p>所有参数直接驱动兼容计算引擎；旧界面不再显示。</p></div><div className={`engine-indicator ${engineReady ? "is-ready" : ""} ${engineFailed ? "is-failed" : ""}`}><i />{engineReady ? "引擎已连接" : engineFailed ? "引擎加载失败" : "正在连接"}</div></div>
           <div className="native-calculator-grid">
             <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
             <section className="native-card pipeline-card"><div className="card-title"><span>02</span><div><h3>色彩管线</h3><p>定义记录伽马、色域与目标输出。</p></div></div><div className="pipeline-groups"><div><h4>记录设置</h4><div className="form-grid">{select("recGammaMaker", "伽马品牌")}{select("recGamma", "记录伽马")}{select("recGamutMaker", "色域品牌")}{select("recGamut", "记录色域")}</div></div><div><h4>输出设置</h4><div className="form-grid">{select("outGammaMaker", "伽马品牌")}{select("outGamma", "输出伽马")}{select("outGamutMaker", "色域品牌")}{select("outGamut", "输出色域")}</div></div></div></section>
-            <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>保留原版输出维度、范围、用途、格式与硬裁切选项。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field><button type="button" className="apple-button output-auto-title" disabled={!engineReady} onClick={() => engineAction(["Auto Title", "自动标题"], "已更新自动标题")}>自动标题</button></div><div className="output-option-board"><div className="output-option-row"><span>输出维度</span><label><input type="radio" name="output-dimension-mode" checked={outputConfig.dimensionMode === "1D"} disabled={!engineReady} onChange={() => setOutputOption("dimensionMode", "1D")} />1D</label><label><input type="radio" name="output-dimension-mode" checked={outputConfig.dimensionMode === "3D"} disabled={!engineReady} onChange={() => setOutputOption("dimensionMode", "3D")} />3D</label><div className="output-chip-group">{(outputConfig.dimensionMode === "1D" ? ["1024", "4096", "16384"] : ["17", "33", "65"]).map((size) => <label key={size}><input type="radio" name="output-dimension" checked={outputConfig.dimension === size} disabled={!engineReady} onChange={() => setOutputOption("dimension", size)} />{outputConfig.dimensionMode === "3D" ? `${size}³` : size}</label>)}</div></div><div className="output-option-row"><span>输入范围</span><label><input type="radio" name="output-input-range" checked={outputConfig.inputRange === "100"} disabled={!engineReady} onChange={() => setOutputOption("inputRange", "100")} />100%</label><label><input type="radio" name="output-input-range" checked={outputConfig.inputRange === "109"} disabled={!engineReady} onChange={() => setOutputOption("inputRange", "109")} />109%</label><span>输出范围</span><label><input type="radio" name="output-output-range" checked={outputConfig.outputRange === "100"} disabled={!engineReady} onChange={() => setOutputOption("outputRange", "100")} />100%</label><label><input type="radio" name="output-output-range" checked={outputConfig.outputRange === "109"} disabled={!engineReady} onChange={() => setOutputOption("outputRange", "109")} />109%</label></div><div className="output-option-row"><span>LUT 用途</span><label><input type="radio" name="output-usage" checked={outputConfig.usage === "grading"} disabled={!engineReady} onChange={() => setOutputOption("usage", "grading")} />调色 LUT</label><label><input type="radio" name="output-usage" checked={outputConfig.usage === "mlut"} disabled={!engineReady} onChange={() => setOutputOption("usage", "mlut")} />相机 / 监看 LUT（MLUT）</label></div><div className="form-grid output-format-fields">{select("lutFormat", "LUT 类型")}{select("hardClip", "硬裁切")}<label className="native-field output-clip-legal"><span>0%–100%</span><input type="checkbox" checked={outputConfig.clipLegal} disabled={!engineReady} onChange={(event) => setOutputOption("clipLegal", event.target.checked)} /></label></div></div><div className="native-actions"><button className="apple-button" onClick={() => syncOriginalPreview("toggle")}><Eye size={15} />显示原版预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
+            <section className="native-card export-card"><div className="card-title"><span>03</span><div><h3>LUT 输出</h3><p>保留原版输出维度、范围、用途、格式与硬裁切选项。</p></div></div><div className="form-grid export-fields"><Field label="LUT 标题 / 文件名"><input value={engineState.title} disabled={!engineReady} onChange={(event) => setEngineField("title", event.target.value)} /></Field><button type="button" className="apple-button output-auto-title" disabled={!engineReady} onClick={() => { if (lutAnalysis.status === "ready" && lutAnalysis.title) { setEngineField("title", lutAnalysis.title); setMessage(`已应用分析标题：${lutAnalysis.title}`); } else { engineAction(["Auto Title", "自动标题"], "已更新自动标题"); } }}>自动标题</button></div><div className="output-option-board"><div className="output-option-row"><span>输出维度</span><label><input type="radio" name="output-dimension-mode" checked={outputConfig.dimensionMode === "1D"} disabled={!engineReady} onChange={() => setOutputOption("dimensionMode", "1D")} />1D</label><label><input type="radio" name="output-dimension-mode" checked={outputConfig.dimensionMode === "3D"} disabled={!engineReady} onChange={() => setOutputOption("dimensionMode", "3D")} />3D</label><div className="output-chip-group">{(outputConfig.dimensionMode === "1D" ? ["1024", "4096", "16384"] : ["17", "33", "65"]).map((size) => <label key={size}><input type="radio" name="output-dimension" checked={outputConfig.dimension === size} disabled={!engineReady} onChange={() => setOutputOption("dimension", size)} />{outputConfig.dimensionMode === "3D" ? `${size}³` : size}</label>)}</div></div><div className="output-option-row"><span>输入范围</span><label><input type="radio" name="output-input-range" checked={outputConfig.inputRange === "100"} disabled={!engineReady} onChange={() => setOutputOption("inputRange", "100")} />100%</label><label><input type="radio" name="output-input-range" checked={outputConfig.inputRange === "109"} disabled={!engineReady} onChange={() => setOutputOption("inputRange", "109")} />109%</label><span>输出范围</span><label><input type="radio" name="output-output-range" checked={outputConfig.outputRange === "100"} disabled={!engineReady} onChange={() => setOutputOption("outputRange", "100")} />100%</label><label><input type="radio" name="output-output-range" checked={outputConfig.outputRange === "109"} disabled={!engineReady} onChange={() => setOutputOption("outputRange", "109")} />109%</label></div><div className="output-option-row"><span>LUT 用途</span><label><input type="radio" name="output-usage" checked={outputConfig.usage === "grading"} disabled={!engineReady} onChange={() => setOutputOption("usage", "grading")} />调色 LUT</label><label><input type="radio" name="output-usage" checked={outputConfig.usage === "mlut"} disabled={!engineReady} onChange={() => setOutputOption("usage", "mlut")} />相机 / 监看 LUT（MLUT）</label></div><div className="form-grid output-format-fields">{select("lutFormat", "LUT 类型")}{select("hardClip", "硬裁切")}<label className="native-field output-clip-legal"><span>0%–100%</span><input type="checkbox" checked={outputConfig.clipLegal} disabled={!engineReady} onChange={(event) => setOutputOption("clipLegal", event.target.checked)} /></label></div></div><div className="native-actions"><button className="apple-button" onClick={() => syncOriginalPreview("toggle")}><Eye size={15} />显示原版预览</button><button className="apple-button is-primary" onClick={() => engineAction(["Generate LUT", "生成 LUT"], "正在生成 LUT")}><WandSparkles size={15} />生成 LUT</button><button className="apple-button" onClick={() => engineAction(["Generate Set", "生成套装"], "正在生成 LUT 套装")}><Download size={15} />生成套装</button></div></section>
             {lutAnalysis.status !== "idle" && <section className={`lut-analysis-context is-${lutAnalysis.status}`} aria-live="polite"><strong>{lutAnalysis.status === "ready" ? "当前输出使用外部 LUT 分析结果" : "外部 LUT 分析状态"}</strong><span>{lutAnalysis.message}</span>{lutAnalysis.status === "ready" && <small>{lutAnalysis.outputGamma} / {lutAnalysis.outputGamut}；生成 LUT 将使用这一已应用的原版引擎输出状态。</small>}</section>}
             <NativeAdjustments engineReady={engineReady} onToggle={toggleAdjustment} onImportLut={importAdjustmentLut} onAnalyzeLut={analyzeAdjustmentLut} onResetLut={resetAdjustmentLut} onControlChange={syncAdjustmentControl} onLutAnalystConfigChange={syncLutAnalystConfig} lutAnalystChoices={lutAnalystChoices} analysisState={lutAnalysis} />
             <iframe ref={iframeRef} className="engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="LUTCalc 同源计算引擎" onLoad={() => { enforceAdjustmentEmbedLayout(); if (!verifyAdjustmentEmbed()) return; installAdjustmentBridge(); [180, 520, 1100].forEach((delay) => window.setTimeout(installAdjustmentBridge, delay)); const documentRef = engineDocument(); if (documentRef) applyWorkbenchTheme(activeTheme, themeMode, documentRef); hydrateEngine(); window.setTimeout(hydrateEngine, 720); }} />
@@ -900,7 +1001,7 @@ export default function Home() {
               {previewVisible && <div className="engine-preview-surface">{enginePreviewSrc ? <img src={enginePreviewSrc} alt="原版 LUTCalc Canvas 预览" /> : <div className="preview-placeholder"><Eye size={22} />点击“显示预览”后读取原版 Canvas</div>}</div>}
               {(previewScope.wfm || previewScope.vector || previewScope.rgb) && <div className="engine-scope-grid">{previewScope.wfm && <div>{engineScopeSrc.wfm ? <img src={engineScopeSrc.wfm} alt="原版波形监看" /> : <span>正在生成 WFM</span>}</div>}{previewScope.vector && <div>{engineScopeSrc.vector ? <img src={engineScopeSrc.vector} alt="原版矢量示波器" /> : <span>正在生成 Vector</span>}</div>}{previewScope.rgb && <div>{engineScopeSrc.rgb ? <img src={engineScopeSrc.rgb} alt="原版 RGB Parade" /> : <span>正在生成 RGB Parade</span>}</div>}</div>}
               <div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div>
-              <div className="preview-footnote"><span>状态</span><strong>{engineReady ? "原版 Canvas 已桥接" : "加载中"}</strong><span>鼠标移动可在原版预览中读取 10-bit RGB；载入图片会要求确认 Gamma、色彩空间与范围。</span></div>
+              <div className="preview-footnote"><span>状态</span><strong>{engineReady ? "原版 Canvas 已桥接" : engineFailed ? "引擎不可用" : "加载中"}</strong><span>鼠标移动可在原版预览中读取 10-bit RGB；载入图片会要求确认 Gamma、色彩空间与范围。</span></div>
             </section>
           </div>
         </section>

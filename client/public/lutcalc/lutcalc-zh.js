@@ -125,10 +125,11 @@
       }
     }
     if (element.matches("input[type=text]")) {
-      const original = element.dataset.lcOriginalValue || element.value;
-      const translated = textMap.get(normalize(original));
+      /* 只翻译当前值本身是英文原词的输入框；用户输入（如 LUT 标题）不属于翻译表时不得覆盖，
+         避免用陈旧的 data-lc-original-value 在后续 MutationObserver 触发时重置用户内容。 */
+      const translated = textMap.get(normalize(element.value));
       if (translated) {
-        element.dataset.lcOriginalValue = original;
+        element.dataset.lcOriginalValue = element.value;
         if (element.value !== translated) element.value = translated;
       }
     }

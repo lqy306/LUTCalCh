@@ -532,6 +532,8 @@ html:is(.dark, [data-workbench-mode="dark"]) { color-scheme: dark; }
 .native-calculator-head h2, .card-title h3, .pipeline-groups h4 { color: var(--theme-text); font-family: var(--theme-font); }
 .native-calculator-head p, .card-title p, .engine-indicator, .native-field, .preview-footnote { color: var(--theme-muted); }
 .engine-indicator { color: var(--theme-muted); background: var(--theme-surface); border-color: var(--theme-border); border-radius: var(--theme-radius); }
+.engine-indicator.is-failed { color: #b42318; border-color: #fecdca; background: #fef3f2; }
+.engine-indicator.is-failed i { background: #f04438; }
 .native-card { background: var(--theme-card); border-color: var(--theme-border); border-radius: var(--theme-radius); box-shadow: var(--theme-shadow); }
 .card-title > span { color: #fff; background: var(--theme-accent); border-radius: var(--theme-radius); }
 .pipeline-groups > div, .native-toggle, .preview-surface { color: var(--theme-text); background: var(--theme-surface); border-color: var(--theme-border); border-radius: var(--theme-radius); }

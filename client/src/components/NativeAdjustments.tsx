@@ -148,7 +148,7 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
     onImportLut(file);
     void file.text().then((content) =>
     {
-      const readComment = (key: string) => content.match(new RegExp(`^\\s*#${key}\\s*:\\s*(.+)$`, "im"))?.[1]?.trim() || "";
+      const readComment = (key: string) => content.match(new RegExp(`^\\s*#${key}\\s*:\\s*(.+)$`, "im"))?.[1]?.trim() || content.match(new RegExp(`^\\s*#${key}\\s+(.+)$`, "im"))?.[1]?.trim() || "";
       const dimension = content.match(/^\s*LUT_3D_SIZE\s+(\d+)/im)?.[1] || content.match(/^\s*LUT_1D_SIZE\s+(\d+)/im)?.[1] || "";
       const fileIdentity = `${file.name}\n${content}`;
       const leicaLLog = /Leica[^\n]*L[-_ ]?Log|(?:^|[_\s])L[-_ ]?Log/i.test(fileIdentity);
@@ -181,18 +181,36 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
         setLutCompatibility({ compatible: false, message: `分析前诊断：${diagnostics[0]}` });
         return;
       }
-      const requestedGamma = leicaLLog ? "Leica L-Log" : (/F-Log2/i.test(content) || /FLog2/i.test(file.name) ? "Fujifilm F-Log2" : "");
-      const requestedGamut = leicaLLog ? (leicaRec2020 ? "Rec2020" : "") : (/F-GamutC/i.test(content) || /F-Log\s*Gamut/i.test(content) ? "Fujifilm F-Log Gamut" : "");
+      const declaredGamma = readComment("Gamma");
+      const declaredGamut = readComment("Gamut");
+      let requestedGamma = leicaLLog ? "Leica L-Log" : (/F-Log2/i.test(content) || /FLog2/i.test(file.name) ? "Fujifilm F-Log2" : "");
+      let requestedGamut = leicaLLog ? (leicaRec2020 ? "Rec2020" : "") : (/F-GamutC/i.test(content) || /F-Log\s*Gamut/i.test(content) ? "Fujifilm F-Log Gamut" : "");
       if (leicaLLog && !leicaRec2020)
       {
         setLutCompatibility({ compatible: false, message: "已识别 Leica L-Log，但文件未明确声明 Rec.2020 / BT.2020 输入色域。为避免静默错配，已阻止分析；请核对官方来源后手动确认输入色域。" });
         return;
       }
+      /* 文件头声明了 Gamma/Gamut 但未被内容规则命中的：先尝试按原样匹配引擎选项，避免静默回退默认值。 */
+      if (!requestedGamma && declaredGamma)
+      {
+        const match = analystGammaChoices.find((item) => item.label === declaredGamma);
+        if (match) requestedGamma = match.label;
+      }
+      if (!requestedGamut && declaredGamut)
+      {
+        const match = analystGamutChoices.find((item) => item.label === declaredGamut);
+        if (match) requestedGamut = match.label;
+      }
       const gammaSupported = !requestedGamma || analystGammaChoices.some((item) => item.label === requestedGamma);
       const gamutSupported = !requestedGamut || analystGamutChoices.some((item) => item.label === requestedGamut);
-      if (!gammaSupported || !gamutSupported)
+      const declaredMismatch = Boolean((declaredGamma && !requestedGamma) || (declaredGamut && !requestedGamut));
+      if (declaredMismatch || !gammaSupported || !gamutSupported)
       {
-        setLutCompatibility({ compatible: false, message: `无法安全分析：文件需要 ${requestedGamma || "指定 Gamma"}${requestedGamut ? ` / ${requestedGamut}` : ""}，当前引擎未提供完全匹配项。` });
+        const unsupported = [
+          declaredGamma && !requestedGamma ? `Gamma「${declaredGamma}」` : "",
+          declaredGamut && !requestedGamut ? `Gamut「${declaredGamut}」` : "",
+        ].filter(Boolean).join(" 与 ");
+        setLutCompatibility({ compatible: false, message: unsupported ? `文件声明的 ${unsupported} 无法匹配当前引擎选项，为避免静默错配已阻止分析；请核对文件来源后手动选择输入基底。` : `无法安全分析：文件需要 ${requestedGamma || "指定 Gamma"}${requestedGamut ? ` / ${requestedGamut}` : ""}，当前引擎未提供完全匹配项。` });
         return;
       }
       if (requestedGamma || requestedGamut)
