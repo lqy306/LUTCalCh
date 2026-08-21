@@ -2785,3 +2785,59 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
     margin-top: 0;
   }
 }
+
+/* 05 预览最终修复：顶部工具区固定，曲线区域使用卡片剩余空间，避免画布被 max-height 裁切。 */
+@media (min-width: 901px) {
+  .apple-app-shell .preview-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+  .apple-app-shell .preview-card .card-title,
+  .apple-app-shell .preview-card .preview-tool-bar,
+  .apple-app-shell .preview-card .preview-tool-options,
+  .apple-app-shell .preview-card .engine-scope-grid,
+  .apple-app-shell .preview-card .preview-footnote {
+    flex: 0 0 auto;
+  }
+  .apple-app-shell .preview-card .engine-preview-surface {
+    flex: 0 1 auto;
+    min-height: 0;
+    max-height: none;
+    height: auto;
+  }
+  .apple-app-shell .preview-card .preview-surface {
+    flex: 1 1 auto;
+    min-height: 230px;
+    max-height: none;
+    height: auto;
+    align-items: stretch;
+  }
+  .apple-app-shell .preview-card .preview-surface img,
+  .apple-app-shell .preview-card .preview-surface canvas {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: contain;
+  }
+}
+
+/* 深色模式下，预览数据区保持白底、黑字和正常混合模式；控制面板随主题变暗。 */
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-surface,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-surface img,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-surface canvas,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .engine-preview-surface {
+  background: #ffffff !important;
+  color: #202124;
+  mix-blend-mode: normal !important;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-footnote {
+  color: #aeb8be;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-options {
+  background: var(--theme-surface, #2a3035);
+  color: var(--theme-text, #f1f3f4);
+  border-color: var(--theme-border, #465058);
+}
