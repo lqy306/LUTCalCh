@@ -2705,3 +2705,53 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
     align-items: start;
   }
 }
+
+/* 精确配平：右侧输出卡片把第一行撑高约 104px，左栏仅回收这段网格空白，避免重叠。 */
+@media (min-width: 901px) {
+  .apple-app-shell .pipeline-card {
+    margin-top: -104px;
+  }
+  .apple-app-shell .adjustments-card {
+    margin-top: -104px;
+  }
+
+  /* 调整项与相机/管线卡片统一为同一套白底、细边框和标题节奏。 */
+  .apple-app-shell .adjustments-card {
+    background: var(--panel, #fff);
+    border: 1px solid #c8c8c8;
+    border-radius: 2px;
+    box-shadow: none;
+  }
+  .apple-app-shell .adjustments-title {
+    min-height: 34px;
+    margin: 0 0 6px;
+    padding: 0 0 6px;
+    border-bottom: 1px solid #d8d8d8;
+  }
+  .apple-app-shell .adjustments-title h3 {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: #222;
+  }
+  .apple-app-shell .adjustments-title p {
+    margin: 2px 0 0;
+    font-size: 9px;
+    line-height: 1.1;
+    color: #777;
+  }
+  .apple-app-shell .adjustment-item {
+    overflow: hidden;
+    border: 1px solid #d8d8d8;
+    border-radius: 1px;
+    background: #fafafa;
+  }
+  .apple-app-shell .adjustment-item-main {
+    background: transparent;
+    color: #333;
+  }
+  .apple-app-shell .adjustment-item-name {
+    font-weight: 600;
+  }
+}
