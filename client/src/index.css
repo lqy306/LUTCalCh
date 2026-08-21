@@ -2763,3 +2763,25 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
     margin-top: -98px;
   }
 }
+
+/* 左栏卡片统一间距：01→02、02→04 均与主网格 row-gap 保持 6px。 */
+@media (min-width: 901px) {
+  .apple-app-shell .pipeline-card,
+  .apple-app-shell .adjustments-card {
+    margin-top: -104px;
+  }
+}
+
+/* 02→04 精确修正：第三行只需回收 34px，避免调整项与色彩管线重叠。 */
+@media (min-width: 901px) {
+  .apple-app-shell .adjustments-card {
+    margin-top: -34px;
+  }
+}
+
+/* 02→04 最终间距：第三行不再使用负 margin，直接采用网格 6px 间距。 */
+@media (min-width: 901px) {
+  .apple-app-shell .adjustments-card {
+    margin-top: 0;
+  }
+}
