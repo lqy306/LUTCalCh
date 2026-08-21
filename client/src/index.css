@@ -2841,3 +2841,46 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-opti
   color: var(--theme-text, #f1f3f4);
   border-color: var(--theme-border, #465058);
 }
+
+/* 深色模式最终收口：主计算卡片不能保持浅色背景配浅色文字。 */
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-calculator-grid {
+  background: #1f1f22;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-card {
+  background: #303036;
+  color: #f5f5f5;
+  border-color: #4b4b52;
+  box-shadow: none;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .card-title h3,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .card-title p,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-field,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .pipeline-groups h4,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-options,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-options label {
+  color: #f1f3f4;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .card-title p {
+  color: #aeb8be;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-field input,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-field select,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-output,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-bar select {
+  background: #242429;
+  color: #f5f5f5;
+  border-color: #4b4b52;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .pipeline-groups > div,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-toggle,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-options {
+  background: #27272d;
+  border-color: #4b4b52;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .export-card .field-hint,
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-footnote {
+  color: #aeb8be;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-card {
+  background: #303036;
+}
