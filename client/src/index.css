@@ -2884,3 +2884,36 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-footnote 
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-card {
   background: #303036;
 }
+
+/* Ubuntu 主题使用项目内字体，避免仅依赖访问者系统是否安装 Ubuntu。 */
+@font-face {
+  font-family: "LUTCalc Ubuntu";
+  src: url("/LUTCalCh/fonts/Ubuntu-Variable.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+}
+
+/* 流程名称输入框与主计算器控件保持相同主题表面。 */
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .workflow-name-label input {
+  color: #f5f5f5;
+  background: #242429;
+  border-color: #4b4b52;
+  caret-color: #ff784b;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .workflow-name-label input::placeholder {
+  color: #aeb8be;
+}
+html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .workflow-name-label input:focus {
+  outline-color: rgba(255, 120, 75, .4);
+  border-color: #ff784b;
+}
+
+/* Ubuntu 主题字体覆盖：中文继续使用 Noto Sans SC 回退，拉丁字符优先使用 Ubuntu。 */
+html[data-workbench-theme="ubuntu"] .apple-app-shell,
+html[data-workbench-theme="ubuntu"] .apple-app-shell button,
+html[data-workbench-theme="ubuntu"] .apple-app-shell input,
+html[data-workbench-theme="ubuntu"] .apple-app-shell select,
+html[data-workbench-theme="ubuntu"] .apple-app-shell textarea {
+  font-family: "LUTCalc Ubuntu", Ubuntu, "Noto Sans SC", sans-serif;
+}
