@@ -2687,3 +2687,21 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
     grid-template-columns: 1fr;
   }
 }
+
+/* 重叠修复：不再用负 margin 追求视觉压缩，左栏模块按自然文档流安全排列。 */
+@media (min-width: 901px) {
+  .apple-app-shell .pipeline-card,
+  .apple-app-shell .adjustments-card {
+    margin-top: 0;
+    transform: none;
+  }
+  .apple-app-shell .adjustments-card {
+    width: 100%;
+    max-width: none;
+    justify-self: stretch;
+  }
+  .apple-app-shell .native-calculator-grid {
+    grid-template-rows: max-content max-content max-content;
+    align-items: start;
+  }
+}
