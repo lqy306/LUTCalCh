@@ -2444,3 +2444,246 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
     grid-row: auto;
   }
 }
+
+/* 原版式最终配平：调整项回到左栏连续工作流，右侧预览跨行填满高度。 */
+@media (min-width: 901px) {
+  .apple-app-shell .adjustments-card {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .apple-app-shell .preview-card {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    height: 100%;
+  }
+  .apple-app-shell .adjustment-list {
+    grid-template-columns: 1fr;
+  }
+  .apple-app-shell .adjustment-item-main > label {
+    min-height: 26px;
+    padding: 3px 7px;
+    font-size: 10px;
+  }
+  .apple-app-shell .adjustment-state {
+    font-size: 8px;
+  }
+  .apple-app-shell .adjustment-details {
+    padding: 7px 9px 8px 30px;
+  }
+}
+
+/* 左栏不跟随右栏跨行高度拉伸，避免相机输入底部出现大片空白；调整面板保持窄幅。 */
+@media (min-width: 901px) {
+  .apple-app-shell .capture-card,
+  .apple-app-shell .pipeline-card {
+    align-self: start;
+    height: fit-content;
+  }
+  .apple-app-shell .adjustments-card {
+    width: min(100%, 360px);
+    justify-self: start;
+  }
+  .apple-app-shell .adjustment-list {
+    width: 100%;
+  }
+  .apple-app-shell .adjustment-item-main > label {
+    max-width: 100%;
+  }
+}
+
+/* 左栏连续化：右栏输出卡片较高时，管线卡片不应被网格行间距推开。 */
+@media (min-width: 901px) {
+  .apple-app-shell .pipeline-card {
+    margin-top: -88px;
+  }
+  .apple-app-shell .adjustments-card {
+    width: min(100%, 320px);
+  }
+  .apple-app-shell .adjustment-details {
+    max-width: 280px;
+    padding-left: 24px;
+    padding-right: 6px;
+  }
+  .apple-app-shell .adjustment-details input,
+  .apple-app-shell .adjustment-details select,
+  .apple-app-shell .adjustment-details textarea {
+    max-width: 100%;
+  }
+}
+
+/* 视觉校正：左栏按自身内容堆叠，不被右栏高预览的网格轨道留出空洞。 */
+@media (min-width: 901px) {
+  .apple-app-shell .capture-card {
+    height: auto;
+  }
+  .apple-app-shell .pipeline-card {
+    margin-top: -159px;
+  }
+  .apple-app-shell .adjustments-card {
+    margin-top: -71px;
+  }
+  .apple-app-shell .adjustment-list {
+    gap: 1px;
+  }
+  .apple-app-shell .adjustment-item-main,
+  .apple-app-shell .adjustment-item-main > label {
+    min-height: 21px;
+  }
+  .apple-app-shell .adjustment-item-main > label {
+    padding: 1px 6px;
+    font-size: 9px;
+    line-height: 1.1;
+  }
+  .apple-app-shell .adjustment-item input[type="checkbox"] {
+    width: 11px;
+    height: 11px;
+  }
+  .apple-app-shell .adjustment-state {
+    margin-right: 5px;
+    font-size: 8px;
+  }
+  .apple-app-shell .adjustment-details {
+    padding: 4px 5px 5px 20px;
+    font-size: 9px;
+  }
+}
+
+/* 最终视觉配平：调整项采用原版短条高度，右侧预览填满左栏工作区。 */
+@media (min-width: 901px) {
+  .apple-app-shell .adjustment-item-main,
+  .apple-app-shell .adjustment-item-main > label {
+    min-height: 18px;
+    height: 18px;
+  }
+  .apple-app-shell .adjustment-item-main > label {
+    padding: 0 6px;
+    font-size: 8.5px;
+    line-height: 1;
+  }
+  .apple-app-shell .adjustment-state {
+    font-size: 7px;
+  }
+  .apple-app-shell .adjustment-item input[type="checkbox"] {
+    width: 10px;
+    height: 10px;
+  }
+  .apple-app-shell .adjustment-details {
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  .apple-app-shell .preview-card {
+    min-height: 450px;
+  }
+  .apple-app-shell .preview-surface,
+  .apple-app-shell .engine-preview-surface {
+    min-height: 280px;
+    max-height: 280px;
+  }
+}
+
+/* 右栏三段连续结构：输出 → 调整项 → 曲线；左栏只承载输入与色彩管线。 */
+@media (min-width: 901px) {
+  .apple-app-shell .capture-card {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .apple-app-shell .pipeline-card {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: -159px;
+  }
+  .apple-app-shell .export-card {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .apple-app-shell .adjustments-card {
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
+    max-width: none;
+    margin-top: 0;
+  }
+  .apple-app-shell .preview-card {
+    grid-column: 2;
+    grid-row: 3;
+    height: auto;
+    min-height: 0;
+  }
+  .apple-app-shell .preview-surface,
+  .apple-app-shell .engine-preview-surface {
+    min-height: 230px;
+    max-height: 230px;
+  }
+  .apple-app-shell .adjustment-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px 4px;
+  }
+  .apple-app-shell .adjustment-details {
+    max-width: none;
+  }
+}
+
+/* 调整项短条化：原版扫描依靠名称和状态，长摘要不应占据每一行高度。 */
+@media (min-width: 901px) {
+  .apple-app-shell .adjustment-item-summary {
+    display: none;
+  }
+  .apple-app-shell .adjustment-item-main,
+  .apple-app-shell .adjustment-item-main > label,
+  .apple-app-shell .adjustment-lut-trigger {
+    min-height: 19px;
+    height: 19px;
+  }
+  .apple-app-shell .adjustment-item-main {
+    padding: 0 5px;
+  }
+  .apple-app-shell .adjustment-item-name {
+    font-size: 9px;
+    white-space: nowrap;
+  }
+  .apple-app-shell .adjustment-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .apple-app-shell .adjustment-details {
+    grid-column: 1 / -1;
+  }
+}
+
+/* 纠正布局方向：调整项始终属于左栏；右栏只保留输出与预览诊断。 */
+@media (min-width: 901px) {
+  .apple-app-shell .capture-card {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .apple-app-shell .pipeline-card {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: -159px;
+  }
+  .apple-app-shell .adjustments-card {
+    grid-column: 1;
+    grid-row: 3;
+    width: min(100%, 320px);
+    max-width: none;
+    margin-top: -71px;
+    justify-self: start;
+  }
+  .apple-app-shell .export-card {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .apple-app-shell .preview-card {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    height: 100%;
+    min-height: 450px;
+  }
+  .apple-app-shell .preview-surface,
+  .apple-app-shell .engine-preview-surface {
+    min-height: 280px;
+    max-height: 280px;
+  }
+  .apple-app-shell .adjustment-list {
+    grid-template-columns: 1fr;
+  }
+}
