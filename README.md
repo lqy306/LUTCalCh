@@ -31,6 +31,23 @@ pnpm build
 pnpm start
 ```
 
+## 离线桌面端（Windows / Linux）
+
+离线桌面端位于分支 `feat/tauri-offline-app`，使用 Tauri v2 封装现有 React/Vite 工作台。Windows 发布为无需安装器的单文件 `LUTCalc.exe`；Linux 发布为 `.AppImage`。macOS 当前未纳入构建范围，BSD 系仅作为未来评估项。
+
+```bash
+# 开发桌面端
+pnpm desktop:dev
+
+# 构建 Linux AppImage（须在 Linux）
+pnpm desktop:linux
+
+# 构建 Windows 单文件 EXE（须在 Windows）
+pnpm desktop:windows
+```
+
+详细的依赖、构建产物、启动方式和发布前检查见[离线桌面端说明](docs/offline-desktop.md)。
+
 ## 部署
 
 站点支持部署到根路径（如 `https://lutcalc.example/`）或子目录（如 GitHub Pages 项目页 `https://<user>.github.io/<repo>/`）。
@@ -64,11 +81,11 @@ LICENSE                    # GPL-2.0 许可文本
 
 ## 工作原理
 
-| 层级 | 职责 |
-| --- | --- |
+| 层级         | 职责                                                              |
+| ------------ | ----------------------------------------------------------------- |
 | React 工作台 | 中文 UI、参数卡、工具中心、主题、元数据审计、流程与配置的本地保存 |
-| 同源桥接 | DOM 选择器映射、跨文档事件、Canvas 快照、状态轮询、分析完成信号 |
-| 原版 LUTCalc | Gamma/Gamut 管线、LUTAnalyst、Worker 运算、曲线与下载 |
+| 同源桥接     | DOM 选择器映射、跨文档事件、Canvas 快照、状态轮询、分析完成信号   |
+| 原版 LUTCalc | Gamma/Gamut 管线、LUTAnalyst、Worker 运算、曲线与下载             |
 
 关键约定：React 不自行计算 LUT，也不把按钮点击或固定延时当作分析完成信号；只有读取到引擎注册的成对 `LA - …` 输出才报告分析成功。
 
