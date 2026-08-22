@@ -746,6 +746,24 @@ export default function Home() {
     const reader = new FileReader();
     reader.onload = () => setPreviewImageSrc(String(reader.result || ""));
     reader.readAsDataURL(file);
+    const documentRef = engineDocument();
+    const windowRef = engineWindow();
+    const engineInput = documentRef?.querySelector("#preview-holder input[type=file], input[type=file]") as HTMLInputElement | null;
+    if (!engineInput || !windowRef) {
+      setMessage("预览图片已读取，但原版引擎尚未准备好，请稍后重试");
+      return;
+    }
+    try {
+      const transfer = new DataTransfer();
+      transfer.items.add(file);
+      engineInput.files = transfer.files;
+      engineInput.dispatchEvent(new (windowRef as unknown as { Event: typeof Event }).Event("change", { bubbles: true }));
+      setMessage(`已载入预览图片：${file.name}；请在原版窗口确认 Gamma、色彩空间和范围`);
+      window.setTimeout(refreshEnginePreview, 500);
+      window.setTimeout(refreshEnginePreview, 1200);
+    } catch {
+      setMessage("预览图片已读取，但无法交给原版引擎处理");
+    }
   };
 
   const findAdjustmentToggle = (label: string) =>
@@ -997,9 +1015,8 @@ export default function Home() {
     }
     else if (kind === "load")
     {
-      const button = Array.from(holder?.querySelectorAll("input[type=button], button") || []).find((node) => /Load Preview|载入预览/.test((node as HTMLInputElement).value || node.textContent || "")) as HTMLElement | undefined;
-      button?.click();
-      setMessage(button ? "原版预览将先要求确认图像 Gamma、色彩空间与范围" : "未找到原版载入预览操作");
+      previewFileRef.current?.click();
+      setMessage("请选择 JPG、JPEG、PNG 或 BMP 预览图片");
     }
     [260, 900].forEach((delay) => window.setTimeout(refreshEnginePreview, delay));
   };
@@ -1070,13 +1087,14 @@ export default function Home() {
               <div className="card-title"><span>05</span><div><h3>原版预览与曲线</h3><p>{previewHint}</p></div></div>
               <div className="preview-tool-bar">
                 <button type="button" className="apple-button" onClick={() => syncOriginalPreview("toggle")}>{previewVisible ? "隐藏预览" : "显示预览"}</button>
+                <input ref={previewFileRef} type="file" accept="image/jpeg,image/png,image/bmp,.jpg,.jpeg,.png,.bmp" hidden onChange={(event) => { loadPreviewImage(event.target.files?.[0]); event.currentTarget.value = ""; }} />
                 <select aria-label="原版预览类型" value={previewPreset} onChange={(event) => syncOriginalPreview("preset", event.target.value)}><option value="high">高对比度</option><option value="low">低对比度</option><option value="rec709">Rec.709 色域</option><option value="chromaticity">xy / uv 色度图</option><option value="gray">灰度</option></select>
                 <button type="button" className="apple-button" onClick={() => syncOriginalPreview("load")}>载入预览…</button>
               </div>
               <div className="preview-tool-options"><span>预览范围</span><label><input type="radio" name="preview-range" checked={previewRange === "100"} onChange={() => syncOriginalPreview("range", "100")} />100%</label><label><input type="radio" name="preview-range" checked={previewRange === "109"} onChange={() => syncOriginalPreview("range", "109")} />109%</label><label><input type="checkbox" checked={previewScope.wfm} onChange={() => syncOriginalPreview("scope", "wfm")} />WFM</label><label><input type="checkbox" checked={previewScope.vector} onChange={() => syncOriginalPreview("scope", "vector")} />Vector</label><label><input type="checkbox" checked={previewScope.rgb} onChange={() => syncOriginalPreview("scope", "rgb")} />RGB</label>{previewVisible && <span className="rgb-readout">10-bit Values - R: {rgbReadout.red} G: {rgbReadout.green} B: {rgbReadout.blue}</span>}</div>
               <div className="preview-content">
                 <div className={`engine-preview-surface ${rgbSamplerEnabled ? "is-sampling" : ""}`} onMouseMove={updatePreviewRGB} onClick={samplePreviewPixel} role={rgbSamplerEnabled ? "button" : undefined} tabIndex={rgbSamplerEnabled ? 0 : undefined}>
-                  {enginePreviewSrc ? <img src={enginePreviewSrc} alt="原版 LUTCalc Canvas 预览" /> : <div className="preview-placeholder"><Eye size={22} />点击“显示预览”后读取原版 Canvas</div>}
+                  {enginePreviewSrc || previewImageSrc ? <img src={enginePreviewSrc || previewImageSrc} alt="原版 LUTCalc Canvas 预览" /> : <div className="preview-placeholder"><Eye size={22} />点击“显示预览”后读取原版 Canvas</div>}
                   {rgbSamples.map((sample) => <span key={sample.id} className="rgb-sample-marker" style={{ left: `${sample.x * 100}%`, top: `${sample.y * 100}%` }}>{sample.id}</span>)}
                 </div>
                 {rgbAdjustmentEnabled && <div className="rgb-sampler-panel" aria-label="RGB采样器">
