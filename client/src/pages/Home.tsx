@@ -1066,7 +1066,7 @@ export default function Home() {
             {lutAnalysis.status !== "idle" && <section className={`lut-analysis-context is-${lutAnalysis.status}`} aria-live="polite"><strong>{lutAnalysis.status === "ready" ? "当前输出使用外部 LUT 分析结果" : "外部 LUT 分析状态"}</strong><span>{lutAnalysis.message}</span>{lutAnalysis.status === "ready" && <small>{lutAnalysis.outputGamma} / {lutAnalysis.outputGamut}；生成 LUT 将使用这一已应用的原版引擎输出状态。</small>}</section>}
             <NativeAdjustments engineReady={engineReady} onToggle={toggleAdjustment} onImportLut={importAdjustmentLut} onAnalyzeLut={analyzeAdjustmentLut} onResetLut={resetAdjustmentLut} onControlChange={syncAdjustmentControl} onLutAnalystConfigChange={syncLutAnalystConfig} lutAnalystChoices={lutAnalystChoices} analysisState={lutAnalysis} />
             <iframe ref={iframeRef} className="engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="LUTCalc 同源计算引擎" onLoad={() => { enforceAdjustmentEmbedLayout(); if (!verifyAdjustmentEmbed()) return; installAdjustmentBridge(); [180, 520, 1100].forEach((delay) => window.setTimeout(installAdjustmentBridge, delay)); const documentRef = engineDocument(); if (documentRef) applyWorkbenchTheme(activeTheme, themeMode, documentRef); hydrateEngine(); window.setTimeout(hydrateEngine, 720); }} />
-            <section className="native-card preview-card">
+            <section className={`native-card preview-card ${previewVisible ? "is-open" : "is-closed"}`}>
               <div className="card-title"><span>05</span><div><h3>原版预览与曲线</h3><p>{previewHint}</p></div></div>
               <div className="preview-tool-bar">
                 <button type="button" className="apple-button" onClick={() => syncOriginalPreview("toggle")}>{previewVisible ? "隐藏预览" : "显示预览"}</button>
@@ -1074,7 +1074,7 @@ export default function Home() {
                 <button type="button" className="apple-button" onClick={() => syncOriginalPreview("load")}>载入预览…</button>
               </div>
               <div className="preview-tool-options"><span>预览范围</span><label><input type="radio" name="preview-range" checked={previewRange === "100"} onChange={() => syncOriginalPreview("range", "100")} />100%</label><label><input type="radio" name="preview-range" checked={previewRange === "109"} onChange={() => syncOriginalPreview("range", "109")} />109%</label><label><input type="checkbox" checked={previewScope.wfm} onChange={() => syncOriginalPreview("scope", "wfm")} />WFM</label><label><input type="checkbox" checked={previewScope.vector} onChange={() => syncOriginalPreview("scope", "vector")} />Vector</label><label><input type="checkbox" checked={previewScope.rgb} onChange={() => syncOriginalPreview("scope", "rgb")} />RGB</label>{previewVisible && <span className="rgb-readout">10-bit Values - R: {rgbReadout.red} G: {rgbReadout.green} B: {rgbReadout.blue}</span>}</div>
-              {previewVisible && <>
+              <div className="preview-content">
                 <div className={`engine-preview-surface ${rgbSamplerEnabled ? "is-sampling" : ""}`} onMouseMove={updatePreviewRGB} onClick={samplePreviewPixel} role={rgbSamplerEnabled ? "button" : undefined} tabIndex={rgbSamplerEnabled ? 0 : undefined}>
                   {enginePreviewSrc ? <img src={enginePreviewSrc} alt="原版 LUTCalc Canvas 预览" /> : <div className="preview-placeholder"><Eye size={22} />点击“显示预览”后读取原版 Canvas</div>}
                   {rgbSamples.map((sample) => <span key={sample.id} className="rgb-sample-marker" style={{ left: `${sample.x * 100}%`, top: `${sample.y * 100}%` }}>{sample.id}</span>)}
@@ -1083,7 +1083,7 @@ export default function Home() {
                   <div className="rgb-sampler-actions"><strong>RGB 采样器</strong><button type="button" className={`apple-button ${rgbSamplerEnabled ? "is-primary" : ""}`} onClick={() => setRgbSamplerEnabled((current) => !current)}>{rgbSamplerEnabled ? "停止点击取样" : "开始点击取样"}</button><button type="button" className="apple-button" onClick={() => setRgbSamples([])} disabled={!rgbSamples.length}>清除</button><span>{rgbSamplerEnabled ? "点击预览图添加采样点" : "开启后点击预览图"}</span></div>
                   {rgbSamples.length > 0 && <div className="rgb-sampler-values">{rgbSamples.map((sample) => <div key={sample.id}><b>{sample.id}</b><span>R {sample.red}</span><span>G {sample.green}</span><span>B {sample.blue}</span></div>)}</div>}
                 </div>}
-              </>}
+              </div>
               {(previewScope.wfm || previewScope.vector || previewScope.rgb) && <div className="engine-scope-grid">{previewScope.wfm && <div>{engineScopeSrc.wfm ? <img src={engineScopeSrc.wfm} alt="原版波形监看" /> : <span>正在生成 WFM</span>}</div>}{previewScope.vector && <div>{engineScopeSrc.vector ? <img src={engineScopeSrc.vector} alt="原版矢量示波器" /> : <span>正在生成 Vector</span>}</div>}{previewScope.rgb && <div>{engineScopeSrc.rgb ? <img src={engineScopeSrc.rgb} alt="原版 RGB Parade" /> : <span>正在生成 RGB Parade</span>}</div>}</div>}
               <div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div>
               <div className="preview-footnote"><span>状态</span><strong>{engineReady ? "原版 Canvas 已桥接" : engineFailed ? "引擎不可用" : "加载中"}</strong><span>鼠标移动可在原版预览中读取 10-bit RGB；载入图片会要求确认 Gamma、色彩空间与范围。</span></div>
