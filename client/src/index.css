@@ -2996,7 +2996,7 @@ html[data-workbench-theme="ubuntu"] .apple-app-shell textarea {
   .apple-app-shell .native-calculator-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-rows: max-content max-content max-content;
     align-items: start;
     gap: 6px;
   }
@@ -3032,7 +3032,7 @@ html[data-workbench-theme="ubuntu"] .apple-app-shell textarea {
     min-height: 0;
     height: auto;
     overflow: hidden;
-    contain: layout paint;
+    contain: size layout paint;
   }
 
   .apple-app-shell .preview-card .preview-tool-bar,
