@@ -12,6 +12,9 @@ import Home from "./pages/Home";
 
 function Router()
 {
+  const pathname = window.location.pathname;
+  const isHomeEntry = pathname === "/" || pathname.endsWith("/") || pathname.endsWith("/index.html");
+  if (isHomeEntry) return <Home />;
   return (
     <WouterRouter base={import.meta.env.BASE_URL}>
       <Switch>
