@@ -37,14 +37,15 @@ pnpm desktop:dev
 
 该命令会先启动 Vite，再启动 Tauri 桌面窗口。生产构建命令如下：
 
-| 目标           | 命令                   | 预期产物                                              |
-| -------------- | ---------------------- | ----------------------------------------------------- |
-| Linux AppImage | `pnpm desktop:linux`   | `src-tauri/target/release/bundle/appimage/*.AppImage` |
-| Windows 裸 EXE | `pnpm desktop:windows` | `src-tauri/target/release/LUTCalc.exe`                |
+| 目标                             | 命令                         | 预期产物                                                      |
+| -------------------------------- | ---------------------------- | ------------------------------------------------------------- |
+| Linux AppImage                   | `pnpm desktop:linux`         | `src-tauri/target/release/bundle/appimage/*.AppImage`         |
+| Windows 裸 EXE（Windows 原生）   | `pnpm desktop:windows`       | `src-tauri/target/release/LUTCalc.exe`                        |
+| Windows 裸 EXE（Linux 交叉编译） | `pnpm desktop:windows:cross` | `src-tauri/target/x86_64-pc-windows-msvc/release/LUTCalc.exe` |
 
-Windows 产物必须在 Windows 环境构建；Linux AppImage 必须在 Linux 环境构建。不要以一个平台的交叉编译结果替代原生验证。若后续配置持续集成，应使用 Windows 原生运行器构建 EXE，并使用 `ubuntu-22.04` 构建 AppImage，以保持较低的 glibc 兼容基线。
+Linux AppImage 必须在 Linux 环境构建。Windows 裸 EXE 优先在 Windows 原生环境构建；若无 Windows 构建环境，可在 Linux 使用官方建议的 MSVC + `cargo-xwin` 路径运行 `pnpm desktop:windows:cross`。交叉编译仅证明 PE x64 文件可生成，不能替代 Windows 上的实际启动、WebView2 可用性、病毒扫描和代码签名验证。若后续配置持续集成，应使用 Windows 原生运行器构建 EXE，并使用 `ubuntu-22.04` 构建 AppImage，以保持较低的 glibc 兼容基线。
 
-Linux 构建机须具备 Tauri 对 WebKitGTK 的开发依赖。对于 Debian/Ubuntu，可按 Tauri 官方前置条件安装 `libwebkit2gtk-4.1-dev`、`build-essential`、`libxdo-dev`、`libssl-dev`、`libayatana-appindicator3-dev`、`librsvg2-dev` 等依赖。[1]
+Linux 构建机须具备 Tauri 对 WebKitGTK 的开发依赖。对于 Debian/Ubuntu，可按 Tauri 官方前置条件安装 `libwebkit2gtk-4.1-dev`、`build-essential`、`libxdo-dev`、`libssl-dev`、`libayatana-appindicator3-dev`、`librsvg2-dev` 等依赖。[1] 交叉编译 Windows EXE 还需安装 LLVM/LLD、执行 `rustup target add x86_64-pc-windows-msvc`，并通过 `cargo install --locked cargo-xwin` 安装交叉编译运行器。[3]
 
 ## 发行前检查
 
@@ -60,4 +61,4 @@ Get-FileHash .\LUTCalc.exe -Algorithm SHA256
 
 [1]: https://v2.tauri.app/start/prerequisites/ "Tauri v2：前置条件"
 [2]: https://v2.tauri.app/distribute/appimage/ "Tauri v2：AppImage 分发"
-[3]: https://v2.tauri.app/develop/configuration-files/ "Tauri v2：配置文件"
+[3]: https://v2.tauri.app/distribute/windows-installer/ "Tauri v2：Windows 安装器与跨平台编译"

@@ -14,7 +14,8 @@
     "desktop:dev": "tauri dev",
     "desktop:build": "tauri build",
     "desktop:linux": "tauri build --bundles appimage",
-    "desktop:windows": "tauri build --no-bundle"
+    "desktop:windows": "tauri build --no-bundle",
+    "desktop:windows:cross": "tauri build --no-bundle --runner cargo-xwin --target x86_64-pc-windows-msvc"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

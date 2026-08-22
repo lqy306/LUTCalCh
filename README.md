@@ -42,8 +42,11 @@ pnpm desktop:dev
 # 构建 Linux AppImage（须在 Linux）
 pnpm desktop:linux
 
-# 构建 Windows 单文件 EXE（须在 Windows）
+# 构建 Windows 单文件 EXE（优先在 Windows 原生环境）
 pnpm desktop:windows
+
+# 在 Linux 交叉编译 Windows x64 EXE（需 cargo-xwin 与 LLVM/LLD）
+pnpm desktop:windows:cross
 ```
 
 详细的依赖、构建产物、启动方式和发布前检查见[离线桌面端说明](docs/offline-desktop.md)。
