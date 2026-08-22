@@ -2403,9 +2403,72 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
   border: 1px solid #c8c8c8;
 }
 .apple-app-shell .engine-preview-surface {
+  position: relative;
   max-height: 220px;
   margin-bottom: 5px;
 }
+.apple-app-shell .engine-preview-surface.is-sampling {
+  cursor: crosshair;
+}
+.apple-app-shell .rgb-sample-marker {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  transform: translate(-50%, -50%);
+  color: #00ffff;
+  background: rgba(0, 0, 0, .56);
+  border: 2px solid #00ffff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .72);
+  font: 700 11px/1 Ubuntu, "Noto Sans SC", sans-serif;
+  pointer-events: none;
+}
+.apple-app-shell .rgb-sampler-panel {
+  display: grid;
+  gap: 5px;
+  margin: 5px 0 0;
+  padding: 6px 7px;
+  color: #6b6b6b;
+  background: #ededed;
+  border: 1px solid #c8c8c8;
+  font: 9px Ubuntu, "Noto Sans SC", sans-serif;
+}
+.apple-app-shell .rgb-sampler-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+}
+.apple-app-shell .rgb-sampler-actions strong {
+  color: #242424;
+  margin-right: 2px;
+  font-size: 10px;
+}
+.apple-app-shell .rgb-sampler-actions span {
+  margin-left: auto;
+}
+.apple-app-shell .rgb-sampler-values {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.apple-app-shell .rgb-sampler-values > div {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 5px;
+  color: #242424;
+  background: #fff;
+  border: 1px solid #d1d1d1;
+  font-variant-numeric: tabular-nums;
+}
+.apple-app-shell .rgb-sampler-values b { color: #009b9b; }
+.apple-app-shell .rgb-sampler-values span:nth-child(2) { color: #b73830; }
+.apple-app-shell .rgb-sampler-values span:nth-child(3) { color: #287d3b; }
+.apple-app-shell .rgb-sampler-values span:nth-child(4) { color: #2f5fa8; }
 .apple-app-shell .preview-footnote {
   gap: 5px 8px;
   margin-top: 5px;
@@ -2454,7 +2517,9 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
   .apple-app-shell .preview-card {
     grid-column: 2;
     grid-row: 2 / span 2;
-    height: 100%;
+    align-self: start;
+    min-height: 0;
+    height: auto;
   }
   .apple-app-shell .adjustment-list {
     grid-template-columns: 1fr;

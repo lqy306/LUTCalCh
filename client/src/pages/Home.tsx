@@ -34,6 +34,7 @@ import NativeAdjustments from "@/components/NativeAdjustments";
 type WorkflowEvent = { action: "change" | "click"; selector: string; value?: string; checked?: boolean; label: string };
 type WorkflowFile = { version: 1; name: string; createdAt: string; events: WorkflowEvent[] };
 type CurveSample = { input: number; output: number };
+type RGBSample = { id: number; x: number; y: number; red: number; green: number; blue: number };
 type LogGammaProfile = {
   schema: "lutcalc-log-gamma-profile";
   version: 1;
@@ -205,6 +206,8 @@ export default function Home() {
   const [previewPreset, setPreviewPreset] = useState("high");
   const [previewRange, setPreviewRange] = useState("109");
   const [previewScope, setPreviewScope] = useState({ wfm: false, vector: false, rgb: false });
+  const [rgbSamplerEnabled, setRgbSamplerEnabled] = useState(false);
+  const [rgbSamples, setRgbSamples] = useState<RGBSample[]>([]);
   const [outputConfig, setOutputConfig] = useState({ dimensionMode: "3D", dimension: "33", inputRange: "109", outputRange: "109", usage: "grading", clipLegal: true });
   const [lutAnalysis, setLutAnalysis] = useState<LutAnalysisState>({ status: "idle", fileName: "", title: "", outputGamma: "", outputGamut: "", completedAt: "", message: "尚未分析外部 LUT。", samples: [] });
   const analysisInProgressRef = useRef(false);
@@ -336,6 +339,23 @@ export default function Home() {
     if (preview) setEnginePreviewSrc(preview);
     setEngineScopeSrc({ wfm: snapshot("#can-waveform"), vector: snapshot("#can-vector"), rgb: snapshot("#can-parade") });
   }, []);
+  const samplePreviewPixel = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    if (!rgbSamplerEnabled || !enginePreviewSrc) return;
+    const image = event.currentTarget.querySelector("img") as HTMLImageElement | null;
+    if (!image || !image.naturalWidth || !image.naturalHeight) return;
+    const rect = image.getBoundingClientRect();
+    const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    const y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    if (!context) return;
+    context.drawImage(image, 0, 0);
+    const pixel = context.getImageData(Math.min(canvas.width - 1, Math.floor(x * canvas.width)), Math.min(canvas.height - 1, Math.floor(y * canvas.height)), 1, 1).data;
+    const next: RGBSample = { id: rgbSamples.length + 1, x, y, red: Math.round(pixel[0] * 1023 / 255), green: Math.round(pixel[1] * 1023 / 255), blue: Math.round(pixel[2] * 1023 / 255) };
+    setRgbSamples((current) => [...current, { ...next, id: current.length + 1 }]);
+  }, [enginePreviewSrc, rgbSamplerEnabled, rgbSamples.length]);
 
   const fieldNode = useCallback((field: EngineField): HTMLInputElement | HTMLSelectElement | null => {
     const documentRef = engineDocument();
@@ -1027,7 +1047,16 @@ export default function Home() {
                 <button type="button" className="apple-button" onClick={() => syncOriginalPreview("load")}>载入预览…</button>
               </div>
               <div className="preview-tool-options"><span>预览范围</span><label><input type="radio" name="preview-range" checked={previewRange === "100"} onChange={() => syncOriginalPreview("range", "100")} />100%</label><label><input type="radio" name="preview-range" checked={previewRange === "109"} onChange={() => syncOriginalPreview("range", "109")} />109%</label><label><input type="checkbox" checked={previewScope.wfm} onChange={() => syncOriginalPreview("scope", "wfm")} />WFM</label><label><input type="checkbox" checked={previewScope.vector} onChange={() => syncOriginalPreview("scope", "vector")} />Vector</label><label><input type="checkbox" checked={previewScope.rgb} onChange={() => syncOriginalPreview("scope", "rgb")} />RGB</label></div>
-              {previewVisible && <div className="engine-preview-surface">{enginePreviewSrc ? <img src={enginePreviewSrc} alt="原版 LUTCalc Canvas 预览" /> : <div className="preview-placeholder"><Eye size={22} />点击“显示预览”后读取原版 Canvas</div>}</div>}
+              {previewVisible && <>
+                <div className={`engine-preview-surface ${rgbSamplerEnabled ? "is-sampling" : ""}`} onClick={samplePreviewPixel} role={rgbSamplerEnabled ? "button" : undefined} tabIndex={rgbSamplerEnabled ? 0 : undefined}>
+                  {enginePreviewSrc ? <img src={enginePreviewSrc} alt="原版 LUTCalc Canvas 预览" /> : <div className="preview-placeholder"><Eye size={22} />点击“显示预览”后读取原版 Canvas</div>}
+                  {rgbSamples.map((sample) => <span key={sample.id} className="rgb-sample-marker" style={{ left: `${sample.x * 100}%`, top: `${sample.y * 100}%` }}>{sample.id}</span>)}
+                </div>
+                <div className="rgb-sampler-panel" aria-label="RGB采样器">
+                  <div className="rgb-sampler-actions"><strong>RGB 采样器</strong><button type="button" className={`apple-button ${rgbSamplerEnabled ? "is-primary" : ""}`} onClick={() => setRgbSamplerEnabled((current) => !current)}>{rgbSamplerEnabled ? "停止点击取样" : "开始点击取样"}</button><button type="button" className="apple-button" onClick={() => setRgbSamples([])} disabled={!rgbSamples.length}>清除</button><span>{rgbSamplerEnabled ? "点击预览图添加采样点" : "开启后点击预览图"}</span></div>
+                  {rgbSamples.length > 0 && <div className="rgb-sampler-values">{rgbSamples.map((sample) => <div key={sample.id}><b>{sample.id}</b><span>R {sample.red}</span><span>G {sample.green}</span><span>B {sample.blue}</span></div>)}</div>}
+                </div>
+              </>}
               {(previewScope.wfm || previewScope.vector || previewScope.rgb) && <div className="engine-scope-grid">{previewScope.wfm && <div>{engineScopeSrc.wfm ? <img src={engineScopeSrc.wfm} alt="原版波形监看" /> : <span>正在生成 WFM</span>}</div>}{previewScope.vector && <div>{engineScopeSrc.vector ? <img src={engineScopeSrc.vector} alt="原版矢量示波器" /> : <span>正在生成 Vector</span>}</div>}{previewScope.rgb && <div>{engineScopeSrc.rgb ? <img src={engineScopeSrc.rgb} alt="原版 RGB Parade" /> : <span>正在生成 RGB Parade</span>}</div>}</div>}
               <div className="preview-surface">{previewSrc ? <img src={previewSrc} alt="LUT 输出曲线预览" /> : <div className="preview-placeholder"><SlidersHorizontal size={22} />等待引擎曲线</div>}</div>
               <div className="preview-footnote"><span>状态</span><strong>{engineReady ? "原版 Canvas 已桥接" : engineFailed ? "引擎不可用" : "加载中"}</strong><span>鼠标移动可在原版预览中读取 10-bit RGB；载入图片会要求确认 Gamma、色彩空间与范围。</span></div>
