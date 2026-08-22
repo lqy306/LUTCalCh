@@ -3165,3 +3165,92 @@ html[data-workbench-theme="ubuntu"] .apple-app-shell textarea {
     display: block;
   }
 }
+
+/* 本轮宽度校准：调整项每一行只扩展内部可用宽度；左栏外部 6px 间距与右栏位置保持不变。 */
+@media (min-width: 900px) {
+  .apple-app-shell .left-workbench-column > .adjustments-card {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .apple-app-shell .adjustments-card .adjustment-list {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .apple-app-shell .adjustments-card .adjustment-item {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+  }
+
+  .apple-app-shell .adjustments-card .adjustment-item-main {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .apple-app-shell .adjustments-card .adjustment-item-main > label {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+  }
+}
+
+/* 预览开关不改变两栏和左栏内部间距。 */
+@media (min-width: 900px) {
+  .apple-app-shell .left-workbench-column {
+    row-gap: 6px !important;
+  }
+}
+
+/* 行条高度校准：用户所说的“肥一些”指调整项内部每一条的垂直高度。 */
+@media (min-width: 901px) {
+  .apple-app-shell .adjustments-card .adjustment-item-main,
+  .apple-app-shell .adjustments-card .adjustment-item-main > label,
+  .apple-app-shell .adjustments-card .adjustment-lut-trigger {
+    min-height: 27px !important;
+    height: 27px !important;
+    box-sizing: border-box !important;
+  }
+
+  .apple-app-shell .adjustments-card .adjustment-item-main > label {
+    padding: 3px 8px !important;
+    line-height: 1.25 !important;
+  }
+
+  .apple-app-shell .adjustments-card .adjustment-item input[type="checkbox"] {
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .apple-app-shell .adjustments-card .adjustment-state {
+    font-size: 8px !important;
+  }
+
+  .apple-app-shell .left-workbench-column {
+    row-gap: 6px !important;
+  }
+}
+
+/* 二次高度调整：独立调整项条目整体加高，确保条带不再显得过薄。 */
+@media (min-width: 901px) {
+  .apple-app-shell .adjustments-card .adjustment-item-main,
+  .apple-app-shell .adjustments-card .adjustment-item-main > label,
+  .apple-app-shell .adjustments-card .adjustment-lut-trigger {
+    min-height: 34px !important;
+    height: 34px !important;
+  }
+
+  .apple-app-shell .adjustments-card .adjustment-item-main > label {
+    padding: 5px 8px !important;
+    line-height: 1.3 !important;
+  }
+
+  .apple-app-shell .adjustments-card .adjustment-item input[type="checkbox"] {
+    width: 13px !important;
+    height: 13px !important;
+  }
+
+  .apple-app-shell .left-workbench-column {
+    row-gap: 6px !important;
+  }
+}
