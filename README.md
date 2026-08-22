@@ -1,6 +1,6 @@
-# LUTCalc 中文工作台
+# LUTCalc 中文优化改良版！
 
-在保留原版 [LUTCalc](https://github.com/BenTurley/LUTCalc) 计算、分析、预览与导出能力的前提下，提供完整简体中文、本地主题化、参数结构更统一的工作台。项目采用「React 外壳 — 同源桥接 — 原版引擎」三层架构：计算真源始终来自嵌入的同源 iframe 原版引擎，React 只负责中文界面、状态同步与本地工具。
+这是 **LUTCalc 中文优化改良版！** 在保留原版 [LUTCalc](https://github.com/BenTurley/LUTCalc) 计算、分析、预览与导出能力的前提下，提供完整简体中文、本地主题化、参数结构更统一的工作台。项目采用「React 外壳 — 同源桥接 — 原版引擎」三层架构：计算真源始终来自嵌入的同源 iframe 原版引擎，React 只负责中文界面、状态同步与本地工具。
 
 ## 功能特性
 
