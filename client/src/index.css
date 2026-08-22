@@ -3057,3 +3057,111 @@ html[data-workbench-theme="ubuntu"] .apple-app-shell textarea {
     height: auto;
   }
 }
+
+/* Beta 最终布局约束：左栏 01→02 与 02→04 的外部间距永久固定为 6px。
+   01 与 02 不共享右栏 03 的网格行高；05 预览不得影响左栏位置。 */
+@media (min-width: 901px) {
+  .apple-app-shell .native-calculator-grid {
+    row-gap: 6px;
+    column-gap: 6px;
+    grid-template-rows: max-content max-content max-content;
+  }
+
+  .apple-app-shell .capture-card {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .apple-app-shell .pipeline-card {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: -105px;
+  }
+
+  .apple-app-shell .adjustments-card {
+    grid-column: 1;
+    grid-row: 3;
+    margin-top: 0;
+  }
+
+  .apple-app-shell .preview-card {
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    contain: size layout paint;
+  }
+}
+
+/* 预览开关不参与页面排版：只切换内部渲染状态。 */
+.apple-app-shell .preview-card.is-closed .preview-content,
+.apple-app-shell .preview-card.is-closed .engine-scope-grid {
+  visibility: hidden;
+}
+
+.apple-app-shell .preview-card.is-open .preview-content,
+.apple-app-shell .preview-card.is-open .engine-scope-grid,
+.apple-app-shell .preview-card.is-open .preview-surface {
+  visibility: visible;
+}
+
+.apple-app-shell .preview-card .preview-surface {
+  visibility: visible;
+}
+
+/* Beta 结构性修复：左右栏完全独立；左栏三个模块只由自身内容决定位置。 */
+@media (min-width: 901px) {
+  .apple-app-shell .native-calculator-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: 6px;
+    row-gap: 0;
+    align-items: start;
+  }
+
+  .apple-app-shell .left-workbench-column,
+  .apple-app-shell .right-workbench-column {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .apple-app-shell .left-workbench-column {
+    gap: 6px;
+  }
+
+  .apple-app-shell .right-workbench-column {
+    gap: 6px;
+  }
+
+  .apple-app-shell .left-workbench-column > .capture-card,
+  .apple-app-shell .left-workbench-column > .pipeline-card,
+  .apple-app-shell .left-workbench-column > .adjustments-card,
+  .apple-app-shell .right-workbench-column > .export-card,
+  .apple-app-shell .right-workbench-column > .preview-card {
+    grid-column: auto;
+    grid-row: auto;
+    margin: 0;
+    width: 100%;
+    max-width: none;
+  }
+
+  .apple-app-shell .right-workbench-column > .preview-card {
+    contain: layout paint;
+  }
+}
+
+/* 关闭预览时真实移除预览内容的显示，但保留工具栏位置，避免重新排版左栏。 */
+@media (min-width: 901px) {
+  .apple-app-shell .preview-card.is-closed .preview-content,
+  .apple-app-shell .preview-card.is-closed .engine-scope-grid {
+    display: none;
+  }
+
+  .apple-app-shell .preview-card.is-open .preview-content,
+  .apple-app-shell .preview-card.is-open .engine-scope-grid {
+    display: block;
+  }
+
+  .apple-app-shell .preview-card .preview-surface {
+    display: block;
+  }
+}

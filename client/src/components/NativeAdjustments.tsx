@@ -8,6 +8,7 @@ import { ChevronDown, FileUp, RotateCcw, Sparkles } from "lucide-react";
 
 type NativeAdjustmentsProps = {
   engineReady: boolean;
+  previewVisible: boolean;
   onToggle: (label: string, checked: boolean) => void;
   onImportLut: (file: File) => void;
   onAnalyzeLut: () => void;
@@ -81,7 +82,7 @@ function SliderControl({ module, spec, value, disabled, onChange }: { module: st
   );
 }
 
-export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyzeLut, onResetLut, onControlChange, onLutAnalystConfigChange, lutAnalystChoices, analysisState }: NativeAdjustmentsProps)
+export function NativeAdjustments({ engineReady, previewVisible, onToggle, onImportLut, onAnalyzeLut, onResetLut, onControlChange, onLutAnalystConfigChange, lutAnalystChoices, analysisState }: NativeAdjustmentsProps)
 {
   const fileRef = useRef<HTMLInputElement>(null);
   const defaultSyncRef = useRef(false);
@@ -243,7 +244,7 @@ export function NativeAdjustments({ engineReady, onToggle, onImportLut, onAnalyz
         <label className="adjustments-master-toggle"><input type="checkbox" checked={customizationEnabled} disabled={!engineReady} onChange={(event) => { const nextValue = event.target.checked; setCustomizationEnabled(nextValue); ADJUSTMENTS.forEach((item) => onToggle(item.engineLabel, nextValue ? Boolean(enabled[item.label]) : false)); }} /><span>启用调整项</span></label>
       </div>
       <div className="adjustment-list">
-        {ADJUSTMENTS.map((item) => (
+        {ADJUSTMENTS.filter((item) => previewVisible || item.label !== "RGB 采样器").map((item) => (
           <div className={`adjustment-item ${enabled[item.label] ? "is-active" : ""}`} key={item.label}>
             <div className="adjustment-item-main">
               <span className="adjustment-check"><input type="checkbox" checked={Boolean(enabled[item.label])} disabled={!engineReady || !customizationEnabled} onChange={(event) => toggleItem(item, event.target.checked)} /></span>
