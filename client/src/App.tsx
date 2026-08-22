@@ -16,6 +16,7 @@ function Router()
     <WouterRouter base={import.meta.env.BASE_URL}>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/index.html" component={Home} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
