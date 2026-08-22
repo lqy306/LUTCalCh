@@ -2426,9 +2426,15 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
   font: 700 11px/1 Ubuntu, "Noto Sans SC", sans-serif;
   pointer-events: none;
 }
+.apple-app-shell .rgb-readout {
+  margin-left: auto;
+  color: #4d4d4d;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
 .apple-app-shell .rgb-sampler-panel {
   display: grid;
-  gap: 5px;
+  gap: 4px;
   margin: 5px 0 0;
   padding: 6px 7px;
   color: #6b6b6b;
@@ -2449,6 +2455,8 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
 }
 .apple-app-shell .rgb-sampler-actions span {
   margin-left: auto;
+  color: #777;
+  white-space: nowrap;
 }
 .apple-app-shell .rgb-sampler-values {
   display: flex;
