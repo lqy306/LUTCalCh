@@ -1,0 +1,25 @@
+[package]
+name = "lutcalc"
+version = "1.0.0"
+description = "LUTCalc 中文离线桌面应用"
+authors = ["LUTCalc contributors"]
+license = "GPL-2.0-only"
+repository = "https://github.com/lqy306/LUTCalCh"
+edition = "2021"
+rust-version = "1.77.2"
+
+[[bin]]
+name = "LUTCalc"
+path = "src/main.rs"
+
+[lib]
+name = "lutcalc_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6.3", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "2.11.3", features = [] }
