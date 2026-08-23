@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { THEME_MODE_STORAGE_KEY } from "@/themes/themeRegistry";
 
 type Theme = "light" | "dark";
 
@@ -30,10 +31,18 @@ export function ThemeProvider({
 {
   const [theme, setTheme] = useState<Theme>(() =>
   {
+    /* 非可切换的模板级 Provider 也不得与工作台主题冲突：挂载时跟随
+       themeRegistry 的明暗模式，避免把 html.dark 类清掉导致主题失效。 */
+    const stored = localStorage.getItem(THEME_MODE_STORAGE_KEY);
+    if (stored === "dark" || stored === "light")
+    {
+      return stored;
+    }
+
     if (switchable)
     {
-      const stored = localStorage.getItem("theme");
-      return (stored as Theme) || defaultTheme;
+      const legacy = localStorage.getItem("theme");
+      return (legacy as Theme) || defaultTheme;
     }
 
     return defaultTheme;

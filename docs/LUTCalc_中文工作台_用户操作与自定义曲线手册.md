@@ -138,6 +138,28 @@ LUT 解析器用于读取已有 LUT，并由原版 **LUTAnalyst** 估计其传�
 
 导入流程时，选择之前导出的 JSON。导入只检查名称与事件数组，不会验证该流程是否适合当前相机或当前 LUT；请先检查 01/02 的输入设置。
 
+已保存流程支持 **执行 / 导出 / 重命名 / 删除 / 上移 / 下移**，重命名按回车提交、按 Esc 取消；已导入的自定义曲线配置同样支持这些操作。
+
+### 6.1 文件步骤：重新选择或固定文件
+
+流程中的「导入新的 LUT / 加载已分析的 LA LUT」文件步骤默认是 **重新选择** 模式：回放时会打开系统文件选择框，由你手动挑选对应 LUT 文件后继续。这是为了让流程可以跨机器复用——录制时的本地路径（`C:\fakepath\...`）不应当被当作真实文件路径回放。
+
+如果你需要在无人值守时复用（例如调试、自动化），可以在导出的流程 JSON 中给该步骤增加 `filePath` 字段指定固定文件，回放时直接载入、不再弹框：
+
+```json
+{
+  "action": "change",
+  "selector": "[data-lutcalc-workflow-id=\"lc-0765\"]",
+  "label": "导入新的 LUT加载已分析的 LA LUT",
+  "value": "C:\\fakepath\\FLog2_to_CLASSIC-Neg._65grid_V.1.00.cube",
+  "filePath": "/FLog2_to_CLASSIC-Neg._65grid_V.1.00.cube"
+}
+```
+
+- 离线桌面版：`filePath` 写宿主机绝对路径，例如 `/home/user/LUT/FLog2_to_CLASSIC-Neg._65grid_V.1.00.cube`。
+- 网页版：先把文件放进站点可访问目录（如 `client/public/`），`filePath` 写站点相对路径，例如 `/FLog2_to_CLASSIC-Neg._65grid_V.1.00.cube`。
+- 不加 `filePath` 即回到默认的「重新选择」模式。
+
 ## 7. 主题与本地数据
 
 右上角可选择 Ubuntu、KDE、macOS、Omarchy，并可切换亮/暗模式。主题仅改变视觉令牌，不改变计算、LUT 分析或导出数学。主题与模式保存于浏览器本地；已移除的旧主题偏好会回退到 Ubuntu。

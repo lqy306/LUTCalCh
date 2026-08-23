@@ -11,7 +11,7 @@
 - `src-tauri/Cargo.toml` 的 `version`
 - `src-tauri/Cargo.lock` 中 `name = "lutcalc"` 的 `version`
 
-本次发布为补丁版本 `1.0.1`。注意：`template.json` 里的 `1.0.0` 是脚手架模板内容，不属于本应用版本，不要改动。
+本次发布为补丁版本 `1.0.2`。注意：`template.json` 里的 `1.0.0` 是脚手架模板内容，不属于本应用版本，不要改动。
 
 ## 1. 前端构建
 
@@ -29,6 +29,37 @@ pnpm build
 - 移除 `index.html` 中对 Google Fonts、umami 等外部资源的引用，避免离线时产生无效网络请求。
 - `vite.config.ts` 中 `base` 使用 `BASE_PATH || "./"`，保证资源在自定义协议/子目录下都能解析。
 - 顶栏主图（`client/public/lutcalc/CWLSB.png`、`CWMSB.png`）随 `public/` 一并打包。
+
+## 1.1 工作流回放：重新选择 vs 固定文件（1.0.2 经验）
+
+工作流中的文件步骤（LUT 文件选择）默认是「重新选择」模式：回放时 `input.click()`
+打开系统文件选择框，等待用户手动选取，避免把录制时的 `C:\fakepath\...` 假路径锁死。
+如果需要在无人工干预时复用（调试、自动化），可在导出的流程 JSON 中给该步骤加
+`filePath` 字段，回放时优先使用固定文件、不再弹框：
+
+```json
+{ "action": "change", "selector": "[data-lutcalc-workflow-id=\"lc-0765\"]",
+  "value": "C:\\fakepath\\FLog2_to_CLASSIC-Neg._65grid_V.1.00.cube",
+  "label": "导入新的 LUT加载已分析的 LA LUT", "filePath": "/FLog2_to_CLASSIC-Neg._65grid_V.1.00.cube" }
+```
+
+固定文件读取按环境回退：
+
+- 桌面端（Tauri）：`src-tauri/src/lib.rs` 注册 `read_local_file` 命令，
+  `filePath` 可以是宿主机绝对路径（如 `/home/user/test.cube`），前端
+  `@tauri-apps/api/core` 的 `invoke` 读取字节后经 `DataTransfer` 注入引擎文件框。
+- 网页端：把调试文件放到 `client/public/`（构建后位于 `dist/public/`），
+  `filePath` 写成站点相对路径（如 `/FLog2_to_CLASSIC-Neg._65grid_V.1.00.cube`），
+  回放时 `fetch` 该 URL 后注入；gh-pages 部署时相对路径自动带仓库前缀。
+
+其他回放相关经验：
+
+- 录制时对 `select`/文本框/文件框的 `click` 不记录（只是打开控件），同类事件按选择器
+  去重、只保留最终值，避免把鼠标移动录成「录屏」。
+- 引擎 DOM 在窄窗口下会进入移动布局，控件 `data-lutcalc-workflow-id` 按会话单调递增
+  分配（不复用文档位置序号），避免同一会话内出现重复 id 导致选择器命中错误控件。
+- 回放末尾不再依赖「固定延时后下载」：生成 LUT 后由引擎 `saveAs()` 直接触发下载；
+  文件步骤后留 800ms 等待引擎异步解析，再继续后续步骤。
 
 ## 2. 构建环境
 
@@ -50,7 +81,7 @@ source ~/.cargo/env
 APPIMAGE_EXTRACT_AND_RUN=1 COREPACK_ENABLE_PROJECT_SPEC=0 pnpm desktop:linux
 ```
 
-产物：`src-tauri/target/release/bundle/appimage/LUTCalc_1.0.1_amd64.AppImage`
+产物：`src-tauri/target/release/bundle/appimage/LUTCalc_1.0.2_amd64.AppImage`
 
 ### 3.1 linuxdeploy 缓存损坏（本机踩坑）
 
@@ -119,7 +150,7 @@ COREPACK_ENABLE_PROJECT_SPEC=0 pnpm desktop:windows:cross
 ## 5. 校验和与发布
 
 ```bash
-sha256sum src-tauri/target/release/bundle/appimage/LUTCalc_1.0.1_amd64.AppImage \
+sha256sum src-tauri/target/release/bundle/appimage/LUTCalc_1.0.2_amd64.AppImage \
           src-tauri/target/x86_64-pc-windows-msvc/release/LUTCalc.exe
 ```
 
@@ -128,16 +159,16 @@ sha256sum src-tauri/target/release/bundle/appimage/LUTCalc_1.0.1_amd64.AppImage 
 ```bash
 git remote set-url origin https://github.com/lqy306/LUTCalCh.git
 git push origin master
-git tag v1.0.1
-git push origin v1.0.1
+git tag v1.0.2
+git push origin v1.0.2
 ```
 
 创建 Release（产物只有 `.exe` 与 `.AppImage`，无安装器）：
 
 ```bash
-gh release create v1.0.1 \
+gh release create v1.0.2 \
   src-tauri/target/x86_64-pc-windows-msvc/release/LUTCalc.exe \
-  src-tauri/target/release/bundle/appimage/LUTCalc_1.0.1_amd64.AppImage \
+  src-tauri/target/release/bundle/appimage/LUTCalc_1.0.2_amd64.AppImage \
   --notes "..."
 ```
 

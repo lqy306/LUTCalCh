@@ -1,6 +1,6 @@
 [package]
 name = "lutcalc"
-version = "1.0.1"
+version = "1.0.2"
 description = "LUTCalc 中文离线桌面应用"
 authors = ["LUTCalc contributors"]
 license = "GPL-2.0-only"

@@ -516,6 +516,11 @@ h1 em { color: #647222; font-style: normal; }
 }
 
 html:is(.dark, [data-workbench-mode="dark"]) { color-scheme: dark; }
+/* 深色模式：页面底色跟随工作台画布，避免滚动越界露出浅色纸张背景。 */
+html:is(.dark, [data-workbench-mode="dark"]),
+html:is(.dark, [data-workbench-mode="dark"]) body {
+  background: var(--theme-canvas, #1f1f22);
+}
 .apple-app-shell { color: var(--theme-text); background: var(--theme-canvas); font-family: var(--theme-font); }
 .apple-topbar { color: var(--theme-topbar-text); background: var(--theme-topbar); border-bottom-color: var(--theme-border); box-shadow: var(--theme-shadow); font-family: var(--theme-font); }
 .apple-brand span { background: var(--theme-accent); }
@@ -542,14 +547,14 @@ html:is(.dark, [data-workbench-mode="dark"]) { color-scheme: dark; }
 .engine-indicator.is-failed i { background: #f04438; }
 .native-card { background: var(--theme-card); border-color: var(--theme-border); border-radius: var(--theme-radius); box-shadow: var(--theme-shadow); }
 .card-title > span { color: #fff; background: var(--theme-accent); border-radius: var(--theme-radius); }
-.pipeline-groups > div, .native-toggle, .preview-surface { color: var(--theme-text); background: var(--theme-surface); border-color: var(--theme-border); border-radius: var(--theme-radius); }
+.pipeline-groups > div, .native-toggle, .preview-surface { color: var(--theme-text); background: var(--theme-surface-muted); border-color: var(--theme-border); border-radius: var(--theme-radius); }
 .native-toggle.is-on { color: var(--theme-text); background: var(--theme-accent-soft); border-color: var(--theme-accent); }
 .native-toggle.is-on .toggle-track { background: var(--theme-accent); }
 .preview-surface img { mix-blend-mode: var(--theme-preview-blend); }
 .preview-footnote strong { color: var(--theme-success); }
 .apple-app-shell .workflow-item, .apple-app-shell .profile-item { background: var(--theme-card); border-color: var(--theme-border); border-radius: var(--theme-radius); box-shadow: var(--theme-shadow); }
 /* 流程为空时使用轻量空状态，不再显示大块灰色占位面板。 */
-.apple-app-shell .workflow-empty {
+.apple-app-shell .workflow-empty, .apple-app-shell .profile-empty {
   min-height: 96px;
   display: grid;
   align-content: center;
@@ -563,7 +568,7 @@ html:is(.dark, [data-workbench-mode="dark"]) { color-scheme: dark; }
   font-size: 11px;
   line-height: 1.4;
 }
-.apple-app-shell .workflow-empty svg {
+.apple-app-shell .workflow-empty svg, .apple-app-shell .profile-empty svg {
   width: 24px;
   height: 24px;
   padding: 5px;
@@ -572,7 +577,7 @@ html:is(.dark, [data-workbench-mode="dark"]) { color-scheme: dark; }
   border: 1px solid var(--theme-border);
   border-radius: 50%;
 }
-.apple-app-shell .workflow-empty:hover {
+.apple-app-shell .workflow-empty:hover, .apple-app-shell .profile-empty:hover {
   border-color: var(--theme-accent) !important;
   background: color-mix(in srgb, var(--theme-accent-soft) 52%, var(--theme-card)) !important;
 }
@@ -2296,12 +2301,12 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
   max-width: none;
   align-items: start;
   padding: 0;
-  background: #e9e9e9;
+  background: var(--theme-canvas, #e9e9e9);
 }
 .apple-app-shell .native-card {
   padding: 8px;
-  background: #f5f5f5;
-  border: 1px solid #c8c8c8;
+  background: var(--theme-card, #f5f5f5);
+  border: 1px solid var(--theme-border, #c8c8c8);
   border-radius: 0;
 }
 .apple-app-shell .capture-card { grid-column: 1; grid-row: 1; }
@@ -2948,7 +2953,7 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-bar 
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .pipeline-groups > div,
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-toggle,
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-options {
-  background: var(--theme-surface, #27272d);
+  background: var(--theme-surface-muted, #27272d);
   border-color: var(--theme-border, #4b4b52);
 }
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .export-card .field-hint,
