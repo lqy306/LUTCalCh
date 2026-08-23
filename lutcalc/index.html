@@ -32,6 +32,31 @@
 	<div id="shed"></div>
 	<script type="text/javascript" src="blob/Blob.js"></script>
 	<script type="text/javascript" src="filesaver/FileSaver.js"></script>
+	<script>
+		/* 工作台嵌入修复：FileSaver 用 setTimeout 触发 <a download> 点击，在 iframe 内会被
+		   Chromium 视为「无用户手势的自动下载」而拦截（多次后直接封禁）；改为同步点击，
+		   保留用户手势上下文，保证点击「生成 LUT」后必定落盘。 */
+		(function () {
+			var realSaveAs = window.saveAs;
+			if (typeof realSaveAs === 'function') {
+				window.saveAs = function (blob, name, opts) {
+					try {
+						var a = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+						var isString = typeof blob === 'string';
+						a.href = isString ? blob : URL.createObjectURL(blob);
+						a.download = name || (blob && blob.name) || 'download';
+						a.rel = 'noopener';
+						document.body.appendChild(a);
+						a.click();
+						setTimeout(function () { if (!isString) URL.revokeObjectURL(a.href); }, 40000);
+						return true;
+					} catch (error) {
+						return realSaveAs(blob, name, opts);
+					}
+				};
+			}
+		})();
+	</script>
 	<script type="text/javascript" src="js/lutcalccombined.js"></script>
 		<script type="text/javascript" src="lutcalc-zh.js"></script>
 </body>
