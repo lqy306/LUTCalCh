@@ -141,6 +141,13 @@ COREPACK_ENABLE_PROJECT_SPEC=0 pnpm desktop:windows:cross
 
 产物：`src-tauri/target/x86_64-pc-windows-msvc/release/LUTCalc.exe`
 
+裸 EXE 的文件名只有二进制名，不含版本与架构；发布前按版本+架构重命名，与 AppImage 的 `LUTCalc_1.0.2_amd64.AppImage` 命名风格保持一致（内容不变，SHA-256 不变）：
+
+```bash
+cp src-tauri/target/x86_64-pc-windows-msvc/release/LUTCalc.exe \
+   src-tauri/target/x86_64-pc-windows-msvc/release/LUTCalc_1.0.2_amd64.exe
+```
+
 注意：
 
 - `desktop:windows:cross` 使用 `--no-bundle`，只生成裸 EXE，不生成 MSI/NSIS 安装器，符合本项目“仅交付便携 exe”的策略。
@@ -151,7 +158,7 @@ COREPACK_ENABLE_PROJECT_SPEC=0 pnpm desktop:windows:cross
 
 ```bash
 sha256sum src-tauri/target/release/bundle/appimage/LUTCalc_1.0.2_amd64.AppImage \
-          src-tauri/target/x86_64-pc-windows-msvc/release/LUTCalc.exe
+          src-tauri/target/x86_64-pc-windows-msvc/release/LUTCalc_1.0.2_amd64.exe
 ```
 
 推送与打标签（注意恢复 origin 直连，国内镜像如 ghfast.top 只适合 clone）：
@@ -167,7 +174,7 @@ git push origin v1.0.2
 
 ```bash
 gh release create v1.0.2 \
-  src-tauri/target/x86_64-pc-windows-msvc/release/LUTCalc.exe \
+  src-tauri/target/x86_64-pc-windows-msvc/release/LUTCalc_1.0.2_amd64.exe \
   src-tauri/target/release/bundle/appimage/LUTCalc_1.0.2_amd64.AppImage \
   --notes "..."
 ```
