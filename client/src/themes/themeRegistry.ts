@@ -1,6 +1,7 @@
 import kde from "./kde.theme.json";
 import macos from "./macos.theme.json";
 import omarchy from "./omarchy.theme.json";
+import original from "./original.theme.json";
 import ubuntu from "./ubuntu.theme.json";
 
 export type ThemeMode = "light" | "dark";
@@ -63,6 +64,7 @@ export const BUILTIN_THEMES =
   kde,
   macos,
   omarchy,
+  original,
 ] as unknown as WorkbenchTheme[];
 
 export function resolveTheme(id: string | null | undefined)

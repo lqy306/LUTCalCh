@@ -207,7 +207,7 @@ const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(
 
 export default defineConfig({
   // 子目录部署（如 GitHub Pages 项目页）通过 BASE_PATH 指定，例如 BASE_PATH=/LUTCalCh/ pnpm build
-  base: process.env.BASE_PATH ?? "/",
+  base: process.env.BASE_PATH || "./",
   plugins,
   resolve: {
     alias: {

@@ -50,6 +50,7 @@ pnpm desktop:windows:cross
 ```
 
 详细的依赖、构建产物、启动方式和发布前检查见[离线桌面端说明](docs/offline-desktop.md)。
+构建、交叉编译、AppImage 打包与发布 Release 的实操经验见[构建与发布经验](docs/build-release-experience.md)。
 
 ## 部署
 

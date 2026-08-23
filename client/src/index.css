@@ -349,6 +349,7 @@ h1 em { color: #647222; font-style: normal; }
 .apple-topbar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; min-height: 42px; padding: 0 16px; color: #1d1d1f; background: rgba(245,245,247,.86); border-bottom: 1px solid rgba(0,0,0,.12); box-shadow: 0 1px 12px rgba(0,0,0,.06); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); font-size: 12px; }
 .apple-brand, .apple-status { display: flex; align-items: center; gap: 8px; font-weight: 600; }
 .apple-brand span { width: 8px; height: 8px; border-radius: 50%; background: #0071e3; }
+.apple-brand img { height: 20px; width: auto; border-radius: 6px; object-fit: contain; vertical-align: middle; }
 .apple-status { justify-content: end; color: #6e6e73; font-size: 11px; font-weight: 400; }
 .apple-status i, .engine-indicator i { width: 7px; height: 7px; border-radius: 50%; background: #d2d2d7; }
 .apple-status i { background: #34c759; }
@@ -2917,12 +2918,12 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-opti
 
 /* 深色模式最终收口：主计算卡片不能保持浅色背景配浅色文字。 */
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-calculator-grid {
-  background: #1f1f22;
+  background: var(--theme-canvas, #1f1f22);
 }
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-card {
-  background: #303036;
-  color: #f5f5f5;
-  border-color: #4b4b52;
+  background: var(--theme-card, #303036);
+  color: var(--theme-text, #f5f5f5);
+  border-color: var(--theme-border, #4b4b52);
   box-shadow: none;
 }
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .card-title h3,
@@ -2931,31 +2932,31 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-field,
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .pipeline-groups h4,
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-options,
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-options label {
-  color: #f1f3f4;
+  color: var(--theme-text, #f1f3f4);
 }
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .card-title p {
-  color: #aeb8be;
+  color: var(--theme-muted, #aeb8be);
 }
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-field input,
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-field select,
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-output,
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-bar select {
-  background: #242429;
-  color: #f5f5f5;
-  border-color: #4b4b52;
+  background: var(--theme-input, #242429);
+  color: var(--theme-text, #f5f5f5);
+  border-color: var(--theme-border, #4b4b52);
 }
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .pipeline-groups > div,
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .native-toggle,
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-tool-options {
-  background: #27272d;
-  border-color: #4b4b52;
+  background: var(--theme-surface, #27272d);
+  border-color: var(--theme-border, #4b4b52);
 }
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .export-card .field-hint,
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-footnote {
-  color: #aeb8be;
+  color: var(--theme-muted, #aeb8be);
 }
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-card {
-  background: #303036;
+  background: var(--theme-card, #303036);
 }
 
 /* Ubuntu 主题使用项目内字体，避免仅依赖访问者系统是否安装 Ubuntu。 */
@@ -2969,17 +2970,17 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .preview-card {
 
 /* 流程名称输入框与主计算器控件保持相同主题表面。 */
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .workflow-name-label input {
-  color: #f5f5f5;
-  background: #242429;
-  border-color: #4b4b52;
-  caret-color: #ff784b;
+  color: var(--theme-text, #f5f5f5);
+  background: var(--theme-input, #242429);
+  border-color: var(--theme-border, #4b4b52);
+  caret-color: var(--theme-accent, #ff784b);
 }
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .workflow-name-label input::placeholder {
-  color: #aeb8be;
+  color: var(--theme-muted, #aeb8be);
 }
 html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .workflow-name-label input:focus {
-  outline-color: rgba(255, 120, 75, .4);
-  border-color: #ff784b;
+  outline-color: var(--theme-focus, rgba(255, 120, 75, .4));
+  border-color: var(--theme-accent, #ff784b);
 }
 
 /* Ubuntu 主题字体覆盖：中文继续使用 Noto Sans SC 回退，拉丁字符优先使用 Ubuntu。 */

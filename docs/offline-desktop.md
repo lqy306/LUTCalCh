@@ -47,6 +47,8 @@ Linux AppImage 必须在 Linux 环境构建。Windows 裸 EXE 优先在 Windows 
 
 Linux 构建机须具备 Tauri 对 WebKitGTK 的开发依赖。对于 Debian/Ubuntu，可按 Tauri 官方前置条件安装 `libwebkit2gtk-4.1-dev`、`build-essential`、`libxdo-dev`、`libssl-dev`、`libayatana-appindicator3-dev`、`librsvg2-dev` 等依赖。[1] 交叉编译 Windows EXE 还需安装 LLVM/LLD、执行 `rustup target add x86_64-pc-windows-msvc`，并通过 `cargo install --locked cargo-xwin` 安装交叉编译运行器。[3]
 
+> 版本号需在 `package.json`、`src-tauri/tauri.conf.json`、`src-tauri/Cargo.toml` 与 `src-tauri/Cargo.lock` 中保持一致；linuxdeploy 缓存损坏、无 FUSE、corepack 校验等构建期踩坑与发布流程见[构建与发布经验](docs/build-release-experience.md)。
+
 ## 发行前检查
 
 发布便携文件前，应在对应原生系统完成一次实际启动、导入 LUT、导出 LUT 和关闭重开后的本地设置持久化检查。对于公开下载，还应发布 SHA-256 校验和：
