@@ -6,7 +6,7 @@ STAGING="${PROJECT}/lutcalc-resources"
 ZIP_PATH="${PROJECT}/lutcalc-resources.zip"
 
 rm -rf "$STAGING" "$ZIP_PATH"
-mkdir -p "$STAGING/fonts" "$STAGING/themes" "$STAGING/configs" "$STAGING/docs" "$STAGING/references"
+mkdir -p "$STAGING/fonts" "$STAGING/themes" "$STAGING/docs" "$STAGING/references"
 
 # 用户提供的 Leica LG1056 字体；两份上传文件已核对为相同 SHA-256。
 cp /home/ubuntu/upload/lg1056_regular.otf "$STAGING/fonts/lg1056_regular.otf"
@@ -15,22 +15,14 @@ cp /home/ubuntu/upload/lg1056_regular.otf "$STAGING/fonts/lg1056_regular.otf"
 cp "$PROJECT"/client/src/themes/*.theme.json "$STAGING/themes/"
 cp "$PROJECT"/client/src/themes/lutcalc-theme.schema.json "$STAGING/themes/"
 
-# 独立 L-Log 配置文件，不改变主程序内置选项。
-cp "$PROJECT"/client/public/configs/leica-l-log-v1.4-bt2020.json "$STAGING/configs/"
-cp "$PROJECT"/client/public/configs/leica-l-log-v1.4-bt709.json "$STAGING/configs/"
-
-# 配置格式、主题和 L-Log 使用说明。
-cp "$PROJECT"/docs/leica-l-log-configuration-guide.md "$STAGING/docs/"
+# 配置格式、主题使用说明。
 cp "$PROJECT"/docs/lutcalc-log-gamma-profile.md "$STAGING/docs/"
 cp "$PROJECT"/docs/lutcalc-log-gamma-profile.schema.json "$STAGING/docs/"
 cp "$PROJECT"/docs/lutcalc-workbench-theme.md "$STAGING/docs/"
 
-# 保留研究依据，方便后续维护者核对 L-Log 与主题来源。
-cp "$PROJECT"/research/leica-l-log-findings.md "$STAGING/references/"
-cp "$PROJECT"/research/leica-lumix-ui-research.md "$STAGING/references/"
+# 保留研究依据，方便后续维护者核对主题与布局来源。
 cp "$PROJECT"/research/original-adjustments-structure.md "$STAGING/references/"
 cp "$PROJECT"/research/original-page-reference-2026-08-19.md "$STAGING/references/"
-cp "$PROJECT"/research/leica-l-log-reference-manual-v1.4.pdf "$STAGING/references/"
 
 cat > "$STAGING/README.md" <<'EOF'
 # LUTCalc 必要资源包
@@ -40,10 +32,9 @@ cat > "$STAGING/README.md" <<'EOF'
 ## 目录
 
 - `fonts/`：Leica LG1056 字体原文件。
-- `themes/`：Ubuntu、KDE、macOS、Omarchy、Leica 固件和 Lumix 固件主题 JSON，以及主题配置架构。
-- `configs/`：独立 Leica L-Log 配置文件，包含 BT.2020 和 BT.709 版本。
-- `docs/`：L-Log、Log/Gamma 配置格式和主题系统使用说明。
-- `references/`：L-Log 白皮书、研究记录和原版布局参考资料。
+- `themes/`：Ubuntu、KDE、macOS、Omarchy 主题 JSON，以及主题配置架构。
+- `docs/`：Log/Gamma 配置格式和主题系统使用说明。
+- `references/`：研究记录和原版布局参考资料。
 
 ## Leica 字体校验
 
@@ -53,9 +44,9 @@ SHA-256：`3fd5d146aa3141350fe449856a45ba4b6b47c52339b072eecfb5dc44a8afb8ce`
 
 该字体来自用户提供的资源。使用、再分发和公开发布时，请确认其授权范围；本资源包不对第三方字体授权作额外声明。
 
-## L-Log 配置说明
+## 自定义 Log/Gamma 配置说明
 
-L-Log 配置文件是独立资源，不会自动注册为 LUTCalc 主程序的内置选项。具体导入方式和字段说明请阅读 `docs/leica-l-log-configuration-guide.md`。
+Log/Gamma 配置文件是独立资源；带 `curve.engineParams` 的公式型配置导入后会自动注册到引擎的 Gamma 下拉（主计算器与 LUT 分析）。仓库随附示例见 `examples/log-gamma-profiles/`，字段说明见 `docs/lutcalc-log-gamma-profile.md`。
 
 ## 原版与许可证
 

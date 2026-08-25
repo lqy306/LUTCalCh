@@ -42,14 +42,16 @@ type RGBReadout = { red: number; green: number; blue: number };
 type RGBSample = { id: number; x: number; y: number; red: number; green: number; blue: number };
 type LogGammaProfile = {
   schema: "lutcalc-log-gamma-profile";
-  version: 1;
+  version: 2;
   id: string;
   name: string;
+  displayName: string;
+  brand: string;
   kind: "log" | "gamma";
   author?: string;
   description?: string;
   input?: { gamut?: string; range?: "full" | "video"; bitDepth?: number };
-  curve: { type: "samples" | "formula"; samples?: CurveSample[]; encode?: string; decode?: string };
+  curve: { type: "samples" | "formula"; samples?: CurveSample[]; encode?: string; decode?: string; engineParams?: number[] };
   colorSpace?: { primaries?: string; whitePoint?: string; toXYZ?: number[][] };
   metadata?: { middleGrayIRE?: number; source?: string };
 };
@@ -70,6 +72,7 @@ type EngineField = "cameraMaker" | "cameraModel" | "cineEI" | "stopShift" | "rec
 
 const WORKFLOW_KEY = "lutcalc-apple-workflows";
 const PROFILE_KEY = "lutcalc-log-gamma-profiles";
+const ACTIVE_PROFILE_KEY = "lutcalc-active-log-profile";
 const ADJUSTMENTS_EMBED_SRC = `${import.meta.env.BASE_URL}lutcalc/index.html?embed=adjustments&workspaceEmbed=20260818-5`;
 const EMPTY_STATE: Record<EngineField, string> = {
   cameraMaker: "", cameraModel: "", cineEI: "", stopShift: "", recGammaMaker: "", recGamma: "", recGamutMaker: "", recGamut: "", outGammaMaker: "", outGamma: "", outGamutMaker: "", outGamut: "", title: "", lutFormat: "", hardClip: "",
@@ -100,7 +103,8 @@ function readProfiles(): LogGammaProfile[]
   try
   {
     const value = JSON.parse(localStorage.getItem(PROFILE_KEY) || "[]");
-    return Array.isArray(value) ? value : [];
+    if (!Array.isArray(value)) return [];
+    return value.map((item: { schema?: string; version?: number; name?: string; displayName?: string; brand?: string }) => (item && item.schema === "lutcalc-log-gamma-profile" && item.version === 1 ? { ...item, version: 2, brand: item.brand || "自定义", displayName: item.displayName || item.name || "未命名" } : item)) as LogGammaProfile[];
   }
   catch
   {
@@ -116,7 +120,7 @@ function validateProfile(value: unknown): value is LogGammaProfile
 
   const profile = value as Partial<LogGammaProfile>;
 
-  if (profile.schema !== "lutcalc-log-gamma-profile" || profile.version !== 1 || !profile.id || !profile.name)
+  if (profile.schema !== "lutcalc-log-gamma-profile" || profile.version !== 2 || !profile.id || !profile.name || !profile.displayName || !profile.brand)
   {
     return false;
   }
@@ -136,7 +140,17 @@ function validateProfile(value: unknown): value is LogGammaProfile
     return false;
   }
 
-  return !(profile.curve.type === "formula" && !profile.curve.encode && !profile.curve.decode);
+  if (profile.curve.type === "formula" && !profile.curve.encode && !profile.curve.decode)
+  {
+    return false;
+  }
+
+  if (profile.curve.engineParams !== undefined && (!Array.isArray(profile.curve.engineParams) || profile.curve.engineParams.length !== 9 || profile.curve.engineParams.some((item) => typeof item !== "number" || !Number.isFinite(item))))
+  {
+    return false;
+  }
+
+  return true;
 }
 
 function elementLabel(element: Element)
@@ -234,6 +248,7 @@ export default function Home() {
   const [events, setEvents] = useState<WorkflowEvent[]>([]);
   const [savedWorkflows, setSavedWorkflows] = useState<WorkflowFile[]>(readWorkflows);
   const [profiles, setProfiles] = useState<LogGammaProfile[]>(readProfiles);
+  const [activeProfileId, setActiveProfileId] = useState<string | null>(() => { try { return localStorage.getItem(ACTIVE_PROFILE_KEY); } catch { return null; } });
   const [editingWorkflowId, setEditingWorkflowId] = useState<string | null>(null);
   const [editingProfileId, setEditingProfileId] = useState<string | null>(null);
   const [message, setMessage] = useState("正在连接计算引擎");
@@ -266,6 +281,19 @@ export default function Home() {
   const engineWindow = () => iframeRef.current?.contentWindow || null;
   const persistWorkflows = useCallback((next: WorkflowFile[]) => { setSavedWorkflows(next); localStorage.setItem(WORKFLOW_KEY, JSON.stringify(next)); }, []);
   const persistProfiles = useCallback((next: LogGammaProfile[]) => { setProfiles(next); localStorage.setItem(PROFILE_KEY, JSON.stringify(next)); }, []);
+  const activeProfile = profiles.find((item) => item.id === activeProfileId) || null;
+  const useActiveProfile = useCallback((id: string | null) => { setActiveProfileId(id); try { if (id) localStorage.setItem(ACTIVE_PROFILE_KEY, id); else localStorage.removeItem(ACTIVE_PROFILE_KEY); } catch { /* 本地存储不可用时仅保持内存状态。 */ } }, []);
+  const registerProfilesWithEngine = useCallback(() => {
+    const engine = engineWindow() as (Window & { lutMessage?: { gaAddCustomGamma?: (profile: { id: string; name: string; brand: string; params: number[]; gamut: string }) => void } }) | null;
+    const message = engine?.lutMessage;
+    const addCustomGamma = message?.gaAddCustomGamma?.bind(message);
+    if (!addCustomGamma) return;
+    profiles.forEach((profile) => {
+      const params = profile.curve?.engineParams;
+      if (!Array.isArray(params) || params.length !== 9) return;
+      addCustomGamma({ id: profile.id, name: profile.displayName || profile.name, brand: profile.brand || "", params, gamut: profile.input?.gamut || "" });
+    });
+  }, [profiles]);
   const renameWorkflow = (id: string, nextName: string) => {
     const name = nextName.trim();
     if (!name) return;
@@ -292,6 +320,7 @@ export default function Home() {
   };
   const deleteProfile = (id: string) => {
     persistProfiles(profiles.filter((item) => item.id !== id));
+    if (activeProfileId === id) useActiveProfile(null);
     setMessage("已删除配置");
   };
   const moveProfile = (id: string, direction: -1 | 1) => {
@@ -578,6 +607,29 @@ export default function Home() {
     window.setTimeout(refreshEnginePreview, 520);
     window.setTimeout(syncAdjustmentFrameHeight, 60);
   }, [fieldNode, refreshEnginePreview, refreshPreview, syncAdjustmentFrameHeight]);
+
+  /* 配置注册：引擎 iframe 的 lutMessage 初始化可能晚于 engineReady，轮询重试确保
+     导入的 engineParams 配置一定注册进引擎 Gamma 列表；注册完成后刷新一次原生下拉，
+     让“伽马品牌 / 记录·输出 Gamma / LUT 分析”出现新曲线（引擎内部分组重建由 worker 完成）。 */
+  useEffect(() => {
+    if (!engineReady) return;
+    let cancelled = false;
+    let tries = 0;
+    const attempt = () => {
+      if (cancelled) return;
+      tries += 1;
+      const engine = engineWindow() as (Window & { lutMessage?: { gaAddCustomGamma?: unknown } }) | null;
+      if (engine?.lutMessage?.gaAddCustomGamma)
+      {
+        registerProfilesWithEngine();
+        window.setTimeout(() => { if (!cancelled) hydrateEngine(); }, 450);
+        return;
+      }
+      if (tries < 40) window.setTimeout(attempt, 250);
+    };
+    attempt();
+    return () => { cancelled = true; };
+  }, [engineReady, registerProfilesWithEngine, hydrateEngine]);
 
   /* 引擎存活检测：iframe 加载失败（404/断网）时，不能依赖 engineReady 驱动的轮询，
      需独立周期检查并给出可理解的失败提示，避免长期停留在“正在连接”。 */
@@ -1167,14 +1219,18 @@ export default function Home() {
     reader.onload = () => { try { const workflow = JSON.parse(String(reader.result)) as WorkflowFile; if (!workflow?.name || !Array.isArray(workflow.events)) throw new Error("invalid"); persistWorkflows([workflow, ...savedWorkflows.filter((item) => item.name !== workflow.name)]); setWorkflowName(workflow.name); setEvents(workflow.events); setMessage(`已导入 ${workflow.events.length} 个步骤`); } catch { setMessage("流程文件格式不正确"); } };
     reader.readAsText(file);
   };
-  /* 文件选择无法程序化回放：等待用户在系统文件选择框中完成选取。 */
-  const waitForFileSelection = (input: HTMLInputElement) =>
+  /* 文件选择无法程序化回放：等待用户在系统文件选择框中完成选取。
+     同一输入框会保留上次运行选择的文件，轮询不能把残留旧值当作新选择；
+     回放前先清空输入框，这里再以「出现全新文件」为完成信号兜底。 */
+  const waitForFileSelection = (input: HTMLInputElement, previous?: { name: string; size: number; lastModified: number } | null) =>
     new Promise<boolean>((resolve) =>
     {
       const startedAt = Date.now();
       const timer = window.setInterval(() =>
       {
-        if (input.files?.length)
+        const file = input.files?.item(0);
+        const picked = file && (!previous || file.name !== previous.name || file.size !== previous.size || file.lastModified !== previous.lastModified);
+        if (picked)
         {
           window.clearInterval(timer);
           resolve(true);
@@ -1227,10 +1283,14 @@ export default function Home() {
           }
           else
           {
-            /* 重新选择模式（默认）：打开系统文件选择框，等待用户选取文件后再继续后续步骤。 */
+            /* 重新选择模式（默认）：打开系统文件选择框，等待用户选取文件后再继续后续步骤。
+               先记录并清空上次选择的文件，否则轮询会立刻命中旧值，流程不等用户选好就继续。 */
             setMessage("流程执行中：请在文件选择框中选择对应的 LUT 文件");
+            const previousFile = target.files?.item(0) ? { name: target.files.item(0)!.name, size: target.files.item(0)!.size, lastModified: target.files.item(0)!.lastModified } : null;
+            target.value = "";
+            const cleared = !target.files?.length;
             target.click();
-            const selected = await waitForFileSelection(target);
+            const selected = await waitForFileSelection(target, cleared ? null : previousFile);
             if (!selected)
             {
               setMessage("未检测到文件选择，流程已中止");
@@ -1259,7 +1319,7 @@ export default function Home() {
     }
   };
   const exportProfile = (profile: LogGammaProfile) => { const url = URL.createObjectURL(new Blob([JSON.stringify(profile, null, 2)], { type: "application/json;charset=utf-8" })); const anchor = document.createElement("a"); anchor.href = url; anchor.download = `${profile.id}.lut配置.json`; anchor.click(); URL.revokeObjectURL(url); setMessage(`已导出配置：${profile.name}`); };
-  const importProfile = (file?: File) => { if (!file) return; const reader = new FileReader(); reader.onload = () => { try { const profile = JSON.parse(String(reader.result)) as LogGammaProfile; if (!validateProfile(profile)) throw new Error("invalid"); const next = [profile, ...profiles.filter((item) => item.id !== profile.id)]; persistProfiles(next); setMessage(`已导入配置：${profile.name}`); } catch { setMessage("配置文件无效：请检查版本、曲线类型和采样数据"); } }; reader.readAsText(file); };
+  const importProfile = (file?: File) => { if (!file) return; const reader = new FileReader(); reader.onload = () => { try { const profile = JSON.parse(String(reader.result)) as LogGammaProfile; if (!validateProfile(profile)) throw new Error("invalid"); const next = [profile, ...profiles.filter((item) => item.id !== profile.id)]; persistProfiles(next); useActiveProfile(profile.id); setMessage(`已导入配置：${profile.name}（已注册到引擎 Gamma 下拉）`); } catch { setMessage("配置文件无效：请检查版本（v2）、品牌、显示名称与曲线数据"); } }; reader.readAsText(file); };
 
   const previewHint = useMemo(() => engineReady ? "预览由原始计算引擎实时生成" : engineFailed ? "原版计算引擎加载失败；预览不可用" : "正在读取原始计算引擎…", [engineFailed, engineReady]);
   const select = (field: EngineField, label: string) => <Field label={label}><select value={engineState[field]} disabled={!engineReady} onChange={(event) => setEngineField(field, event.target.value)}>{(choices[field] || [{ value: "", label: "正在读取…" }]).map((item) => <option key={`${field}-${item.value}`} value={item.value}>{item.label}</option>)}</select></Field>;
@@ -1272,7 +1332,7 @@ export default function Home() {
           <div className="workflow-sidebar-head"><div><span className="eyebrow">工具中心</span><h1><SlidersHorizontal size={17} />工作台工具</h1></div><button className="icon-button" onClick={() => setWorkflowOpen(false)} aria-label="关闭工具中心"><X size={16} /></button></div>
           <div className="tool-tabs" role="tablist"><button className={toolTab === "workflow" ? "is-active" : ""} onClick={() => setToolTab("workflow")}><Workflow size={14} />流程</button><button className={toolTab === "profiles" ? "is-active" : ""} onClick={() => setToolTab("profiles")}><Settings2 size={14} />曲线</button></div>
           {toolTab === "workflow" && <div className="tool-panel"><p className="workflow-intro">录制当前计算器中的参数调整，并将它们保存为可重复执行的流程。</p><label className="workflow-name-label">流程名称<input value={workflowName} onChange={(event) => setWorkflowName(event.target.value)} /></label><div className="workflow-record-row"><button className={`apple-button ${recording ? "is-recording" : "is-primary"}`} onClick={() => { setRecording((value) => !value); setMessage(recording ? "已停止记录" : "正在记录参数操作"); }}>{recording ? <Square size={14} /> : <span className="record-dot" />}{recording ? "停止记录" : "开始记录"}</button><span className="workflow-count">{events.length} 步</span></div><div className="workflow-actions"><button className="apple-button" onClick={saveWorkflow}><Save size={14} />保存流程</button><button className="apple-button" onClick={() => exportWorkflow()}><Download size={14} />导出文件</button><button className="apple-button" onClick={() => workflowFileRef.current?.click()}><Upload size={14} />导入文件</button><button className="apple-button is-quiet" onClick={() => { setEvents([]); setMessage("已清空当前流程"); }}><Trash2 size={14} />清空当前</button><input ref={workflowFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importWorkflow(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div><div className="workflow-list-head"><span>已保存流程</span><span>{savedWorkflows.length}</span></div><div className="workflow-list">{savedWorkflows.length === 0 && <div className="workflow-empty"><Plus size={16} />保存后会出现在这里</div>}{savedWorkflows.map((workflow, index) => <article className="workflow-item" key={workflow.createdAt}><div className="workflow-item-title">{editingWorkflowId === workflow.createdAt ? <input className="workflow-rename-input" defaultValue={workflow.name} autoFocus onBlur={(event) => { setEditingWorkflowId(null); renameWorkflow(workflow.createdAt, event.currentTarget.value); }} onKeyDown={(event) => { if (event.key === "Enter") event.currentTarget.blur(); if (event.key === "Escape") setEditingWorkflowId(null); }} /> : <><FolderOpen size={14} /><strong>{workflow.name}</strong></>}</div><div className="workflow-item-meta">{workflow.events.length} 步操作</div><div className="workflow-item-actions"><button onClick={() => replayWorkflow(workflow)}><Play size={13} />执行</button><button onClick={() => exportWorkflow(workflow)}><Download size={13} />导出</button><button onClick={() => setEditingWorkflowId(workflow.createdAt)}><Pencil size={13} />重命名</button><button onClick={() => deleteWorkflow(workflow.createdAt)}><Trash2 size={13} />删除</button><button onClick={() => moveWorkflow(workflow.createdAt, -1)} disabled={index === 0}><ChevronUp size={13} />上移</button><button onClick={() => moveWorkflow(workflow.createdAt, 1)} disabled={index === savedWorkflows.length - 1}><ChevronDown size={13} />下移</button></div></article>)}</div></div>}
-          {toolTab === "profiles" && <div className="tool-panel"><p className="profile-help">导入个人或官方的日志 / 伽马配置。配置独立保存，可在不同流程中复用。</p><div className="profile-actions"><button className="apple-button" onClick={() => profileFileRef.current?.click()}><Upload size={14} />导入配置</button><input ref={profileFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importProfile(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div><div className="workflow-list-head"><span>已导入配置</span><span>{profiles.length}</span></div><div className="profile-list">{profiles.length === 0 && <div className="profile-empty"><FileJson size={16} />等待导入配置文件</div>}{profiles.map((profile, index) => <article className="profile-item" key={profile.id}><div className="profile-item-title">{editingProfileId === profile.id ? <input className="workflow-rename-input" defaultValue={profile.name} autoFocus onBlur={(event) => { setEditingProfileId(null); renameProfile(profile.id, event.currentTarget.value); }} onKeyDown={(event) => { if (event.key === "Enter") event.currentTarget.blur(); if (event.key === "Escape") setEditingProfileId(null); }} /> : <><CheckCircle2 size={14} /><strong>{profile.name}</strong></>}</div><div className="profile-item-meta">{profile.kind === "log" ? "日志曲线" : "伽马曲线"} · {profile.curve.type === "samples" ? `${profile.curve.samples?.length ?? 0} 个采样点` : "公式曲线"}</div><div className="profile-item-actions"><button onClick={() => exportProfile(profile)}><Download size={13} />导出</button><button onClick={() => setEditingProfileId(profile.id)}><Pencil size={13} />重命名</button><button onClick={() => deleteProfile(profile.id)}><Trash2 size={13} />删除</button><button onClick={() => moveProfile(profile.id, -1)} disabled={index === 0}><ChevronUp size={13} />上移</button><button onClick={() => moveProfile(profile.id, 1)} disabled={index === profiles.length - 1}><ChevronDown size={13} />下移</button></div></article>)}</div></div>}
+          {toolTab === "profiles" && <div className="tool-panel"><p className="profile-help">导入个人或官方的日志 / 伽马配置。含 engineParams 的配置会自动注册到引擎，出现在“输入 / 输出 Gamma”下拉；“使用”中的曲线作为 LUT 标题 * 映射的“新 LOG”。</p><div className="profile-actions"><button className="apple-button" onClick={() => profileFileRef.current?.click()}><Upload size={14} />导入配置</button><input ref={profileFileRef} type="file" accept="application/json,.json" hidden onChange={(event) => { importProfile(event.target.files?.[0]); event.currentTarget.value = ""; }} /></div><div className="workflow-list-head"><span>已导入配置</span><span>{profiles.length}</span></div><div className="profile-list">{profiles.length === 0 && <div className="profile-empty"><FileJson size={16} />等待导入配置文件</div>}{profiles.map((profile, index) => <article className={`profile-item${activeProfileId === profile.id ? " is-active" : ""}`} key={profile.id}><div className="profile-item-title">{editingProfileId === profile.id ? <input className="workflow-rename-input" defaultValue={profile.name} autoFocus onBlur={(event) => { setEditingProfileId(null); renameProfile(profile.id, event.currentTarget.value); }} onKeyDown={(event) => { if (event.key === "Enter") event.currentTarget.blur(); if (event.key === "Escape") setEditingProfileId(null); }} /> : <><CheckCircle2 size={14} /><strong>{profile.name}</strong></>}</div><div className="profile-item-meta">{profile.kind === "log" ? "日志曲线" : "伽马曲线"} · {profile.curve.type === "samples" ? `${profile.curve.samples?.length ?? 0} 个采样点` : "公式曲线"}{profile.brand ? ` · ${profile.brand}` : ""}</div><div className="profile-item-actions"><button className={activeProfileId === profile.id ? "is-active" : ""} onClick={() => useActiveProfile(profile.id)} disabled={activeProfileId === profile.id}><CheckCircle2 size={13} />使用</button><button onClick={() => exportProfile(profile)}><Download size={13} />导出</button><button onClick={() => setEditingProfileId(profile.id)}><Pencil size={13} />重命名</button><button onClick={() => deleteProfile(profile.id)}><Trash2 size={13} />删除</button><button onClick={() => moveProfile(profile.id, -1)} disabled={index === 0}><ChevronUp size={13} />上移</button><button onClick={() => moveProfile(profile.id, 1)} disabled={index === profiles.length - 1}><ChevronDown size={13} />下移</button></div></article>)}</div></div>}
         </aside>
 
         <section className="native-calculator-pane">
@@ -1283,7 +1343,7 @@ export default function Home() {
             <section className="native-card capture-card"><div className="card-title"><span>01</span><div><h3>相机输入</h3><p>选择相机、曝光基准与输入记录设置。</p></div></div><div className="form-grid camera-grid">{select("cameraMaker", "相机品牌")}{select("cameraModel", "相机型号")}<Field label="原生 ISO"><output className="native-output">{engineState.cineEI || "—"}</output></Field><Field label="CineEI ISO"><input type="number" value={engineState.cineEI} disabled={!engineReady} onChange={(event) => setEngineField("cineEI", event.target.value)} /></Field><Field label="挡位修正"><input type="number" step="any" value={engineState.stopShift} disabled={!engineReady} onChange={(event) => setEngineField("stopShift", event.target.value)} /></Field></div></section>
             <section className="native-card pipeline-card"><div className="card-title"><span>02</span><div><h3>色彩管线</h3><p>定义记录伽马、色域与目标输出。</p></div></div><div className="pipeline-groups"><div><h4>记录设置</h4><div className="form-grid">{select("recGammaMaker", "伽马品牌")}{select("recGamma", "记录伽马")}{select("recGamutMaker", "色域品牌")}{select("recGamut", "记录色域")}</div></div><div><h4>输出设置</h4><div className="form-grid">{select("outGammaMaker", "伽马品牌")}{select("outGamma", "输出伽马")}{select("outGamutMaker", "色域品牌")}{select("outGamut", "输出色域")}</div></div></div></section>
             {lutAnalysis.status !== "idle" && <section className={`lut-analysis-context is-${lutAnalysis.status}`} aria-live="polite"><strong>{lutAnalysis.status === "ready" ? "当前输出使用外部 LUT 分析结果" : "外部 LUT 分析状态"}</strong><span>{lutAnalysis.message}</span>{lutAnalysis.status === "ready" && <small>{lutAnalysis.outputGamma} / {lutAnalysis.outputGamut}；生成 LUT 将使用这一已应用的原版引擎输出状态。</small>}</section>}
-            <NativeAdjustments engineReady={engineReady} previewVisible={previewVisible} onToggle={toggleAdjustment} onImportLut={importAdjustmentLut} onAnalyzeLut={analyzeAdjustmentLut} onResetLut={resetAdjustmentLut} onControlChange={syncAdjustmentControl} onLutAnalystConfigChange={syncLutAnalystConfig} lutAnalystChoices={lutAnalystChoices} analysisState={lutAnalysis} />
+            <NativeAdjustments engineReady={engineReady} previewVisible={previewVisible} onToggle={toggleAdjustment} onImportLut={importAdjustmentLut} onAnalyzeLut={analyzeAdjustmentLut} onResetLut={resetAdjustmentLut} onControlChange={syncAdjustmentControl} onLutAnalystConfigChange={syncLutAnalystConfig} activeLogProfile={activeProfile ? [activeProfile.brand, activeProfile.displayName || activeProfile.name].filter(Boolean).join(" ") : ""} lutAnalystChoices={lutAnalystChoices} analysisState={lutAnalysis} />
             <iframe ref={iframeRef} className="engine-frame" src={ADJUSTMENTS_EMBED_SRC} title="LUTCalc 同源计算引擎" onLoad={() => { enforceAdjustmentEmbedLayout(); if (!verifyAdjustmentEmbed()) return; installAdjustmentBridge(); [180, 520, 1100].forEach((delay) => window.setTimeout(installAdjustmentBridge, delay)); const documentRef = engineDocument(); if (documentRef) applyWorkbenchTheme(activeTheme, themeMode, documentRef); hydrateEngine(); window.setTimeout(hydrateEngine, 720); }} />
             </div>
             <div className="right-workbench-column">

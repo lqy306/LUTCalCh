@@ -172,7 +172,7 @@ LUT 解析器用于读取已有 LUT，并由原版 **LUTAnalyst** 估计其传�
 
 工具中心的 **曲线** 标签页用于导入、保存、导出和管理 Log/Gamma 配置文件。它适合保存个人曲线说明、白皮书数据或与团队交换结构化资料。
 
-> **当前限制**：导入的自定义配置尚未自动注册为原版 LUTCalc 的相机、Gamma 或 Gamut 下拉项，因此导入后不会直接出现在 02 区的记录 Gamma/Gamut 菜单中，也不会自动改变计算。这是资料库与交换格式功能，不是完整的曲线引擎适配层。
+> **引擎注册**：带 `curve.engineParams`（9 个 `LUTGammaLog` 参数）的公式型配置导入后会自动注册到原版引擎，出现在 02 区的记录 Gamma、输出 Gamma 以及 LUT 分析的“输入 Gamma”下拉中，可直接参与 LUT 生成与分析。未提供 `engineParams` 的采样型配置仅作为资料库保存，不进入引擎下拉。
 
 ### 8.2 文件格式
 
@@ -181,9 +181,11 @@ LUT 解析器用于读取已有 LUT，并由原版 **LUTAnalyst** 估计其传�
 ```json
 {
   "schema": "lutcalc-log-gamma-profile",
-  "version": 1,
+  "version": 2,
   "id": "my-log-v1",
   "name": "我的 Log 曲线 v1",
+  "brand": "我的相机",
+  "displayName": "Log v1",
   "kind": "log",
   "author": "作者或团队",
   "description": "适用相机、版本和注意事项",
@@ -211,7 +213,7 @@ LUT 解析器用于读取已有 LUT，并由原版 **LUTAnalyst** 估计其传�
 }
 ```
 
-`schema` 必须为 `lutcalc-log-gamma-profile`，`version` 必须为 `1`，并且 `id`、`name`、`kind`、`curve` 不可缺失。`kind` 只能是 `log` 或 `gamma`。
+`schema` 必须为 `lutcalc-log-gamma-profile`，`version` 必须为 `2`，并且 `id`、`name`、`brand`、`displayName`、`kind`、`curve` 不可缺失。`kind` 只能是 `log` 或 `gamma`；`brand` 用于下拉分组，`displayName` 用于下拉与“标题 *”映射展示。
 
 ### 8.3 采样表曲线
 
@@ -232,14 +234,17 @@ LUT 解析器用于读取已有 LUT，并由原版 **LUTAnalyst** 估计其传�
 ```json
 {
   "schema": "lutcalc-log-gamma-profile",
-  "version": 1,
+  "version": 2,
   "id": "my-gamma-formula-v1",
   "name": "我的公式曲线 v1",
+  "brand": "我的相机",
+  "displayName": "公式曲线 v1",
   "kind": "gamma",
   "curve": {
     "type": "formula",
     "encode": "按白皮书填写编码公式及分段条件",
-    "decode": "按白皮书填写解码公式及分段条件"
+    "decode": "按白皮书填写解码公式及分段条件",
+    "engineParams": "可选：9 个 LUTGammaLog 参数 [b, c, d, e, f, g, h, i, j]；提供后自动注册到引擎 Gamma 下拉"
   },
   "metadata": {
     "source": "文档名称、版本、页码或测量方法"
@@ -249,13 +254,13 @@ LUT 解析器用于读取已有 LUT，并由原版 **LUTAnalyst** 估计其传�
 
 ### 8.5 导入、校验与备份
 
-进入 **工具中心 → 曲线**，点击 **导入配置** 并选择 JSON。导入成功后会显示曲线名称、类型及采样点数；可点击 **导出** 保存副本，或点击 **删除** 移除本地条目。出现“配置文件无效”时，优先检查 schema、version、id、name、kind、curve.type 与 samples 数量。
+进入 **工具中心 → 曲线**，点击 **导入配置** 并选择 JSON。导入成功后会显示曲线名称、类型及采样点数；带 `engineParams` 的配置会同步注册到引擎下拉。可点击 **导出** 保存副本，或点击 **删除** 移除本地条目。出现“配置文件无效”时，优先检查 schema、version（v2）、id、name、brand、displayName、kind、curve.type 与 samples 数量。
 
 ## 9. 常见问题
 
 | 问题 | 建议处理 |
 |---|---|
-| 导入曲线配置后为什么不在 Gamma 下拉中出现？ | 这是当前实现边界。配置会保存为资料，但尚未注册为原版引擎选项。 |
+| 导入曲线配置后为什么不在 Gamma 下拉中出现？ | 只有带 `curve.engineParams` 的公式型配置会注册到引擎下拉；采样型配置仅作为资料保存。检查文件是否包含合法的 9 参数 `engineParams`。 |
 | 分析 LUT 后曲线没有变化？ | 等待“分析结果已同步”；确认输出 Gamma/Gamut 同时为 `LA - 标题`；若不是，检查文件和输入基底。 |
 | 为什么我的 F-Log2C 被映射为 F-Log2？ | 工作台会保留原始文件标记，并选用原版目录中可用的标准项；应由用户根据官方资料确认此映射是否适合项目。 |
 | 为什么导出的流程执行后结果不一样？ | 流程不包含素材本身，也可能依赖原版控件顺序、候选项和环境；应将输入基底、版本和用途写入流程名称。 |

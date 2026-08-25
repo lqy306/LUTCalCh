@@ -302,16 +302,15 @@ LUTGamma.prototype.subIdx = function(cat) {
 		case 'RED': return 5;
 		case 'GoPro': return 6;
 		case 'Panavision': return 7;
-			case 'Blackmagic': return 8;
-			case 'Bolex': return 9;
-			case 'Fujifilm': return 10;
-			case 'Leica': return 11;
-			case 'Nikon': return 12;
-			case 'DJI': return 13;
-			case 'Log': return 14;
-			case 'Display': return 15;
-			case 'HDR Display': return 16;
-			case 'Linear / γ': return 17;
+		case 'Blackmagic': return 8;
+		case 'Bolex': return 9;
+		case 'Fujifilm': return 10;
+		case 'Nikon': return 11;
+		case 'DJI': return 12;
+		case 'Log': return 13;
+		case 'Display': return 14;
+		case 'HDR Display': return 15;
+		case 'Linear / γ': return 16;
 	}
 	return false;
 };
@@ -324,11 +323,10 @@ LUTGamma.prototype.gammaList = function() {
 						'RED',
 						'GoPro',
 						'Panavision',
-							'Blackmagic',
-							'Bolex',
-							'Fujifilm',
-							'Leica',
-							'Nikon',
+						'Blackmagic',
+						'Bolex',
+						'Fujifilm',
+						'Nikon',
 						'DJI',
 						'Log',
 						'Display',
@@ -431,14 +429,6 @@ LUTGamma.prototype.gammaList = function() {
 		'Fujifilm F-Log', [ 0.1144737, -0.010630486, 0.344676, 0.5000004, 10, 0.790453, 0.009468, 0.100537775, 0.000988889 ]));
 	this.gammaSub.push([this.subIdx('Fujifilm'),this.subIdx('Log')]);
 	this.gts.push('Fujifilm F-Log Gamut');
-	this.gammaDat.push(true);
-	this.gammaExt.push(true);
-	/* Leica L-Log Reference Manual V1.6: linear toe <= 0.006 and base-10 log branch above it.
-	 * LUTGammaLog uses >= for the log branch, therefore a minimal threshold offset preserves Leica's inclusive toe boundary. */
-	this.gammas.push(new LUTGammaLog(
-		'Leica L-Log', [ 0.125, -0.01125, 0.27, 1.3, 10, 0.6, 0.0115, 0.138, 0.006000000000001 ]));
-	this.gammaSub.push([this.subIdx('Leica'),this.subIdx('Log')]);
-	this.gts.push('Rec2020');
 	this.gammaDat.push(true);
 	this.gammaExt.push(true);
 	this.gammas.push(new LUTGammaCineon(
@@ -6187,6 +6177,107 @@ LUTGamma.prototype.getLists = function(p,t) {
 		LA: this.LA
 	};
 };
+LUTGamma.prototype.rebuildGammaLists = function() {
+	var max = this.gammas.length;
+	var logList = [], linList = [], genList = [], hdrList = [], ioList = [];
+	var firstLin = false;
+	var disList = [];
+	this.inList = [];
+	this.outList = [];
+	this.linList = [];
+	this.disList = [];
+	this.disGts = [];
+	this.catList = [];
+	for (var i=0; i < max; i++) {
+		if (i === this.LA) {
+			this.inList.push({name: 'Linear / \u03b3', idx: 9999});
+			this.outList.push({name: 'Linear / \u03b3', idx: 9999});
+		}
+		this.catList[i] = this.gammas[i].cat;
+		switch(this.gammas[i].cat) {
+			case 0: logList.push({name: this.gammas[i].name, idx: i});
+					this.inList.push({name: this.gammas[i].name, idx: i});
+					this.outList.push({name: this.gammas[i].name, idx: i});
+					break;
+			case 1: if (this.gammas[i].gamma !== '') {
+						this.linList.push({name: this.gammas[i].name + ' - ' + this.gammas[i].gamma, idx: i});
+					} else {
+						this.linList.push({name: this.gammas[i].name, idx: i});
+					}
+					if (this.gammas[i].name.indexOf('DCI') !== -1) {
+						this.disList.push({name: 'DCI-P3', idx: i});
+						this.disGts.push('P3 - DCI');
+						this.disList.push({name: 'DCI-D60', idx: i});
+						this.disGts.push('P3 - D60');
+						this.disList.push({name: 'DCI-D65', idx: i});
+						this.disGts.push('P3 - D65');
+					} else if (this.gammas[i].name.indexOf('OOTF') === -1) {
+						this.disList.push({name: this.gammas[i].name, idx: i});
+						this.disGts.push(this.gts[i]);
+					}
+					this.dispInIdx = this.rec709;
+					this.dispOutIdx = this.rec709;
+					break;
+			case 2: genList.push({name: this.gammas[i].name, idx: i});
+					this.outList.push({name: this.gammas[i].name, idx: i});
+					break;
+			case 3: this.outList.push({name: this.gammas[i].name, idx: i});
+					break;
+			case 5:
+			case 7: hdrList.push({name: this.gammas[i].name, idx: i});
+					this.inList.push({name: this.gammas[i].name, idx: i});
+					this.outList.push({name: this.gammas[i].name, idx: i});
+					if (this.gammas[i].name.indexOf('Rec2100') !== -1 || this.gammas[i].name.indexOf('PQ') !== -1) {
+						disList.push({name: this.gammas[i].name, idx: i});
+					}
+					break;
+			case 6: ioList.push({name: this.gammas[i].name, idx: i});
+					this.inList.push({name: this.gammas[i].name, idx: i});
+					this.outList.push({name: this.gammas[i].name, idx: i});
+					break;
+			default: break;
+		}
+	}
+	max = disList.length;
+	for (var i=0; i<max; i++) {
+		this.disList.push(disList[i]);
+		this.disGts.push(this.gts[disList[i].idx]);
+	}
+};
+LUTGamma.prototype.addCustomGamma = function(p,t,d) {
+	var idx = -1;
+	var max = this.gammas.length;
+	for (var j=0; j<max; j++) {
+		if (this.gammas[j].custId === d.id) {
+			idx = j;
+			break;
+		}
+	}
+	if (d.brand && this.subNames.indexOf(d.brand) === -1) {
+		this.subNames.splice(this.subNames.length - 1, 0, d.brand);
+	}
+	var subIdx = d.brand ? this.subNames.indexOf(d.brand) : this.subIdx('Log');
+	var logIdx = this.subIdx('Log');
+	if (idx === -1) {
+		var gamma = new LUTGammaLog(d.name, d.params);
+		gamma.custId = d.id;
+		idx = this.gammas.length;
+		this.gammas.push(gamma);
+		this.gammaSub.push([subIdx, logIdx]);
+		this.gts.push(d.gamut || '');
+		this.gammaDat.push(true);
+		this.gammaExt.push(false);
+	} else {
+		this.gammas[idx].name = d.name;
+		this.gammas[idx].params = d.params;
+		this.gammaSub[idx] = [subIdx, logIdx];
+		this.gts[idx] = d.gamut || this.gts[idx];
+	}
+	this.rebuildGammaLists();
+	var out = this.getLists(p,t);
+	out.seq = d.seq;
+	return out;
+};
 LUTGamma.prototype.setLA = function(p,t,i) {
 	this.gammas[this.LA].setLUT(i);
 	return { p: p, t:t+20, v: this.ver, i: i.title };
@@ -6862,6 +6953,8 @@ function LUTGammaWorker() {
 				case 18:lutGammaWorker.sendGammaMessage(lutGammaWorker.gammas.chartRGB(d.p,d.t,d.d));
 						break;
 				case 19:lutGammaWorker.sendGammaMessage(lutGammaWorker.gammas.changePQ(d.p,d.t,d.d));
+						break;
+				case 20:lutGammaWorker.sendGammaMessage(lutGammaWorker.gammas.addCustomGamma(d.p,d.t,d.d));
 						break;
 			}
 		}
@@ -18476,6 +18569,24 @@ LUTMessage.prototype.gaTxAll = function(p,t,d) { // parent (sender), type, data
 		}
 	}
 };
+LUTMessage.prototype.gaAddCustomGamma = function(profile) {
+	if (!profile || !profile.id || typeof profile.name !== 'string' || !Array.isArray(profile.params) || profile.params.length !== 9) {
+		return;
+	}
+	this.gaCustomSeq = (this.gaCustomSeq || 0) + 1;
+	var d = {
+		id: profile.id,
+		name: profile.name,
+		brand: profile.brand || '',
+		params: profile.params,
+		gamut: profile.gamut || '',
+		seq: this.gaCustomSeq
+	};
+	var max = this.gas.length;
+	for (var j=0; j<max; j++) {
+		this.gas[j].postMessage({p: 10, t: 20, v: this.gaV, d: d});
+	}
+};
 LUTMessage.prototype.gaRx = function(d) {
 	if (d.msg) {
 		console.log(d.details);
@@ -18484,6 +18595,8 @@ LUTMessage.prototype.gaRx = function(d) {
 	} else if (d.resend) {
 		console.log('Resending gamma - ' + d.t + ' to ' + d.p);
 		this.gaTx(d.p,d.t,d.d);
+	} else if (d.t === 40 && d.seq === this.gaCustomSeq) { // Custom gamma lists updated (latest registration round only)
+		this.gotGammaLists(d);
 	} else if (d.v === this.gaV) {
 		switch(d.t) {
 			case 20: // Set Parameters
@@ -18650,6 +18763,9 @@ LUTMessage.prototype.gotGammaLists = function(d) {
 	this.ui[2].gotGammaLists(); // Gamma Box
 	this.ui[3].gotGammaLists(); // Tweaks Box
 	this.ui[4].gotGammaLists(); // LUT Box
+	if (this.ui[10]) {
+		this.ui[10].gotGammaLists(); // LUTAnalyst
+	}
 	this.gaSetParams();
 };
 LUTMessage.prototype.gotBaseIRE = function(d) {
@@ -24350,6 +24466,10 @@ LUTGammaBox.prototype.gotGammaLists = function() {
 	var outList = this.inputs.gammaOutList;
 	var linList = this.inputs.gammaLinList;
 	var subNames = this.inputs.gammaSubNames;
+	var prevIn = this.inGammaSelect.value;
+	var prevOut = this.outGammaSelect.value;
+	var prevInLin = this.inLinSelect.value;
+	var prevOutLin = this.outLinSelect.value;
 	this.inGammaSubs.length = 0;
 	this.inGammaSelect.length = 0;
 	this.outGammaSubs.length = 0;
@@ -24397,6 +24517,18 @@ LUTGammaBox.prototype.gotGammaLists = function() {
 			this.outGammaSubOpts[i].selected = true;
 		}
 		this.outGammaSubs.appendChild(this.outGammaSubOpts[i]);
+	}
+	if (prevIn !== '' && inList.some(function(item) { return String(item.idx) === prevIn; })) {
+		this.inGammaSelect.value = prevIn;
+	}
+	if (prevOut !== '' && outList.some(function(item) { return String(item.idx) === prevOut; })) {
+		this.outGammaSelect.value = prevOut;
+	}
+	if (prevInLin !== '' && linList.some(function(item) { return String(item.idx) === prevInLin; })) {
+		this.inLinSelect.value = prevInLin;
+	}
+	if (prevOutLin !== '' && linList.some(function(item) { return String(item.idx) === prevOutLin; })) {
+		this.outLinSelect.value = prevOutLin;
 	}
 	this.updateGammaInList(false);
 	this.updateGammaOutList(true);
@@ -31518,6 +31650,34 @@ function TWKLA(tweaksBox, inputs, messages, files, formats) {
 	this.ui();
 	lutcalcReady(this.p);
 }
+TWKLA.prototype.gotGammaLists = function() {
+	var prev = this.gammaSelect.value;
+	this.gammaSelect.length = 0;
+	var inList = this.inputs.gammaInList;
+	var max = inList.length;
+	for (var j=0; j<max; j++) {
+		var option = document.createElement('option');
+		option.value = inList[j].idx;
+		option.appendChild(document.createTextNode(inList[j].name));
+		this.gammaSelect.appendChild(option);
+	}
+	if (prev !== '' && inList.some(function(item) { return String(item.idx) === prev; })) {
+		this.gammaSelect.value = prev;
+	}
+	var prevLin = this.linGammaSelect.value;
+	this.linGammaSelect.length = 0;
+	var linList = this.inputs.gammaLinList;
+	max = linList.length;
+	for (var j=0; j<max; j++) {
+		var linOption = document.createElement('option');
+		linOption.value = linList[j].idx;
+		linOption.appendChild(document.createTextNode(linList[j].name));
+		this.linGammaSelect.appendChild(linOption);
+	}
+	if (prevLin !== '' && linList.some(function(item) { return String(item.idx) === prevLin; })) {
+		this.linGammaSelect.value = prevLin;
+	}
+};
 TWKLA.prototype.io = function() {
 	// Tweak Checkbox
 	this.tweakCheck = document.createElement('input');

@@ -156,7 +156,7 @@ LUT 文件可同时有原始文件名、文件头 `#title`、分析标题和最�
 
 工作流使用 `lutcalc-apple-workflows` 保存。事件记录包括操作类型、稳定选择器、标签、值与 checked 状态，最多保留 100 步。执行流程时会立即关闭记录标志，防止回放动作写回自身；每步间隔约 80 ms。工作流 JSON 仅是浏览器端操作录制，不是可移植的数学 LUT 描述。
 
-曲线配置使用 `lutcalc-log-gamma-profiles` 保存，并以 `lutcalc-log-gamma-profile` / `version: 1` 为 schema。当前实现支持储存、校验、导入、删除和导出两类描述：采样表曲线与公式曲线。**重要限制是：该配置目前是独立资料库，尚未注册为原版 LUTCalc 的相机、Gamma 或 Gamut 选项。** 因此它可被管理与分享，但不会自动改变原版计算管线。
+曲线配置使用 `lutcalc-log-gamma-profiles` 保存，并以 `lutcalc-log-gamma-profile` / `version: 2` 为 schema。当前实现支持储存、校验、导入、删除和导出两类描述：采样表曲线与公式曲线。带 `curve.engineParams`（9 个 `LUTGammaLog` 参数）的公式型配置会在导入后通过 `lutMessage.gaAddCustomGamma`（worker 消息类型 20）注册到原版引擎的 Gamma 列表并重建所有下拉，出现在 02 区记录/输出 Gamma 与 LUT 分析的“输入 Gamma”中；`brand` 进入子类分组，`displayName` 作为下拉显示名。采样型配置（无 `engineParams`）仍作为独立资料库保存，不进入引擎下拉。
 
 ## 8. 构建、部署与缓存
 

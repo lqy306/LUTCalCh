@@ -282,12 +282,14 @@ h1 em { color: #647222; font-style: normal; }
 .profile-list { display: grid; gap: 8px; }
 .profile-empty { display: grid; justify-items: center; gap: 6px; padding: 18px 8px; color: #888; border: 1px dashed #c6c6c6; border-radius: 4px; font-size: 11px; text-align: center; }
 .profile-item { padding: 9px; background: var(--ubuntu-panel); border: 1px solid var(--ubuntu-border); border-radius: 4px; }
+.profile-item.is-active { border-color: var(--ubuntu-orange); box-shadow: 0 0 0 1px var(--ubuntu-orange) inset; }
 .profile-item-title { display: flex; align-items: center; gap: 7px; color: var(--ubuntu-ink); font-size: 12px; }
 .profile-item-title svg { color: #33d17a; }
 .profile-item-title strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
 .profile-item-meta { margin: 6px 0 8px 21px; color: var(--ubuntu-muted); font-size: 10px; }
 .profile-item-actions { display: flex; gap: 10px; margin-left: 21px; }
 .profile-item-actions button { display: inline-flex; align-items: center; gap: 4px; padding: 0; color: var(--ubuntu-orange); background: transparent; border: 0; font: 500 11px Ubuntu, "Noto Sans SC", sans-serif; }
+.profile-item-actions button.is-active { color: var(--ubuntu-muted); cursor: default; }
 
 /* Apple 风格最终覆盖：系统字体、浅灰层次、蓝色操作色、柔和阴影和克制圆角；不再使用 Ubuntu 专属字体或深紫橙色主题。 */
 .ubuntu-app-shell {

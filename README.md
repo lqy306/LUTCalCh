@@ -5,11 +5,11 @@
 ## 功能特性
 
 - **主计算器**：相机输入（品牌/型号/ISO/挡位）、色彩管线（记录与输出 Gamma/Gamut）、LUT 输出（1D/3D、尺寸、范围、用途、格式、硬裁切），参数实时同步原版引擎。
-- **外部 LUT 分析**：上传 `.cube` 等文件后核对文件头 Gamma/Gamut、网格维度、数据行数与 SHA-256；支持 F-Log2C / Classic Neg 与官方 Leica Cine LUT 自动匹配输入基底；分析成功后把 `LA - …` 输出注册到引擎，曲线与导出随动。
-- **异常诊断与安全阻断**：缺 `LUT_3D_SIZE`、数据截断、非数值行、未知 Gamma/Gamut 均给出结构化中文诊断并阻止错误分析；仅 L-Log 未声明 Rec.2020 的文件会要求人工确认。
+- **外部 LUT 分析**：上传 `.cube` 等文件后核对文件头 Gamma/Gamut、网格维度、数据行数与 SHA-256；支持 F-Log2C / Classic Neg 自动匹配输入基底；分析成功后把 `LA - …` 输出注册到引擎，曲线与导出随动。
+- **异常诊断与安全阻断**：缺 `LUT_3D_SIZE`、数据截断、非数值行、未知 Gamma/Gamut 均给出结构化中文诊断并阻止错误分析。
 - **原版预览与示波器**：原版 Canvas 预览、输出曲线（白底）、WFM / Vector / RGB Parade 快照。
 - **调整项与流程**：白平衡、ASC-CDL、膝点、黑伽马等模块；参数操作可录制为流程并保存、导出、导入、回放。
-- **自定义曲线配置资料库**：导入/校验/导出日志或伽马配置文件（见 `docs/lutcalc-log-gamma-profile.md`），配置独立保存、跨流程复用；不自动注册为主引擎 profile（有意的边界）。
+- **自定义曲线配置资料库**：导入/校验/导出日志或伽马配置文件（见 `docs/lutcalc-log-gamma-profile.md`），配置独立保存、跨流程复用；带 `engineParams` 的公式型配置导入后自动注册到引擎“输入 / 输出 Gamma”与 LUT 分析下拉。仓库随附示例见 [examples/log-gamma-profiles/](examples/log-gamma-profiles/README.md)。
 - **主题系统**：内置 Ubuntu、KDE、macOS、Omarchy 四套主题，均支持亮/暗模式，偏好持久化；旧主题偏好可安全回退。
 
 ## 快速开始
@@ -98,10 +98,10 @@ LICENSE                    # GPL-2.0 许可文本
 - [文档索引](docs/README.md)
 - [技术文档](docs/LUTCalc_中文工作台_技术文档.md)：面向维护者与发布负责人
 - [用户操作与自定义曲线手册](docs/LUTCalc_中文工作台_用户操作与自定义曲线手册.md)
-- [L-Log 配置指南](docs/leica-l-log-configuration-guide.md)
 - [Log/Gamma 配置格式](docs/lutcalc-log-gamma-profile.md)
 - [主题系统](docs/lutcalc-workbench-theme.md)
 - [开发期过程文档归档](docs/archive/)
+- [自定义 Log/Gamma 配置示例](examples/log-gamma-profiles/README.md)：外接 LUT 能力演示
 
 ## 验收测试
 

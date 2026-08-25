@@ -3,58 +3,211 @@
   "$id": "https://lutcalcapp-s8bmtac7.manus.space/schemas/lutcalc-log-gamma-profile.schema.json",
   "title": "LUTCalc Log Gamma Profile",
   "type": "object",
-  "required": ["schema", "version", "id", "name", "kind", "curve"],
+  "required": [
+    "schema",
+    "version",
+    "id",
+    "name",
+    "brand",
+    "displayName",
+    "kind",
+    "curve"
+  ],
   "properties": {
-    "schema": { "const": "lutcalc-log-gamma-profile" },
-    "version": { "const": 1 },
-    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$" },
-    "name": { "type": "string", "minLength": 1, "maxLength": 120 },
-    "kind": { "enum": ["log", "gamma"] },
-    "author": { "type": "string", "maxLength": 120 },
-    "description": { "type": "string", "maxLength": 1000 },
+    "schema": {
+      "const": "lutcalc-log-gamma-profile"
+    },
+    "version": {
+      "const": 2
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,63}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "kind": {
+      "enum": [
+        "log",
+        "gamma"
+      ]
+    },
+    "author": {
+      "type": "string",
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000
+    },
     "input": {
       "type": "object",
       "properties": {
-        "gamut": { "type": "string", "maxLength": 120 },
-        "range": { "enum": ["full", "video"] },
-        "bitDepth": { "type": "integer", "minimum": 8, "maximum": 32 }
+        "gamut": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "range": {
+          "enum": [
+            "full",
+            "video"
+          ]
+        },
+        "bitDepth": {
+          "type": "integer",
+          "minimum": 8,
+          "maximum": 32
+        }
       },
       "additionalProperties": false
     },
     "curve": {
       "type": "object",
-      "required": ["type"],
+      "required": [
+        "type"
+      ],
       "properties": {
-        "type": { "enum": ["samples", "formula"] },
+        "type": {
+          "enum": [
+            "samples",
+            "formula"
+          ]
+        },
         "samples": {
           "type": "array",
           "minItems": 2,
           "items": {
             "type": "object",
-            "required": ["input", "output"],
+            "required": [
+              "input",
+              "output"
+            ],
             "properties": {
-              "input": { "type": "number", "minimum": 0, "maximum": 1 },
-              "output": { "type": "number", "minimum": 0, "maximum": 1 }
+              "input": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "output": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
             },
             "additionalProperties": false
           }
         },
-        "encode": { "type": "string", "maxLength": 4000 },
-        "decode": { "type": "string", "maxLength": 4000 }
+        "encode": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "decode": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "engineParams": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "minItems": 9,
+          "maxItems": 9,
+          "description": "LUTCalc 引擎 LUTGammaLog 参数（b, c, d, e, f, g, h, i, j）。提供后该曲线会注册到引擎 Gamma 下拉。"
+        }
       },
       "additionalProperties": false
     },
     "colorSpace": {
       "type": "object",
       "properties": {
-        "primaries": { "type": "string", "maxLength": 120 },
-        "whitePoint": { "type": "string", "maxLength": 40 },
+        "primaries": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "whitePoint": {
+          "type": "string",
+          "maxLength": 40
+        },
         "toXYZ": {
           "type": "array",
           "prefixItems": [
-            { "type": "array", "prefixItems": [{ "type": "number" }, { "type": "number" }, { "type": "number" }], "minItems": 3, "maxItems": 3 },
-            { "type": "array", "prefixItems": [{ "type": "number" }, { "type": "number" }, { "type": "number" }], "minItems": 3, "maxItems": 3 },
-            { "type": "array", "prefixItems": [{ "type": "number" }, { "type": "number" }, { "type": "number" }], "minItems": 3, "maxItems": 3 }
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "minItems": 3,
+              "maxItems": 3
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "minItems": 3,
+              "maxItems": 3
+            },
+            {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "minItems": 3,
+              "maxItems": 3
+            }
           ],
           "minItems": 3,
           "maxItems": 3
@@ -65,10 +218,27 @@
     "metadata": {
       "type": "object",
       "properties": {
-        "middleGrayIRE": { "type": "number", "minimum": 0, "maximum": 109 },
-        "source": { "type": "string", "format": "uri" }
+        "middleGrayIRE": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 109
+        },
+        "source": {
+          "type": "string",
+          "format": "uri"
+        }
       },
       "additionalProperties": false
+    },
+    "brand": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
     }
   },
   "additionalProperties": false

@@ -254,6 +254,24 @@ LUTMessage.prototype.gaTxAll = function(p,t,d) { // parent (sender), type, data
 		}
 	}
 };
+LUTMessage.prototype.gaAddCustomGamma = function(profile) {
+	if (!profile || !profile.id || typeof profile.name !== 'string' || !Array.isArray(profile.params) || profile.params.length !== 9) {
+		return;
+	}
+	this.gaCustomSeq = (this.gaCustomSeq || 0) + 1;
+	var d = {
+		id: profile.id,
+		name: profile.name,
+		brand: profile.brand || '',
+		params: profile.params,
+		gamut: profile.gamut || '',
+		seq: this.gaCustomSeq
+	};
+	var max = this.gas.length;
+	for (var j=0; j<max; j++) {
+		this.gas[j].postMessage({p: 10, t: 20, v: this.gaV, d: d});
+	}
+};
 LUTMessage.prototype.gaRx = function(d) {
 	if (d.msg) {
 		console.log(d.details);
@@ -262,6 +280,8 @@ LUTMessage.prototype.gaRx = function(d) {
 	} else if (d.resend) {
 		console.log('Resending gamma - ' + d.t + ' to ' + d.p);
 		this.gaTx(d.p,d.t,d.d);
+	} else if (d.t === 40 && d.seq === this.gaCustomSeq) { // Custom gamma lists updated (latest registration round only)
+		this.gotGammaLists(d);
 	} else if (d.v === this.gaV) {
 		switch(d.t) {
 			case 20: // Set Parameters
@@ -428,6 +448,9 @@ LUTMessage.prototype.gotGammaLists = function(d) {
 	this.ui[2].gotGammaLists(); // Gamma Box
 	this.ui[3].gotGammaLists(); // Tweaks Box
 	this.ui[4].gotGammaLists(); // LUT Box
+	if (this.ui[10]) {
+		this.ui[10].gotGammaLists(); // LUTAnalyst
+	}
 	this.gaSetParams();
 };
 LUTMessage.prototype.gotBaseIRE = function(d) {
