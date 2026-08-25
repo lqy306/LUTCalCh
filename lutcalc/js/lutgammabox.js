@@ -399,6 +399,10 @@ LUTGammaBox.prototype.gotGammaLists = function() {
 	var outList = this.inputs.gammaOutList;
 	var linList = this.inputs.gammaLinList;
 	var subNames = this.inputs.gammaSubNames;
+	var prevIn = this.inGammaSelect.value;
+	var prevOut = this.outGammaSelect.value;
+	var prevInLin = this.inLinSelect.value;
+	var prevOutLin = this.outLinSelect.value;
 	this.inGammaSubs.length = 0;
 	this.inGammaSelect.length = 0;
 	this.outGammaSubs.length = 0;
@@ -446,6 +450,18 @@ LUTGammaBox.prototype.gotGammaLists = function() {
 			this.outGammaSubOpts[i].selected = true;
 		}
 		this.outGammaSubs.appendChild(this.outGammaSubOpts[i]);
+	}
+	if (prevIn !== '' && inList.some(function(item) { return String(item.idx) === prevIn; })) {
+		this.inGammaSelect.value = prevIn;
+	}
+	if (prevOut !== '' && outList.some(function(item) { return String(item.idx) === prevOut; })) {
+		this.outGammaSelect.value = prevOut;
+	}
+	if (prevInLin !== '' && linList.some(function(item) { return String(item.idx) === prevInLin; })) {
+		this.inLinSelect.value = prevInLin;
+	}
+	if (prevOutLin !== '' && linList.some(function(item) { return String(item.idx) === prevOutLin; })) {
+		this.outLinSelect.value = prevOutLin;
 	}
 	this.updateGammaInList(false);
 	this.updateGammaOutList(true);

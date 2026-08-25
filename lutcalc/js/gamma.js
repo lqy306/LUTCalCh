@@ -95,16 +95,15 @@ LUTGamma.prototype.subIdx = function(cat) {
 		case 'RED': return 5;
 		case 'GoPro': return 6;
 		case 'Panavision': return 7;
-			case 'Blackmagic': return 8;
-			case 'Bolex': return 9;
-			case 'Fujifilm': return 10;
-			case 'Leica': return 11;
-			case 'Nikon': return 12;
-			case 'DJI': return 13;
-			case 'Log': return 14;
-			case 'Display': return 15;
-			case 'HDR Display': return 16;
-			case 'Linear / γ': return 17;
+		case 'Blackmagic': return 8;
+		case 'Bolex': return 9;
+		case 'Fujifilm': return 10;
+		case 'Nikon': return 11;
+		case 'DJI': return 12;
+		case 'Log': return 13;
+		case 'Display': return 14;
+		case 'HDR Display': return 15;
+		case 'Linear / γ': return 16;
 	}
 	return false;
 };
@@ -117,11 +116,10 @@ LUTGamma.prototype.gammaList = function() {
 						'RED',
 						'GoPro',
 						'Panavision',
-							'Blackmagic',
-							'Bolex',
-							'Fujifilm',
-							'Leica',
-							'Nikon',
+						'Blackmagic',
+						'Bolex',
+						'Fujifilm',
+						'Nikon',
 						'DJI',
 						'Log',
 						'Display',
@@ -224,13 +222,6 @@ LUTGamma.prototype.gammaList = function() {
 		'Fujifilm F-Log', [ 0.1144737, -0.010630486, 0.344676, 0.5000004, 10, 0.790453, 0.009468, 0.100537775, 0.000988889 ]));
 	this.gammaSub.push([this.subIdx('Fujifilm'),this.subIdx('Log')]);
 	this.gts.push('Fujifilm F-Log Gamut');
-	this.gammaDat.push(true);
-	this.gammaExt.push(true);
-	/* Leica L-Log Reference Manual V1.6: retain the inclusive 0.006 linear toe in the generic log implementation. */
-	this.gammas.push(new LUTGammaLog(
-		'Leica L-Log', [ 0.125, -0.01125, 0.27, 1.3, 10, 0.6, 0.0115, 0.138, 0.006000000000001 ]));
-	this.gammaSub.push([this.subIdx('Leica'),this.subIdx('Log')]);
-	this.gts.push('Rec2020');
 	this.gammaDat.push(true);
 	this.gammaExt.push(true);
 	this.gammas.push(new LUTGammaCineon(
@@ -5979,6 +5970,107 @@ LUTGamma.prototype.getLists = function(p,t) {
 		LA: this.LA
 	};
 };
+LUTGamma.prototype.rebuildGammaLists = function() {
+	var max = this.gammas.length;
+	var logList = [], linList = [], genList = [], hdrList = [], ioList = [];
+	var firstLin = false;
+	var disList = [];
+	this.inList = [];
+	this.outList = [];
+	this.linList = [];
+	this.disList = [];
+	this.disGts = [];
+	this.catList = [];
+	for (var i=0; i < max; i++) {
+		if (i === this.LA) {
+			this.inList.push({name: 'Linear / \u03b3', idx: 9999});
+			this.outList.push({name: 'Linear / \u03b3', idx: 9999});
+		}
+		this.catList[i] = this.gammas[i].cat;
+		switch(this.gammas[i].cat) {
+			case 0: logList.push({name: this.gammas[i].name, idx: i});
+					this.inList.push({name: this.gammas[i].name, idx: i});
+					this.outList.push({name: this.gammas[i].name, idx: i});
+					break;
+			case 1: if (this.gammas[i].gamma !== '') {
+						this.linList.push({name: this.gammas[i].name + ' - ' + this.gammas[i].gamma, idx: i});
+					} else {
+						this.linList.push({name: this.gammas[i].name, idx: i});
+					}
+					if (this.gammas[i].name.indexOf('DCI') !== -1) {
+						this.disList.push({name: 'DCI-P3', idx: i});
+						this.disGts.push('P3 - DCI');
+						this.disList.push({name: 'DCI-D60', idx: i});
+						this.disGts.push('P3 - D60');
+						this.disList.push({name: 'DCI-D65', idx: i});
+						this.disGts.push('P3 - D65');
+					} else if (this.gammas[i].name.indexOf('OOTF') === -1) {
+						this.disList.push({name: this.gammas[i].name, idx: i});
+						this.disGts.push(this.gts[i]);
+					}
+					this.dispInIdx = this.rec709;
+					this.dispOutIdx = this.rec709;
+					break;
+			case 2: genList.push({name: this.gammas[i].name, idx: i});
+					this.outList.push({name: this.gammas[i].name, idx: i});
+					break;
+			case 3: this.outList.push({name: this.gammas[i].name, idx: i});
+					break;
+			case 5:
+			case 7: hdrList.push({name: this.gammas[i].name, idx: i});
+					this.inList.push({name: this.gammas[i].name, idx: i});
+					this.outList.push({name: this.gammas[i].name, idx: i});
+					if (this.gammas[i].name.indexOf('Rec2100') !== -1 || this.gammas[i].name.indexOf('PQ') !== -1) {
+						disList.push({name: this.gammas[i].name, idx: i});
+					}
+					break;
+			case 6: ioList.push({name: this.gammas[i].name, idx: i});
+					this.inList.push({name: this.gammas[i].name, idx: i});
+					this.outList.push({name: this.gammas[i].name, idx: i});
+					break;
+			default: break;
+		}
+	}
+	max = disList.length;
+	for (var i=0; i<max; i++) {
+		this.disList.push(disList[i]);
+		this.disGts.push(this.gts[disList[i].idx]);
+	}
+};
+LUTGamma.prototype.addCustomGamma = function(p,t,d) {
+	var idx = -1;
+	var max = this.gammas.length;
+	for (var j=0; j<max; j++) {
+		if (this.gammas[j].custId === d.id) {
+			idx = j;
+			break;
+		}
+	}
+	if (d.brand && this.subNames.indexOf(d.brand) === -1) {
+		this.subNames.splice(this.subNames.length - 1, 0, d.brand);
+	}
+	var subIdx = d.brand ? this.subNames.indexOf(d.brand) : this.subIdx('Log');
+	var logIdx = this.subIdx('Log');
+	if (idx === -1) {
+		var gamma = new LUTGammaLog(d.name, d.params);
+		gamma.custId = d.id;
+		idx = this.gammas.length;
+		this.gammas.push(gamma);
+		this.gammaSub.push([subIdx, logIdx]);
+		this.gts.push(d.gamut || '');
+		this.gammaDat.push(true);
+		this.gammaExt.push(false);
+	} else {
+		this.gammas[idx].name = d.name;
+		this.gammas[idx].params = d.params;
+		this.gammaSub[idx] = [subIdx, logIdx];
+		this.gts[idx] = d.gamut || this.gts[idx];
+	}
+	this.rebuildGammaLists();
+	var out = this.getLists(p,t);
+	out.seq = d.seq;
+	return out;
+};
 LUTGamma.prototype.setLA = function(p,t,i) {
 	this.gammas[this.LA].setLUT(i);
 	return { p: p, t:t+20, v: this.ver, i: i.title };
@@ -6654,6 +6746,8 @@ function LUTGammaWorker() {
 				case 18:lutGammaWorker.sendGammaMessage(lutGammaWorker.gammas.chartRGB(d.p,d.t,d.d));
 						break;
 				case 19:lutGammaWorker.sendGammaMessage(lutGammaWorker.gammas.changePQ(d.p,d.t,d.d));
+						break;
+				case 20:lutGammaWorker.sendGammaMessage(lutGammaWorker.gammas.addCustomGamma(d.p,d.t,d.d));
 						break;
 			}
 		}

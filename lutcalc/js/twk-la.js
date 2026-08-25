@@ -23,6 +23,34 @@ function TWKLA(tweaksBox, inputs, messages, files, formats) {
 	this.ui();
 	lutcalcReady(this.p);
 }
+TWKLA.prototype.gotGammaLists = function() {
+	var prev = this.gammaSelect.value;
+	this.gammaSelect.length = 0;
+	var inList = this.inputs.gammaInList;
+	var max = inList.length;
+	for (var j=0; j<max; j++) {
+		var option = document.createElement('option');
+		option.value = inList[j].idx;
+		option.appendChild(document.createTextNode(inList[j].name));
+		this.gammaSelect.appendChild(option);
+	}
+	if (prev !== '' && inList.some(function(item) { return String(item.idx) === prev; })) {
+		this.gammaSelect.value = prev;
+	}
+	var prevLin = this.linGammaSelect.value;
+	this.linGammaSelect.length = 0;
+	var linList = this.inputs.gammaLinList;
+	max = linList.length;
+	for (var j=0; j<max; j++) {
+		var linOption = document.createElement('option');
+		linOption.value = linList[j].idx;
+		linOption.appendChild(document.createTextNode(linList[j].name));
+		this.linGammaSelect.appendChild(linOption);
+	}
+	if (prevLin !== '' && linList.some(function(item) { return String(item.idx) === prevLin; })) {
+		this.linGammaSelect.value = prevLin;
+	}
+};
 TWKLA.prototype.io = function() {
 	// Tweak Checkbox
 	this.tweakCheck = document.createElement('input');
