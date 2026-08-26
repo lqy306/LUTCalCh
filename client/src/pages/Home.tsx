@@ -34,6 +34,7 @@ import {
 import { invoke } from "@tauri-apps/api/core";
 import { applyWorkbenchTheme, BUILTIN_THEMES, readStoredThemeId, readStoredThemeMode, resolveTheme, THEME_MODE_STORAGE_KEY, THEME_STORAGE_KEY, type ThemeMode } from "@/themes/themeRegistry";
 import NativeAdjustments from "@/components/NativeAdjustments";
+import { applyLocale, getStoredLocale, localizeElementText, LOCALES, type Locale } from "@/i18n";
 
 type WorkflowEvent = { action: "change" | "click"; selector: string; value?: string; checked?: boolean; label: string; filePath?: string };
 type WorkflowFile = { version: 1; name: string; createdAt: string; events: WorkflowEvent[] };
@@ -275,6 +276,7 @@ export default function Home() {
   const engineSnapshotRef = useRef("");
   const [themeId, setThemeId] = useState(readStoredThemeId);
   const [themeMode, setThemeMode] = useState<ThemeMode>(readStoredThemeMode);
+  const [locale, setLocale] = useState<Locale>(getStoredLocale);
   const activeTheme = useMemo(() => resolveTheme(themeId), [themeId]);
 
   const engineDocument = () => iframeRef.current?.contentDocument || null;
@@ -331,6 +333,15 @@ export default function Home() {
     [updated[index], updated[next]] = [updated[next], updated[index]];
     persistProfiles(updated);
   };
+
+  useEffect(() => {
+    applyLocale(locale);
+  }, [locale]);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => localizeElementText(document.querySelector(".apple-app-shell"), locale), 0);
+    return () => window.clearTimeout(timer);
+  });
 
   useEffect(() => {
     applyWorkbenchTheme(activeTheme, themeMode);
@@ -1326,7 +1337,15 @@ export default function Home() {
 
   return (
     <main className="apple-app-shell" aria-label="LUTCalc 中文计算器工作台">
-      <header className="apple-topbar"><div className="apple-brand"><img src={themeMode === "light" ? "lutcalc/CWLSB.png" : "lutcalc/CWMSB.png"} alt="LUTCalc" />LUTCalc 中文计算器</div><div>主工作台</div><div className="topbar-actions"><div className="theme-controls" aria-label="主题设置"><Palette size={14} aria-hidden="true" /><select aria-label="选择主题" value={activeTheme.id} onChange={(event) => setThemeId(event.target.value)}>{BUILTIN_THEMES.map((theme) => <option key={theme.id} value={theme.id}>{theme.name}</option>)}</select><button type="button" className="theme-mode-button" aria-label={`切换到${themeMode === "light" ? "深色" : "亮色"}模式`} onClick={() => setThemeMode((current) => current === "light" ? "dark" : "light")}>{themeMode === "light" ? <Sun size={14} /> : <Moon size={14} />}<span>{activeTheme.modes[themeMode].label}</span></button></div><div className="apple-status"><i />{message}</div></div></header>
+      <header className="apple-topbar">
+        <div className="apple-brand"><img src={themeMode === "light" ? "lutcalc/CWLSB.png" : "lutcalc/CWMSB.png"} alt="LUTCalc" />LUTCalc 中文计算器工作台</div>
+        <div>主工作台</div>
+        <div className="topbar-actions">
+          <label className="locale-controls" aria-label="语言"><span>语言</span><select value={locale} onChange={(event) => setLocale(event.target.value as Locale)}>{LOCALES.map((item) => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
+          <div className="theme-controls" aria-label="主题设置"><Palette size={14} aria-hidden="true" /><select aria-label="选择主题" value={activeTheme.id} onChange={(event) => setThemeId(event.target.value)}>{BUILTIN_THEMES.map((theme) => <option key={theme.id} value={theme.id}>{theme.name}</option>)}</select><button type="button" className="theme-mode-button" aria-label={`切换到${themeMode === "light" ? "深色" : "亮色"}模式`} onClick={() => setThemeMode((current) => current === "light" ? "dark" : "light")}>{themeMode === "light" ? <Sun size={14} /> : <Moon size={14} />}<span>{activeTheme.modes[themeMode].label}</span></button></div>
+          <div className="apple-status"><i />{message}</div>
+        </div>
+      </header>
       <div className="apple-workspace">
         <aside className={`workflow-sidebar tool-sidebar ${workflowOpen ? "is-open" : "is-closed"}`} aria-label="工具中心">
           <div className="workflow-sidebar-head"><div><span className="eyebrow">工具中心</span><h1><SlidersHorizontal size={17} />工作台工具</h1></div><button className="icon-button" onClick={() => setWorkflowOpen(false)} aria-label="关闭工具中心"><X size={16} /></button></div>
@@ -1382,7 +1401,7 @@ export default function Home() {
           <div className="project-disclosure-body">
             <p>本项目是基于 <a href="https://github.com/cameramanben/LUTCalc" target="_blank" rel="noreferrer">原版 LUTCalc</a> 的界面复刻与工作台扩展，并非官方发行版本。</p>
             <p>原版 LUTCalc 与本复刻项目均采用 <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank" rel="noreferrer">GNU GPL-2.0</a> 许可；原始项目版权归其原作者及权利人所有。</p>
-            <p>界面与工作台扩展由 Manus 开发。本版本可能不稳定，且不保证持续更新、技术支持或长期兼容性。</p>
+            <p>界面与工作台扩展由 AI 维护。本版本可能不稳定，且不保证持续更新、技术支持或长期兼容性。</p>
           </div>
         </details>
       </footer>
