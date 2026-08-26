@@ -473,7 +473,7 @@ h1 em { color: #647222; font-style: normal; }
 .analyst-actions { display: flex; flex-wrap: wrap; gap: 7px; }
 @media (max-width: 760px) { .tool-sidebar { width: min(310px, 90vw); } }
 
-/* 原版调整项嵌入：纵向模块栈由同源 LUTCalc DOM 渲染；外层只负责 Ubuntu 工作台的边界与自适应高度。 */
+/* 调整项嵌入：纵向模块栈由同源 LUTCalc DOM 渲染；外层只负责 Ubuntu 工作台的边界与自适应高度。 */
 .original-adjust-card { padding: 14px; overflow: hidden; }
 .adjustments-engine-frame { display: block; width: 100%; min-height: 360px; height: 640px; border: 0; background: transparent; transition: height 180ms var(--ease-out); }
 @media (max-width: 760px) { .original-adjust-card { padding: 12px; } .adjustments-engine-frame { min-height: 410px; } }
@@ -922,7 +922,7 @@ html:is(.dark, [data-workbench-mode="dark"]) body {
 
 
 /*
- * 原版整体布局回归：这里不再模拟现代卡片仪表盘，而是还原 LUTCalc 的密集参数工作区。
+ * 工作台整体布局回归：这里不再模拟现代卡片仪表盘，而是还原 LUTCalc 的密集参数工作区。
  * 01/02 保持同一行双栏，03/04/05 依次全宽；模块内部使用细边框和连续行结构。
  */
 .apple-app-shell .native-calculator-pane {
@@ -1260,7 +1260,7 @@ html:is(.dark, [data-workbench-mode="dark"]) body {
 }
 
 
-/* 原版白平衡参数区：灰色实体控件、纵向输入和两组居中 Reset 滑块。 */
+/* 白平衡参数区：灰色实体控件、纵向输入和两组居中 Reset 滑块。 */
 .apple-app-shell .white-balance-details {
   display: grid;
   gap: 8px;
@@ -1350,7 +1350,7 @@ html:is(.dark, [data-workbench-mode="dark"]) body {
 
 
 /*
- * 调整项重构视觉：以原版 LUTCalc 的连续工具条为结构基准，但使用统一的工作台表面、细分隔线和清晰的展开面板。
+ * 调整项重构视觉：以LUTCalc 的连续工具条为结构基准，但使用统一的工作台表面、细分隔线和清晰的展开面板。
  * 目标是减少暗红大面积填充，保持专业工具密度，并让每个模块的操作内容一眼可见。
  */
 .adjustments-card {
@@ -2279,7 +2279,7 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
   }
 }
 
-/* 2026-08 原版效率布局：高密度双栏工作区，优先保证首屏可见参数与曲线。 */
+/* 2026-08 高效工作台布局：高密度双栏工作区，优先保证首屏可见参数与曲线。 */
 .apple-app-shell .native-calculator-pane {
   padding: 8px 10px 16px;
 }
@@ -2524,7 +2524,7 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
   }
 }
 
-/* 原版式最终配平：调整项回到左栏连续工作流，右侧预览跨行填满高度。 */
+/* 工作台式最终配平：调整项回到左栏连续工作流，右侧预览跨行填满高度。 */
 @media (min-width: 901px) {
   .apple-app-shell .adjustments-card {
     grid-column: 1;
@@ -2629,7 +2629,7 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
   }
 }
 
-/* 最终视觉配平：调整项采用原版短条高度，右侧预览填满左栏工作区。 */
+/* 最终视觉配平：调整项采用紧凑条目高度，右侧预览填满左栏工作区。 */
 @media (min-width: 901px) {
   .apple-app-shell .adjustment-item-main,
   .apple-app-shell .adjustment-item-main > label {
@@ -2704,7 +2704,7 @@ html:is(.dark, [data-workbench-mode="dark"]) .apple-app-shell .adjustment-state 
   }
 }
 
-/* 调整项短条化：原版扫描依靠名称和状态，长摘要不应占据每一行高度。 */
+/* 调整项短条化：紧凑扫描依靠名称和状态，长摘要不应占据每一行高度。 */
 @media (min-width: 901px) {
   .apple-app-shell .adjustment-item-summary {
     display: none;
@@ -2999,7 +2999,7 @@ html[data-workbench-theme="ubuntu"] .apple-app-shell textarea {
   font-family: "LUTCalc Ubuntu", Ubuntu, "Noto Sans SC", sans-serif;
 }
 
-/* 稳定原版双栏：05 预览不参与外层行高计算，显示/隐藏只改变右栏卡片内部内容。 */
+/* 稳定双栏工作台：05 预览不参与外层行高计算，显示/隐藏只改变右栏卡片内部内容。 */
 @media (min-width: 901px) {
   .apple-app-shell .native-calculator-grid {
     display: grid;
@@ -3282,6 +3282,15 @@ html[data-workbench-theme="ubuntu"] .apple-app-shell textarea {
   border: 1px solid rgba(255,255,255,.35);
   border-radius: 4px;
   font: inherit;
+}
+/* Native option popups do not reliably inherit themed colors in Chromium. */
+.apple-app-shell .locale-controls select option {
+  color: #16181d;
+  background: #ffffff;
+}
+.apple-app-shell .locale-controls select option:checked {
+  color: #ffffff;
+  background: #276eb5;
 }
 
 :root[dir="rtl"] .apple-app-shell,
