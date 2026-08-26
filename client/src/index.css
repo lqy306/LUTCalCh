@@ -3262,3 +3262,60 @@ html[data-workbench-theme="ubuntu"] .apple-app-shell textarea {
     row-gap: 6px !important;
   }
 }
+
+/* Internationalization controls and RTL support. */
+.apple-app-shell .locale-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: inherit;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.apple-app-shell .locale-controls select {
+  min-width: 104px;
+  max-width: 132px;
+  min-height: 27px;
+  color: inherit;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 4px;
+  font: inherit;
+}
+
+:root[dir="rtl"] .apple-app-shell,
+:root[dir="rtl"] .native-calculator-pane,
+:root[dir="rtl"] .workflow-sidebar {
+  direction: rtl;
+}
+
+:root[dir="rtl"] .apple-topbar,
+:root[dir="rtl"] .topbar-actions,
+:root[dir="rtl"] .workflow-sidebar-head,
+:root[dir="rtl"] .card-title,
+:root[dir="rtl"] .adjustment-item-main,
+:root[dir="rtl"] .adjustment-details-foot,
+:root[dir="rtl"] .rgb-sampler-actions,
+:root[dir="rtl"] .preview-footnote {
+  flex-direction: row-reverse;
+}
+
+:root[dir="rtl"] .workflow-sidebar,
+:root[dir="rtl"] .native-calculator-pane,
+:root[dir="rtl"] .tool-panel,
+:root[dir="rtl"] .native-card,
+:root[dir="rtl"] .project-disclosure {
+  text-align: right;
+}
+
+:root[dir="rtl"] input,
+:root[dir="rtl"] select,
+:root[dir="rtl"] textarea {
+  text-align: start;
+}
+
+@media (max-width: 760px) {
+  .apple-app-shell .locale-controls { width: 100%; justify-content: space-between; }
+  .apple-app-shell .locale-controls select { flex: 1; max-width: none; }
+}
